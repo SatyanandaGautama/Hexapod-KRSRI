@@ -14,29 +14,46 @@ void Rotate(float rot) {
       }
     }
   }
-  if (rot >= 0) {
-    xFL_Awal = round((P1[0][0]));//FL
-    yFL_Awal = round((P1[1][0]));//FL
-    xLM_Awal = round((P2[0][0]));//LM
-    yLM_Awal = round((P2[1][0]));//LM
+  if (arahPutar < 0) {
+    if (rot >= 0) {
+      xFL_Awal = round((P1[0][0]));//FL
+      yFL_Awal = round((P1[1][0]));//FL
+      xLM_Awal = round((P2[0][0]));//LM
+      yLM_Awal = round((P2[1][0]));//LM
+    }
+    if (rot < 0) {
+      xFL_Akhir = round((P1[0][0]));//FL
+      yFL_Akhir = round((P1[1][0]));//FL
+      xLM_Akhir = round((P2[0][0]));//LM
+      yLM_Akhir = round((P2[1][0]));//LM
+    }
   }
-  if (rot < 0) {
-    xFL_Akhir = round((P1[0][0]));//FL
-    yFL_Akhir = round((P1[1][0]));//FL
-    xLM_Akhir = round((P2[0][0]));//LM
-    yLM_Akhir = round((P2[1][0]));//LM
+  if (arahPutar > 0) {
+    if (rot < 0) {
+      xFL_Awal = round((P1[0][0]));//FL
+      yFL_Awal = round((P1[1][0]));//FL
+      xLM_Awal = round((P2[0][0]));//LM
+      yLM_Awal = round((P2[1][0]));//LM
+    }
+    if (rot >= 0) {
+      xFL_Akhir = round((P1[0][0]));//FL
+      yFL_Akhir = round((P1[1][0]));//FL
+      xLM_Akhir = round((P2[0][0]));//LM
+      yLM_Akhir = round((P2[1][0]));//LM
+    }
   }
 }
 
-void GerakRotasi(float degree, float tinggi, float speeds, float LebarLangkah) { //lebarY : 30 (maju) -30 (mundur)
+void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar kiri), sudut - (putar kanan)
+  arahPutar = degree;
   Increment = 180 / speeds;
   if (!statusGerak) {
     switch (steps) {
       case 0 :
         degAwal = 0 + Increment;
         degAkhir = 180;
-        Rotate(degree + LebarLangkah);
-        Rotate(-1 * (degree + LebarLangkah));
+        Rotate(degree);
+        Rotate(-1 * (degree));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Akhir),  yFR0 =  yFL_Akhir, xFR1 = -(xFL_Awal), yFR1 = yFL_Awal, zFR0 = 0, zFRp = tinggi;
         //KIRI TENGAH (LM)
@@ -73,8 +90,8 @@ void GerakRotasi(float degree, float tinggi, float speeds, float LebarLangkah) {
       case 2 :
         degAwal = 0 + Increment;
         degAkhir = 180;
-        Rotate(degree + LebarLangkah);
-        Rotate(-1 * (degree + LebarLangkah));
+        Rotate(degree);
+        Rotate(-1 * (degree));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Awal),  yFR0 =  yFL_Awal, xFR1 = -(xFL_Akhir), yFR1 = yFL_Akhir, zFR0 = 0, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -115,4 +132,15 @@ void GerakRotasi(float degree, float tinggi, float speeds, float LebarLangkah) {
 }
 
 void Standby() {
+  xFR0 = -65,  yFR0 = 65, xFR1 = -65, yFR1 = 65, zFR0 = 0, zFRp = 0;
+  //KIRI TENGAH (LM)
+  xLM0 = 90, yLM0 = 0, xLM1 = 90, yLM1 = 0, zLM0 = 0, zLMp = 0;
+  //KANAN BELAKANG (BR)
+  xBR0 = -65, yBR0 = -65, xBR1 = -65,  yBR1 = -65, zBR0 = 0, zBRp = 0;
+  //KIRI DEPAN (FL)
+  xFL0 = 65, yFL0 = 65, xFL1 = 65,  yFL1 = 65, zFL0 = 0, zFLp = 0;
+  //KANAN TENGAH (RM)
+  xRM0 = -90, yRM0 = 0, xRM1 = -90, yRM1 = 0, zRM0 = 0, zRMp = 0;
+  //KIRI BELAKANG (BL)
+  xBL0 = 65, yBL0 = -65, xBL1 = 65,  yBL1 = -65, zBL0 = 0, zBLp = 0;
 }

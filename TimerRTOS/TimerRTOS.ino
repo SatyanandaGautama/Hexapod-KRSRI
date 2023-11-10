@@ -2,13 +2,13 @@
 #include <STM32FreeRTOS.h>
 #include <semphr.h>
 #define configUSE_16_BIT_TICKS  1
-HardwareSerial Serial2(USART2);
-HardwareSerial Serial3 = new HardwareSerial(USART3);
+HardwareSerial Serial2(USART2);//Serial Driver Servo
+HardwareSerial Serial3(USART3);//Serial Arduino Nano
 HardwareTimer Timer6(TIM6);
-const uint32_t timerPeriod_us = 10000 - 1;
+const uint32_t timerPeriod_us = 15000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
-//MPU
+//MPU6050
 int yaw, pitch, roll = 0;
 float degOffset;
 //PING
@@ -50,12 +50,16 @@ const int height = -95;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :
-const float standFR[3][1] = {{ -60}, {60}, {0}};
-const float standRM[3][1] = {{ -85}, {0}, {0}};
-const float standBR[3][1] = {{ -60}, { -60}, {0}};
-const float standFL[3][1] = {{ 60}, {60}, {0}};
-const float standLM[3][1] = {{ 85}, {0}, {0}};
-const float standBL[3][1] = {{ 60}, { -60}, {0}};
+const float standFR[3][1] = {{ -65}, {65}, {0}};
+const float standRM[3][1] = {{ -80}, {0}, {0}};
+const float standBR[3][1] = {{ -65}, { -65}, {0}};
+const float standFL[3][1] = {{ 65}, {65}, {0}};
+const float standLM[3][1] = {{ 80}, {0}, {0}};
+const float standBL[3][1] = {{ 65}, { -65}, {0}};
+//Gerak Rotate
+float P1[3][1];
+float P2[3][1];
+float arahPutar;
 //PID Jarak
 const float kp = 1.75 ; //kp
 const float ki = 0; //ki
@@ -87,7 +91,7 @@ void setup() {
   Serial3.setRx(PD9);
   Serial3.begin(9600);
   delay(1000);
-  verify_nano();
+  //  verify_nano();
   delay(1000);
   bin_sem = xSemaphoreCreateBinary();
   if (bin_sem == NULL) {

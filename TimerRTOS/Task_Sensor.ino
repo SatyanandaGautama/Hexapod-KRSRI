@@ -1,18 +1,15 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    GerakRotasi(17, 10, 18, 0); //15 & 14//17 & 18 (lumayan stabil)
-    Serial.println("Baca");
-    vTaskDelay(3 / portTICK_PERIOD_MS);
+    GerakRotasi(20, 20, 22);                           //15 & 14//17 & 18 (lumayan stabil)
+    vTaskDelay(5 / portTICK_PERIOD_MS);
   }
 }
-
-void Rotate(float deg, float tinggi, float speeds){
-  float degOffset
-}
-
-
-
-void susurkiriV2() {
+//Logika Rotate
+//offset = tujuan - sekarang
+//jika offset > 180
+//offset = tujuan - sekarang - 360
+//- kiri, + kanan
+void jalanLurus() {
   float sdtbelok = 5;
   ReadPING_1();
   error = jarak[0] - 5;
@@ -52,7 +49,6 @@ void PIDJarak() {
   pid_output = P_control + I_control + D_control;
   previous_error = error;
 }
-
 void resetPID() {
   P_control = 0;
   I_control = 0;
