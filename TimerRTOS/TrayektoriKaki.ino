@@ -1,19 +1,19 @@
 void TrayektoriSinus() {
-  //  if (modeGerak == true) {
-  actual_xFR = ((xFR1 - xFR0) / 10) * 2;
-  actual_yFR = ((yFR1 - yFR0) / 10) * 2;
-  actual_xLM = ((xLM1 - xLM0) / 10) * 2;
-  actual_yLM = ((yLM1 - yLM0) / 10) * 2;
-  actual_xBR = ((xBR1 - xBR0) / 10) * 2;
-  actual_yBR = ((yBR1 - yBR0) / 10) * 2;
-  actual_xFL = ((xFL1 - xFL0) / 10) * 2;
-  actual_yFL = ((yFL1 - yFL0) / 10) * 2;
-  actual_xRM = ((xRM1 - xRM0) / 10) * 2;
-  actual_yRM = ((yRM1 - yRM0) / 10) * 2;
-  actual_xBL = ((xBL1 - xBL0) / 10) * 2;
-  actual_yBL = ((yBL1 - yBL0) / 10) * 2;
-  //    modeGerak == false;
-  //  }
+  if (modeGerak == true) {
+    actual_xFR = ((xFR1 - xFR0) / 10) * 2;
+    actual_yFR = ((yFR1 - yFR0) / 10) * 2;
+    actual_xLM = ((xLM1 - xLM0) / 10) * 2;
+    actual_yLM = ((yLM1 - yLM0) / 10) * 2;
+    actual_xBR = ((xBR1 - xBR0) / 10) * 2;
+    actual_yBR = ((yBR1 - yBR0) / 10) * 2;
+    actual_xFL = ((xFL1 - xFL0) / 10) * 2;
+    actual_yFL = ((yFL1 - yFL0) / 10) * 2;
+    actual_xRM = ((xRM1 - xRM0) / 10) * 2;
+    actual_yRM = ((yRM1 - yRM0) / 10) * 2;
+    actual_xBL = ((xBL1 - xBL0) / 10) * 2;
+    actual_yBL = ((yBL1 - yBL0) / 10) * 2;
+    modeGerak == false;
+  }
   if (theta <= degAkhir) {
     //KANAN ATAS
     xFR = xFR0 + (((actual_xFR * theta) / 360)) * 10;

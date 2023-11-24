@@ -1,76 +1,50 @@
-void verify_nano() {
-  while (true) {
-    String status = "";
-    if (Serial3.available()) {
-      while (Serial3.available()) {
-        char c = Serial3.read();
-        status += c;
-      }
-    }
-    if (status == "200") {
-      Serial.println("Connection successful");
-      break;
-    } else if (status == "404") {
-      Serial.println("Connection failed");
-      while (1);
-    } else {
-      Serial.println("Connection pending");
-    }
-    delay(200);
-  }
-}
-
 void read_MPU() {
-  Serial3.write('1'); // trigger ngirim data
+  Serial3.write('1');
+  Serial3.flush();
+  String yawT = "";
+  String pitchT = "";
+  String rollT = "";
 
-  String status = "";
-  String yawS, pitchS, rollS = ""; // Menyimpan data yaw dan pitch yang diterima
-  int i = -1;
-
+  int i = 0;
   while (Serial3.available()) {
-    // Mulai membaca data
-    if (i == -1) {
+    if (i == 0) {
       char c = Serial3.read();
       if (c == '|') {
         i += 1;
       } else {
-        status += c;
-      }
-    } else if (i == 0) {
-      // Make sure status code is correct
-      if (status != "200") {
-        Serial.println("Read Invalid!");
-        return;
-      }
-
-      char c = Serial3.read();
-      if (c == '|') {
-        i += 1;
-      } else {
-        yawS += c;
+        yawT += c;
+        if (yawT.length() > 3) {
+          Serial.println("Invalid MPU Value"); // Karena value yaw maksimal 360, jika lebih dari 3 digit maka Serial yang diterima bukan value YPR.
+          while (Serial.available()) {
+            Serial3.read();
+          }
+          return;
+        }
       }
     } else if (i == 1) {
       char c = Serial3.read();
-
       if (c == '|') {
-        i += 1;
+        i += 2;
       } else {
-        pitchS += c;
+        pitchT += c;
       }
     } else {
       char c = Serial3.read();
-      rollS += c;
+      rollT += c;
     }
   }
 
-  yaw = yawS.toInt();
-  pitch = pitchS.toInt();
-  roll = rollS.toInt();
-
-  Serial.print("YAW: ");
-  Serial.println(yaw);
-  Serial.print("PITCH:");
-  Serial.println(pitch);
-  Serial.print("ROLL:");
-  Serial.println(roll);
+  if (yawT != "" && pitchT != "" && rollT != "") {
+    //    Serial.print("ypr: \t");
+    //    Serial.print(yawT);
+    //    Serial.print("\t");
+    //    Serial.print(pitchT);
+    //    Serial.print("\t");
+    //    Serial.println(rollT);
+    yaw = yawT.toInt();
+    pitch = pitchT.toInt();
+    roll = rollT.toInt();
+    //    Serial.print("YAW: ");
+    //    Serial.println(yaw);
+  }
 }

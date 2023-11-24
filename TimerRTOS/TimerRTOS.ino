@@ -1,6 +1,8 @@
 #include <HardwareTimer.h>
 #include <STM32FreeRTOS.h>
 #include <semphr.h>
+#define leftBack PE12
+#define leftFront PE11
 #define configUSE_16_BIT_TICKS  1
 HardwareSerial Serial2(USART2);//Serial Driver Servo
 HardwareSerial Serial3(USART3);//Serial Arduino Nano
@@ -8,9 +10,11 @@ HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 15000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
+//Rotate MPU
+int Offset, Tujuan;
 //MPU6050
-int yaw, pitch, roll = 0;
-float degOffset;
+int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
+int pitch, roll = 0;
 //PING
 unsigned char jarak[2];
 double duration, cm;
@@ -71,7 +75,7 @@ float pid_output;
 float previous_error;
 float error;
 float sudutBelok, longStep;
-
+bool rot = true;
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
   // Give semaphore to tell task that new value is ready
@@ -89,10 +93,16 @@ void setup() {
   Serial2.begin(1000000);
   Serial3.setTx(PD8);
   Serial3.setRx(PD9);
-  Serial3.begin(9600);
+  Serial3.begin(115200);
   delay(1000);
-  //  verify_nano();
-  delay(1000);
+  Standby();
+  TrayektoriSinus();
+  KirimIntruksiGerak(0);
+  while (yaw < 0) {
+    read_MPU();
+    delay(10);
+  }
+  delay(2000);
   bin_sem = xSemaphoreCreateBinary();
   if (bin_sem == NULL) {
     Serial.println("Could not create Semaphore");
@@ -101,13 +111,13 @@ void setup() {
               "Sensor",
               512,
               NULL,
-              1,
+              1, //Priority Lebih Rendah
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
               512,
               NULL,
-              2,
+              2, //Priority Lebih Tinggi
               NULL);
   Timer6.pause(); //Stop the Timer
   Timer6.setPrescaleFactor(prescaler); //Set the prescaler to achieve 1us per tick (assuming 84MHz clock)
