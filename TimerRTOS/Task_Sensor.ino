@@ -1,39 +1,10 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    if (rot == true) {
-      Rotate(90);
-      while (abs(Offset) > 1) {
-        Rotate(90);
-        GerakRotasi(Offset, 20, 22);
-      }
-      Standby();
-      read_MPU();
-      Serial.print("YAW Putar 1 : ");
-      Serial.println(yaw);
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
-      Rotate(180);
-      while (abs(Offset) > 1) {
-        Rotate(180);
-        GerakRotasi(Offset, 20, 22);
-      }
-      Standby();
-      read_MPU();
-      Serial.print("YAW Putar 2 : ");
-      Serial.println(yaw);
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
-      Rotate(270);
-      while (abs(Offset) > 1) {
-        Rotate(270);
-        GerakRotasi(Offset, 20, 22);
-      }
-      rot = false;
-    }
-    Standby();
-    read_MPU();
-    readPING(leftBack);
-    Serial.print("YAW Putar 3 : ");
-    Serial.println(yaw);
-    vTaskDelay(5 / portTICK_PERIOD_MS);
+    GerakDinamis(20, 20, 24, 0);
+    Serial.print("Back : ");
+    Serial.println(readPING(leftBack));
+    Serial.print("Front : ");
+    Serial.println(readPING(leftFront));
   }
 }
 
@@ -54,7 +25,7 @@ void Rotate(int tujuan) {
 void jalanLurus() {
   float sdtbelok = 5;
   //  ReadPING_1();
-  error = jarak[0] - 5;
+  //  error = jarak[0] - 5;
   PIDJarak();
   longStep = pid_output;
   if (longStep >= sdtbelok)longStep = sdtbelok;
@@ -64,21 +35,20 @@ void jalanLurus() {
   //  Serial.print("longStep = ");
   //  Serial.println(longStep);
 }
-void readPING(int pinData) {
+
+int readPING(uint32_t pinData) {
   pinMode(pinData, OUTPUT);
   digitalWrite(pinData, LOW);
-  delay(7);
+  vTaskDelay(2 / portTICK_PERIOD_MS); //2
   digitalWrite(pinData, HIGH);
-  delay(7);
+  vTaskDelay(5 / portTICK_PERIOD_MS); //5
   digitalWrite(pinData, LOW);
   pinMode(pinData, INPUT);
   duration = pulseIn(pinData, HIGH);
   cm = duration / 29 / 2 ;
-  jarak[0] = cm;
-  //  Serial.print("PING 1 : ");
-  //  Serial.println(jarak[0]);
+  jarak = cm;
+  return jarak;
 }
-
 
 void PIDJarak() {
   P_control = kp * error;
@@ -101,3 +71,38 @@ void resetPID() {
   previous_error = 0;
   pid_output = 0;
 }
+
+//====Rotate Logic====//
+//    if (rot == true) {
+//      Rotate(90);
+//      while (abs(Offset) > 1) {
+//        Rotate(90);
+//        GerakRotasi(Offset, 20, 22);
+//      }
+//      Standby();
+//      read_MPU();
+//      Serial.print("YAW Putar 1 : ");
+//      Serial.println(yaw);
+//      vTaskDelay(1000 / portTICK_PERIOD_MS);
+//      Rotate(180);
+//      while (abs(Offset) > 1) {
+//        Rotate(180);
+//        GerakRotasi(Offset, 20, 22);
+//      }
+//      Standby();
+//      read_MPU();
+//      Serial.print("YAW Putar 2 : ");
+//      Serial.println(yaw);
+//      vTaskDelay(1000 / portTICK_PERIOD_MS);
+//      Rotate(270);
+//      while (abs(Offset) > 1) {
+//        Rotate(270);
+//        GerakRotasi(Offset, 20, 22);
+//      }
+//      rot = false;
+//    }
+//    Standby();
+//    read_MPU();
+//    readPING(leftBack);
+//    Serial.print("YAW Putar 3 : ");
+//    Serial.println(yaw);

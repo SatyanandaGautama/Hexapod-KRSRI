@@ -3,12 +3,13 @@ void Kaki(void *pvParameters) {
     xSemaphoreTake(bin_sem, portMAX_DELAY);
     TrayektoriSinus();
     KirimIntruksiGerak(0);
-    Serial.println("KAKI");
+    //    Serial.println("K");
+    vTaskDelay(15 / portTICK_PERIOD_MS);
   }
 }
 
 void TransformasiGerak(float lebarY, float lbr) {
-  //Kanan maju duluan//Belok Kanan = lbr(+), Belok kiri = lbr(-)
+  //Kanan maju duluan && Belok Kanan = lbr(+), Belok kiri = lbr(-)
   //KANAN DEPAN (FR)
   yFR_Awal = (standFR[1][0] - lebarY) + lbr, yFR_Akhir = (standFR[1][0] + lebarY) - lbr;
   //KIRI TENGAH (LM)
@@ -32,7 +33,6 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         degAkhir = 180;
         TransformasiGerak(Lebar, PanjangLangkah);
         //KANAN DEPAN (FR)
-
         xFR0 = standFR[0][0],  yFR0 =  yFR_Awal, xFR1 = standFR[0][0] , yFR1 = yFR_Akhir, zFR0 = 0, zFRp = tinggi;
         //KIRI TENGAH (LM)
         xLM0 = standLM[0][0],  yLM0 =  yLM_Awal, xLM1 = standLM[0][0] , yLM1 = yLM_Akhir, zLM0 = 0, zLMp = tinggi;

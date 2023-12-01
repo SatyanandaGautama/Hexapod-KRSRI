@@ -1,9 +1,16 @@
 #include <HardwareTimer.h>
 #include <STM32FreeRTOS.h>
 #include <semphr.h>
-#define leftBack PE12
-#define leftFront PE11
 #define configUSE_16_BIT_TICKS  1
+//======Sensor IR ToF=====//
+//#include <Wire.h>
+//TwoWire Wire3(PC9, PA8);
+//#include "Adafruit_VL53L1X.h"
+//Adafruit_VL53L1X vl53_0;
+//#define vl53Address1  0x30
+//#define XSHUT1 PE7
+//int IRRangeVal_0;
+//========================//
 HardwareSerial Serial2(USART2);//Serial Driver Servo
 HardwareSerial Serial3(USART3);//Serial Arduino Nano
 HardwareTimer Timer6(TIM6);
@@ -16,7 +23,9 @@ int Offset, Tujuan;
 int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll = 0;
 //PING
-unsigned char jarak[2];
+uint32_t leftFront = PE11;
+uint32_t leftBack = PE12;
+int jarak;
 double duration, cm;
 //Gerakan
 volatile bool statusGerak = false;
@@ -30,7 +39,7 @@ float xFR, yFR, zFR, xFL, yFL, zFL, xBR, yBR, zBR, xBL, yBL, zBL, xRM, yRM, zRM,
 float yFR_Awal, yFL_Awal, yBL_Awal, yBR_Awal, yRM_Awal, yLM_Awal, yFR_Akhir, yFL_Akhir, yBL_Akhir, yBR_Akhir, yRM_Akhir, yLM_Akhir;
 float xFR_Awal, xFL_Awal, xBL_Awal, xBR_Awal, xRM_Awal, xLM_Awal, xFR_Akhir, xFL_Akhir, xBL_Akhir, xBR_Akhir, xRM_Akhir, xLM_Akhir;
 float actual_xFR, actual_yFR, actual_xRM, actual_yRM, actual_xBR, actual_yBR, actual_xBL, actual_yBL, actual_xLM, actual_yLM, actual_xFL, actual_yFL;
-// Input Trayektori Global
+//=====Input Trayektori Global=====//
 //KANAN DEPAN (FR)
 volatile float xFR0, yFR0, xFR1, yFR1, zFR0, zFRp;
 //KIRI TENGAH (LM)
@@ -44,7 +53,7 @@ volatile float xRM0, yRM0, xRM1, yRM1, zRM0, zRMp;
 //KIRI BELAKANG (BL)
 volatile float xBL0, yBL0, xBL1,  yBL1, zBL0, zBLp;
 volatile float Increment;
-// Variabel simpan sudut tiap servo
+//Variabel simpan sudut tiap servo
 int outServo[6][3];
 //Variabel Invers Kinematik
 const float cx = 22;
@@ -68,14 +77,7 @@ float arahPutar;
 const float kp = 1.75 ; //kp
 const float ki = 0; //ki
 const float kd = 0.75; //kd
-float P_control;
-float I_control;
-float D_control;
-float pid_output;
-float previous_error;
-float error;
-float sudutBelok, longStep;
-bool rot = true;
+float P_control, I_control, D_control, pid_output, previous_error, error, sudutBelok, longStep;
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
   // Give semaphore to tell task that new value is ready
@@ -87,21 +89,30 @@ void timerInterrupt() {
 void setup() {
   Serial.setTx(PA9);
   Serial.setRx(PA10);
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial2.setTx(PA2);
   Serial2.setRx(PA3);
   Serial2.begin(1000000);
   Serial3.setTx(PD8);
   Serial3.setRx(PD9);
   Serial3.begin(115200);
-  delay(1000);
-  Standby();
-  TrayektoriSinus();
-  KirimIntruksiGerak(0);
-  while (yaw < 0) {
-    read_MPU();
-    delay(10);
-  }
+  //====Setup IR====//
+  //  pinMode(XSHUT1, OUTPUT);
+  //  digitalWrite(XSHUT1, LOW);
+  //  digitalWrite(XSHUT1, HIGH);
+  //  vl53_0.begin(vl53Address1, &Wire3);
+  //  vl53_0.startRanging();
+  //  vl53_0.setTimingBudget(50);
+  //  Wire3.begin();
+  //================//
+  delay(2000);
+  //  Standby();
+  //  TrayektoriSinus();
+  //  KirimIntruksiGerak(0);
+  //  while (yaw < 0) {
+  //    read_MPU();
+  //    delay(10);
+  //  }
   delay(2000);
   bin_sem = xSemaphoreCreateBinary();
   if (bin_sem == NULL) {
@@ -111,7 +122,7 @@ void setup() {
               "Sensor",
               512,
               NULL,
-              1, //Priority Lebih Rendah
+              1, //Priority Lebih Rendah 
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
