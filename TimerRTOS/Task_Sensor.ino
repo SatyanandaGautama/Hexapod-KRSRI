@@ -1,11 +1,27 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    GerakDinamis(20, 20, 24, 0);
-    Serial.print("Back : ");
-    Serial.println(readPING(leftBack));
-    Serial.print("Front : ");
-    Serial.println(readPING(leftFront));
+    GerakDinamis(15, 15, 8, 0);
+    //    Standby();
+    //    Serial.print("Back : ");
+    readPING(leftBack);
+//    Serial.println("PG1");
+    //    Serial.print("Front : ");
+    readPING(leftFront);
+//    Serial.println("PG2");
+    bacaIR();
   }
+}
+
+void bacaIR() {
+  int distance = sensor.readRangeContinuousMillimeters();
+  int cm = distance / 10;
+//  Serial.println("IR");
+  vTaskDelay(7 / portTICK_PERIOD_MS);
+  //  Serial.print("Distance: ");
+  //  Serial.print(cm);
+  //  if (sensor.timeoutOccurred()) {
+  //    Serial.print(" TIMEOUT");
+  //  }
 }
 
 //Logika Rotate

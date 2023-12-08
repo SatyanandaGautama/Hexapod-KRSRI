@@ -3,18 +3,14 @@
 #include <semphr.h>
 #define configUSE_16_BIT_TICKS  1
 //======Sensor IR ToF=====//
-//#include <Wire.h>
-//TwoWire Wire3(PC9, PA8);
-//#include "Adafruit_VL53L1X.h"
-//Adafruit_VL53L1X vl53_0;
-//#define vl53Address1  0x30
-//#define XSHUT1 PE7
-//int IRRangeVal_0;
+#include <Wire.h>
+#include <VL53L0X.h>
+VL53L0X sensor;
 //========================//
 HardwareSerial Serial2(USART2);//Serial Driver Servo
 HardwareSerial Serial3(USART3);//Serial Arduino Nano
 HardwareTimer Timer6(TIM6);
-const uint32_t timerPeriod_us = 15000 - 1;
+const uint32_t timerPeriod_us = 25000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
 //Rotate MPU
@@ -23,8 +19,8 @@ int Offset, Tujuan;
 int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll = 0;
 //PING
-uint32_t leftFront = PE11;
-uint32_t leftBack = PE12;
+uint32_t leftBack = PE11;
+uint32_t leftFront = PE12;
 int jarak;
 double duration, cm;
 //Gerakan
@@ -97,18 +93,21 @@ void setup() {
   Serial3.setRx(PD9);
   Serial3.begin(115200);
   //====Setup IR====//
-  //  pinMode(XSHUT1, OUTPUT);
-  //  digitalWrite(XSHUT1, LOW);
-  //  digitalWrite(XSHUT1, HIGH);
-  //  vl53_0.begin(vl53Address1, &Wire3);
-  //  vl53_0.startRanging();
-  //  vl53_0.setTimingBudget(50);
-  //  Wire3.begin();
+  Wire.setSDA(PC9);
+  Wire.setSCL(PA8);
+  Wire.begin();
+  sensor.init();
+  sensor.setTimeout(1000);
+  sensor.startContinuous();
   //================//
-  delay(2000);
-  //  Standby();
-  //  TrayektoriSinus();
-  //  KirimIntruksiGerak(0);
+  delay(3000);
+  FR(-65, 65, 0);
+  RM(-80, 0, 0);
+  BR(-65, -65, 0);
+  BL(65, -65, 0);
+  LM(80, 0, 0);
+  FL(65, 65, 0);
+  KirimIntruksiGerak(0);
   //  while (yaw < 0) {
   //    read_MPU();
   //    delay(10);
@@ -122,7 +121,7 @@ void setup() {
               "Sensor",
               512,
               NULL,
-              1, //Priority Lebih Rendah 
+              1, //Priority Lebih Rendah
               NULL);
   xTaskCreate(Kaki,
               "Kaki",

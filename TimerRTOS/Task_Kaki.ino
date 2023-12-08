@@ -2,9 +2,11 @@ void Kaki(void *pvParameters) {
   while (1) {
     xSemaphoreTake(bin_sem, portMAX_DELAY);
     TrayektoriSinus();
-    KirimIntruksiGerak(0);
-    //    Serial.println("K");
-    vTaskDelay(15 / portTICK_PERIOD_MS);
+    if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
+      KirimIntruksiGerak(0);
+    }
+//    Serial.println("K");
+    vTaskDelay(25 / portTICK_PERIOD_MS);
   }
 }
 

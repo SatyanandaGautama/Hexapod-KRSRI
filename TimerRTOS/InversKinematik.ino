@@ -46,13 +46,13 @@ void RM (float x, float y, float h) { //Kanan Tengah (Kuadrant 2 atau 3)
   outServo[1][0] = round(sdtcoxa);
   outServo[1][1] = round(sdtfemur);
   outServo[1][2] = round(sdttibia);
-  // Serial.println("RIGHT MIDDLE :");
-  // Serial.print("CX :");
-  // Serial.println(sdtcoxa);
-  // Serial.print("FM :");
-  // Serial.println(sdtfemur);
-  // Serial.print("TB :");
-  // Serial.println(sdttibia);
+  //  Serial.println("RIGHT MIDDLE :");
+  //  Serial.print("CX :");
+  //  Serial.println(sdtcoxa);
+  //  Serial.print("FM :");
+  //  Serial.println(sdtfemur);
+  //  Serial.print("TB :");
+  //  Serial.println(sdttibia);
 }
 
 void BR (float x, float y, float h) { //Kanan Bawah (KUADRANT 3)
