@@ -1,13 +1,8 @@
 void Sensor(void *pvParameters) {
   while (1) {
     GerakDinamis(15, 15, 8, 0);
-    //    Standby();
-    //    Serial.print("Back : ");
-    readPING(leftBack);
-//    Serial.println("PG1");
-    //    Serial.print("Front : ");
-    readPING(leftFront);
-//    Serial.println("PG2");
+    Serial.println(readPING(leftBack));
+    Serial.println(readPING(leftFront));
     bacaIR();
   }
 }
@@ -15,7 +10,7 @@ void Sensor(void *pvParameters) {
 void bacaIR() {
   int distance = sensor.readRangeContinuousMillimeters();
   int cm = distance / 10;
-//  Serial.println("IR");
+  //  Serial.println("IR");
   vTaskDelay(7 / portTICK_PERIOD_MS);
   //  Serial.print("Distance: ");
   //  Serial.print(cm);

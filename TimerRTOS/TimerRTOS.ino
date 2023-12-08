@@ -119,13 +119,13 @@ void setup() {
   }
   xTaskCreate(Sensor,
               "Sensor",
-              512,
+              1024,
               NULL,
               1, //Priority Lebih Rendah
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
-              512,
+              1024,
               NULL,
               2, //Priority Lebih Tinggi
               NULL);
