@@ -5,7 +5,6 @@ void Kaki(void *pvParameters) {
     if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
       KirimIntruksiGerak(0);
     }
-
     vTaskDelay(25 / portTICK_PERIOD_MS);
   }
 }
