@@ -5,7 +5,7 @@ void Kaki(void *pvParameters) {
     if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
       KirimIntruksiGerak(0);
     }
-//    Serial.println("K");
+
     vTaskDelay(25 / portTICK_PERIOD_MS);
   }
 }
@@ -48,6 +48,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Awal, xBL1 =  standBL[0][0], yBL1 = yBL_Akhir, zBL0 = 0, zBLp = 0;
         modeGerak = true;
         statusGerak = true;
+        Serial.println("1");
         break;
       case 1:
         degAwal = 90 + Increment;
@@ -66,6 +67,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Akhir, xBL1 =  standBL[0][0], yBL1 = yBL_Awal, zBL0 = 0, zBLp = tinggi;
         modeGerak = true;
         statusGerak = true;
+        Serial.println("2");
         break;
       case 2 :
         degAwal = 0 + Increment;
@@ -85,6 +87,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Akhir, xBL1 =  standBL[0][0], yBL1 = yBL_Awal, zBL0 = 0, zBLp = tinggi;
         modeGerak = true;
         statusGerak = true;
+        Serial.println("3");
         break;
       case 3 :
         degAwal = 90 + Increment;
@@ -103,6 +106,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Awal, xBL1 =  standBL[0][0], yBL1 = yBL_Akhir, zBL0 = 0, zBLp = 0;
         modeGerak = true;
         statusGerak = true;
+        Serial.println("4");
         break;
     }
     steps++;
