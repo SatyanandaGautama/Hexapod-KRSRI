@@ -23,7 +23,7 @@ void bacaIR() {
 
 //Logika Rotate
 //(-)Putar Kiri, (+)Putar Kanan
-void Rotate(int tujuan) {
+void RotateMPU(int tujuan) {
   read_MPU();
   Serial.print("YAW: ");
   Serial.println(yaw);
@@ -87,9 +87,9 @@ void resetPID() {
 
 //====Rotate Logic====//
 //    if (rot == true) {
-//      Rotate(90);
+//      RotateMPU(90);
 //      while (abs(Offset) > 1) {
-//        Rotate(90);
+//        RotateMPU(90);
 //        GerakRotasi(Offset, 20, 22);
 //      }
 //      Standby();
@@ -97,9 +97,9 @@ void resetPID() {
 //      Serial.print("YAW Putar 1 : ");
 //      Serial.println(yaw);
 //      vTaskDelay(1000 / portTICK_PERIOD_MS);
-//      Rotate(180);
+//      RotateMPU(180);
 //      while (abs(Offset) > 1) {
-//        Rotate(180);
+//        RotateMPU(180);
 //        GerakRotasi(Offset, 20, 22);
 //      }
 //      Standby();
@@ -107,15 +107,14 @@ void resetPID() {
 //      Serial.print("YAW Putar 2 : ");
 //      Serial.println(yaw);
 //      vTaskDelay(1000 / portTICK_PERIOD_MS);
-//      Rotate(270);
+//      RotateMPU(270);
 //      while (abs(Offset) > 1) {
-//        Rotate(270);
+//        RotateMPU(270);
 //        GerakRotasi(Offset, 20, 22);
 //      }
 //      rot = false;
 //    }
 //    Standby();
 //    read_MPU();
-//    readPING(leftBack);
 //    Serial.print("YAW Putar 3 : ");
 //    Serial.println(yaw);
