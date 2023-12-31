@@ -1,34 +1,23 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    GerakDinamis(15, 15, 8, 0);
-    Serial.println("P1");
-    readPING(leftBack);
-    Serial.println("P2");
-    readPING(leftFront);
-    bacaIR();
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    GerakDinamis(15, 10, 10, 0);
+    xSemaphoreGive(mutex);
   }
-}
-
-void bacaIR() {
-  int distance = sensor.readRangeContinuousMillimeters();
-  int cm = distance / 10;
-  Serial.println("IR");
-  vTaskDelay(7 / portTICK_PERIOD_MS);
-  //  Serial.print("Distance: ");
-  //  Serial.print(cm);
-  //  if (sensor.timeoutOccurred()) {
-  //    Serial.print(" TIMEOUT");
-  //  }
 }
 
 //Logika Rotate
 //(-)Putar Kiri, (+)Putar Kanan
 void RotateMPU(int tujuan) {
   read_MPU();
-  Serial.print("YAW: ");
-  Serial.println(yaw);
+  vTaskDelay(15 / portTICK_PERIOD_MS);
+  //  Serial.print("YAW: ");
+  //  Serial.println(yaw);
   Offset = tujuan - yaw;
-  if (abs(Offset) > 180) {
+  if (Offset < -180) {
+    Offset = tujuan - yaw + 360;
+  }
+  if (Offset > 180) {
     Offset = tujuan - yaw - 360;
   }
   //  Serial.print("OFFSET: ");
@@ -76,6 +65,7 @@ void PIDJarak() {
   pid_output = P_control + I_control + D_control;
   previous_error = error;
 }
+
 void resetPID() {
   P_control = 0;
   I_control = 0;
@@ -118,3 +108,21 @@ void resetPID() {
 //    read_MPU();
 //    Serial.print("YAW Putar 3 : ");
 //    Serial.println(yaw);
+
+
+//===Logika Baca Jarak Sambil Jalan===//
+//    xSemaphoreTake(mutex, portMAX_DELAY);
+//    readPING(leftBack);
+//    readPING(leftFront);
+//    GerakDinamis(15, 15, 8, 0);
+//    xSemaphoreGive(mutex);
+//    bacaIR();
+
+
+//===Logika Kamera===//
+//    read_maix();
+//    xSemaphoreTake(mutex, portMAX_DELAY);
+//    GerakDinamis(20, 20, 20, 0);
+//    xSemaphoreGive(mutex);
+//    bacaIR();
+//NB : Baca IR ditaruh diluar mutex, gerakannya jadi agak patah patah tapi ga terlalu kelihatan dan lebih cepat geraknya

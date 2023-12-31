@@ -1,6 +1,6 @@
 void read_MPU() {
   Serial3.write('1');
-  Serial3.flush();
+  //  Serial3.flush();
   String yawT = "";
   String pitchT = "";
   String rollT = "";
@@ -41,10 +41,12 @@ void read_MPU() {
     //    Serial.print(pitchT);
     //    Serial.print("\t");
     //    Serial.println(rollT);
+    //    Serial3.flush();
+
     yaw = yawT.toInt();
     pitch = pitchT.toInt();
     roll = rollT.toInt();
-    //    Serial.print("YAW: ");
-    //    Serial.println(yaw);
+    Serial.print("YAW: ");
+    Serial.println(yaw);
   }
 }

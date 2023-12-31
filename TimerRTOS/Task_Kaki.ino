@@ -1,11 +1,18 @@
 void Kaki(void *pvParameters) {
   while (1) {
     xSemaphoreTake(bin_sem, portMAX_DELAY);
-    TrayektoriSinus();
-    if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
-      KirimIntruksiGerak(0);
+    if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
+      TrayektoriSinus();
+      if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
+        KirimIntruksiGerak(0);
+      }
+      xSemaphoreGive(mutex);
     }
-    vTaskDelay(25 / portTICK_PERIOD_MS);
+    //    else {
+    //      Serial.println("NULL");
+    //      mut = true;
+    //    }
+    vTaskDelay(17 / portTICK_PERIOD_MS);
   }
 }
 
@@ -25,7 +32,8 @@ void TransformasiGerak(float lebarY, float lbr) {
   yBL_Awal = (standBL[1][0] + lebarY) + lbr, yBL_Akhir = (standBL[1][0] - lebarY) - lbr;
 }
 
-void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah) { //lebarY : 30 (maju) -30 (mundur)
+//======Gerak Dinamis versi Trayektori Sinus======//
+void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah) { //lebarY : maju (+), mundur (-)
   Increment = 180 / speeds;
   if (!statusGerak) {
     switch (steps) {
@@ -47,7 +55,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Awal, xBL1 =  standBL[0][0], yBL1 = yBL_Akhir, zBL0 = 0, zBLp = 0;
         modeGerak = true;
         statusGerak = true;
-        Serial.println("1");
+        //        Serial.println("1");
         break;
       case 1:
         degAwal = 90 + Increment;
@@ -66,7 +74,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Akhir, xBL1 =  standBL[0][0], yBL1 = yBL_Awal, zBL0 = 0, zBLp = tinggi;
         modeGerak = true;
         statusGerak = true;
-        Serial.println("2");
+        //        Serial.println("2");
         break;
       case 2 :
         degAwal = 0 + Increment;
@@ -86,7 +94,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Akhir, xBL1 =  standBL[0][0], yBL1 = yBL_Awal, zBL0 = 0, zBLp = tinggi;
         modeGerak = true;
         statusGerak = true;
-        Serial.println("3");
+        //        Serial.println("3");
         break;
       case 3 :
         degAwal = 90 + Increment;
@@ -105,7 +113,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
         xBL0 = standBL[0][0],  yBL0 = yBL_Awal, xBL1 =  standBL[0][0], yBL1 = yBL_Akhir, zBL0 = 0, zBLp = 0;
         modeGerak = true;
         statusGerak = true;
-        Serial.println("4");
+        //        Serial.println("4");
         break;
     }
     steps++;
@@ -113,6 +121,7 @@ void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah)
   }
 }
 
+//======Gerak Dinamis versi Trayektori Beizer======//
 //void GerakDinamis(float Lebar, float tinggi, float speeds, float PanjangLangkah) { //lebarY : 30 (maju) -30 (mundur)
 //  Increment = 1 / speeds;
 //  if (!statusGerak) {

@@ -50,6 +50,12 @@ void TrayektoriSinus() {
     theta = degAwal; //Untuk Increment Tujuan Selanjutnya
     statusGerak = false;
   }
+  //  Serial.print("x:");
+  //  Serial.println(xLM);
+  //  Serial.print("y:");
+  //  Serial.println(yRM);
+  //  Serial.print("z:");
+  //  Serial.println(zRM);
   //  }
   //  else if (theta > degAkhir) {
   //    theta = degAwal; //Untuk Increment Tujuan Selanjutnya
@@ -67,45 +73,43 @@ void TrayektoriBezier() { //Cubic Bezier Curve
   float zRM1 =  (zRMp - 0.25 * zRM0) / 0.75;
   float a, b, c, d;
   float xFR, yFR, zFR, xFL, yFL, zFL, xBR, yBR, zBR, xBL, yBL, zBL, xRM, yRM, zRM, xLM, yLM, zLM;
-  if (t <= tAkhir) {
-    a = (1 - t) * (1 - t) * (1 - t);
-    b = 3 * t * (1 - t) * (1 - t);
-    c = 3 * t * t * (1 - t);
-    d = t * t * t;
-    /////////// KANAN ATAS (RM)////////////////////
-    xFR = a * xFR0 + b * xFR0 + c * xFR1 + d * xFR1;
-    yFR = a * yFR0 + b * yFR0 + c * yFR1 + d * yFR1;
-    zFR = a * zFR0 + b * zFR1 + c * zFR1 + d * zFR0;
-    /////////// KIRI TENGAH (LM)////////////////////
-    xLM = a * xLM0 + b * xLM0 + c * xLM1 + d * xLM1;
-    yLM = a * yLM0 + b * yLM0 + c * yLM1 + d * yLM1;
-    zLM = a * zLM0 + b * zLM1 + c * zLM1 + d * zLM0;
-    /////////// KANAN BELAKANG (BR)////////////////
-    xBR = a * xBR0 + b * xBR0 + c * xBR1 + d * xBR1;
-    yBR = a * yBR0 + b * yBR0 + c * yBR1 + d * yBR1;
-    zBR = a * zBR0 + b * zBR1 + c * zBR1 + d * zBR0;
-    /////////// KIRI DEPAN (FL)////////////////
-    xFL = a * xFL0 + b * xFL0 + c * xFL1 + d * xFL1;
-    yFL = a * yFL0 + b * yFL0 + c * yFL1 + d * yFL1;
-    zFL = a * zFL0 + b * zFL1 + c * zFL1 + d * zFL0;
-    /////////// KANAN TENGAH (RM)////////////////////
-    xRM = a * xRM0 + b * xRM0 + c * xRM1 + d * xRM1;
-    yRM = a * yRM0 + b * yRM0 + c * yRM1 + d * yRM1;
-    zRM = a * zRM0 + b * zRM1 + c * zRM1 + d * zRM0;
-    /////////// KIRI BELAKANG (BL)////////////////
-    xBL = a * xBL0 + b * xBL0 + c * xBL1 + d * xBL1;
-    yBL = a * yBL0 + b * yBL0 + c * yBL1 + d * yBL1;
-    zBL = a * zBL0 + b * zBL1 + c * zBL1 + d * zBL0;
-    //////////////////////////////////////////////
-    FR(xFR, yFR, zFR);
-    RM(xRM, yRM, zRM);
-    BR(xBR, yBR, zBR);
-    BL(xBL, yBL, zBL);
-    LM(xLM, yLM, zLM);
-    FL(xFL, yFL, zFL);
-    t += Increment;
-  }
-  else if (t > tAkhir) {
+  a = (1 - t) * (1 - t) * (1 - t);
+  b = 3 * t * (1 - t) * (1 - t);
+  c = 3 * t * t * (1 - t);
+  d = t * t * t;
+  /////////// KANAN ATAS (RM)////////////////////
+  xFR = a * xFR0 + b * xFR0 + c * xFR1 + d * xFR1;
+  yFR = a * yFR0 + b * yFR0 + c * yFR1 + d * yFR1;
+  zFR = a * zFR0 + b * zFR1 + c * zFR1 + d * zFR0;
+  /////////// KIRI TENGAH (LM)////////////////////
+  xLM = a * xLM0 + b * xLM0 + c * xLM1 + d * xLM1;
+  yLM = a * yLM0 + b * yLM0 + c * yLM1 + d * yLM1;
+  zLM = a * zLM0 + b * zLM1 + c * zLM1 + d * zLM0;
+  /////////// KANAN BELAKANG (BR)////////////////
+  xBR = a * xBR0 + b * xBR0 + c * xBR1 + d * xBR1;
+  yBR = a * yBR0 + b * yBR0 + c * yBR1 + d * yBR1;
+  zBR = a * zBR0 + b * zBR1 + c * zBR1 + d * zBR0;
+  /////////// KIRI DEPAN (FL)////////////////
+  xFL = a * xFL0 + b * xFL0 + c * xFL1 + d * xFL1;
+  yFL = a * yFL0 + b * yFL0 + c * yFL1 + d * yFL1;
+  zFL = a * zFL0 + b * zFL1 + c * zFL1 + d * zFL0;
+  /////////// KANAN TENGAH (RM)////////////////////
+  xRM = a * xRM0 + b * xRM0 + c * xRM1 + d * xRM1;
+  yRM = a * yRM0 + b * yRM0 + c * yRM1 + d * yRM1;
+  zRM = a * zRM0 + b * zRM1 + c * zRM1 + d * zRM0;
+  /////////// KIRI BELAKANG (BL)////////////////
+  xBL = a * xBL0 + b * xBL0 + c * xBL1 + d * xBL1;
+  yBL = a * yBL0 + b * yBL0 + c * yBL1 + d * yBL1;
+  zBL = a * zBL0 + b * zBL1 + c * zBL1 + d * zBL0;
+  //////////////////////////////////////////////
+  FR(xFR, yFR, zFR);
+  RM(xRM, yRM, zRM);
+  BR(xBR, yBR, zBR);
+  BL(xBL, yBL, zBL);
+  LM(xLM, yLM, zLM);
+  FL(xFL, yFL, zFL);
+  t += Increment;
+  if (t > tAkhir) {
     t = tAwal; //Untuk Increment Tujuan Selanjutnya
     statusGerak = false;
   }
