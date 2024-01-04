@@ -1,8 +1,28 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    xSemaphoreTake(mutex, portMAX_DELAY);
-    GerakDinamis(15, 10, 10, 0);
-    xSemaphoreGive(mutex);
+
+  }
+}
+void BodyMaju(float speedss) {
+  if (!statusGerak) {
+    theta = 0;
+    Increment = 180 / speedss;
+    degAwal = 0;
+    degAkhir = 180;
+    //KANAN DEPAN (FR)
+    xFR0 = -65,  yFR0 = 65, xFR1 = -65, yFR1 = 15, zFR0 = 0, zFRp = 0;
+    //KIRI TENGAH (LM)
+    xLM0 = 80, yLM0 = 0, xLM1 = 80, yLM1 = -50, zLM0 = 0, zLMp = 0;
+    //KANAN BELAKANG (BR)
+    xBR0 = -65, yBR0 = -65, xBR1 = -65,  yBR1 = -100, zBR0 = 0, zBRp = 0;
+    //KIRI DEPAN (FL)
+    xFL0 = 65, yFL0 = 65, xFL1 = 65,  yFL1 = 15, zFL0 = 0, zFLp = 0;
+    //KANAN TENGAH (RM)
+    xRM0 = -80, yRM0 = 0, xRM1 = -80, yRM1 = -50, zRM0 = 0, zRMp = 0;
+    //KIRI BELAKANG (BL)
+    xBL0 = 65, yBL0 = -65, xBL1 = 65,  yBL1 = -100, zBL0 = 0, zBLp = 0;
+    modeGerak = true;
+    statusGerak = true;
   }
 }
 
@@ -126,3 +146,32 @@ void resetPID() {
 //    xSemaphoreGive(mutex);
 //    bacaIR();
 //NB : Baca IR ditaruh diluar mutex, gerakannya jadi agak patah patah tapi ga terlalu kelihatan dan lebih cepat geraknya
+
+////====Logika Body Maju Ambil Korban====//
+//    xSemaphoreTake(mutex, portMAX_DELAY);
+//    BodyMaju(60);
+//    xSemaphoreGive(mutex);
+//    if (!statusGerak) {
+//      while (1) {
+//        xSemaphoreTake(mutex, portMAX_DELAY);
+//        theta = 180;
+//        xFR0 = -65,  yFR0 = 15, xFR1 = -65, yFR1 = 15, zFR0 = 0, zFRp = 0;
+//        //KIRI TENGAH (LM)
+//        xLM0 = 80, yLM0 = -50, xLM1 = 80, yLM1 = -50, zLM0 = 0, zLMp = 0;
+//        //KANAN BELAKANG (BR)
+//        xBR0 = -65, yBR0 = -100, xBR1 = -65,  yBR1 = -100, zBR0 = 0, zBRp = 0;
+//        //KIRI DEPAN (FL)
+//        xFL0 = 65, yFL0 = 15, xFL1 = 65,  yFL1 = 15, zFL0 = 0, zFLp = 0;
+//        //KANAN TENGAH (RM)
+//        xRM0 = -80, yRM0 = -50, xRM1 = -80, yRM1 = -50, zRM0 = 0, zRMp = 0;
+//        //KIRI BELAKANG (BL)
+//        xBL0 = 65, yBL0 = -100, xBL1 = 65,  yBL1 = -100, zBL0 = 0, zBLp = 0;
+//        xSemaphoreGive(mutex);
+//      }
+//    }
+
+//==Gerakan Jalan Pecah 1==//
+//    xSemaphoreTake(mutex, portMAX_DELAY);
+//    height = -100;
+//    GerakDinamis(18, 37, 24, 0);
+//    xSemaphoreGive(mutex);

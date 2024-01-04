@@ -66,7 +66,7 @@ int outServo[6][3];
 const float cx = 22;
 const int fm = 58;
 const int tb = 80;
-const int height = -95;
+int height = -95;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :

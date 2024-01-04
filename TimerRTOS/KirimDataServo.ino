@@ -11,7 +11,7 @@ void KirimIntruksiGerak(int speedss) {
   unsigned char LENGTH = (panjangData + 1) * jumlahServo + 4;//19; // (panjang data +1) x jumlah servo + 4 ===>>> lighat manual rx 28 halaman 37
 
   speed_H = speedss >> 8; //high adresses
-  speed_L = speedss & 0xff; //low addresses karena pengiriman  data harus 16bit tetapi dipecah menjadi 2 yaitu masing2 8bit
+  speed_L = speedss & 0xff; //low addresses karena pengiriman  data harus 16 bit tetapi dipecah menjadi 2 yaitu masing2 8bit
   checksum = 0xFE + LENGTH + 0x83 + 0x1E + panjangData;
   //############# HEADER ############//
   bufferDataTx[0] = 0xFF;
