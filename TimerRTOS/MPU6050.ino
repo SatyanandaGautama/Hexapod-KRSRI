@@ -46,7 +46,5 @@ void read_MPU() {
     yaw = yawT.toInt();
     pitch = pitchT.toInt();
     roll = rollT.toInt();
-    Serial.print("YAW: ");
-    Serial.println(yaw);
   }
 }

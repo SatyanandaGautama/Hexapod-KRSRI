@@ -1,38 +1,16 @@
 void Sensor(void *pvParameters) {
   while (1) {
-
-  }
-}
-void BodyMaju(float speedss) {
-  if (!statusGerak) {
-    theta = 0;
-    Increment = 180 / speedss;
-    degAwal = 0;
-    degAkhir = 180;
-    //KANAN DEPAN (FR)
-    xFR0 = -65,  yFR0 = 65, xFR1 = -65, yFR1 = 15, zFR0 = 0, zFRp = 0;
-    //KIRI TENGAH (LM)
-    xLM0 = 80, yLM0 = 0, xLM1 = 80, yLM1 = -50, zLM0 = 0, zLMp = 0;
-    //KANAN BELAKANG (BR)
-    xBR0 = -65, yBR0 = -65, xBR1 = -65,  yBR1 = -100, zBR0 = 0, zBRp = 0;
-    //KIRI DEPAN (FL)
-    xFL0 = 65, yFL0 = 65, xFL1 = 65,  yFL1 = 15, zFL0 = 0, zFLp = 0;
-    //KANAN TENGAH (RM)
-    xRM0 = -80, yRM0 = 0, xRM1 = -80, yRM1 = -50, zRM0 = 0, zRMp = 0;
-    //KIRI BELAKANG (BL)
-    xBL0 = 65, yBL0 = -65, xBL1 = 65,  yBL1 = -100, zBL0 = 0, zBLp = 0;
-    modeGerak = true;
-    statusGerak = true;
+    navigasiMPU(0, 18);
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    GerakDinamis_v2(18, 37, 24, lebarKiri, lebarKanan);
+    xSemaphoreGive(mutex);
   }
 }
 
-//Logika Rotate
-//(-)Putar Kiri, (+)Putar Kanan
-void RotateMPU(int tujuan) {
+//Logika Rotate dengan MPU
+void RotateMPU(int tujuan) { //(-)Putar Kiri, (+)Putar Kanan
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
-  //  Serial.print("YAW: ");
-  //  Serial.println(yaw);
   Offset = tujuan - yaw;
   if (Offset < -180) {
     Offset = tujuan - yaw + 360;
@@ -40,22 +18,41 @@ void RotateMPU(int tujuan) {
   if (Offset > 180) {
     Offset = tujuan - yaw - 360;
   }
-  //  Serial.print("OFFSET: ");
-  //  Serial.println(Offset);
 }
 
-void jalanLurus() {
-  float sdtbelok = 5;
-  //  ReadPING_1();
-  //  error = jarak[0] - 5;
-  PIDJarak();
-  longStep = pid_output;
-  if (longStep >= sdtbelok)longStep = sdtbelok;
-  else if (longStep <= sdtbelok * -1)longStep = sdtbelok * -1;
-  //  Serial.print("error = ");
-  //  Serial.println(error);
-  //  Serial.print("longStep = ");
-  //  Serial.println(longStep);
+void navigasiMPU(int sdtAcuan, int maxStep) {
+  read_MPU();
+  vTaskDelay(15 / portTICK_PERIOD_MS);
+  error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
+  if (error < -180) {
+    error = sdtAcuan - yaw + 360;
+  }
+  if (Offset > 180) {
+    error = sdtAcuan - yaw - 360;
+  }
+  PID_controller();
+  if (PID_control >= maxStep )PID_control = maxStep;
+  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
+  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+    lebarKiri = 0;
+    lebarKanan = PID_control;
+  }
+  else if (PID_control < 0) {//PID_control(-) = belok kiri
+    lebarKiri = PID_control;
+    lebarKanan = 0;
+  }
+  else {
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  time_prev = Time;
+  Time = millis();
+  dt = (Time - time_prev) / 1000;
+  previous_error = error;
+  Serial.print("E: ");
+  Serial.println(error);
+  //  Serial.print(", Y: ");
+  //  Serial.println(yaw);
 }
 
 int readPING(uint32_t pinData) {
@@ -72,27 +69,24 @@ int readPING(uint32_t pinData) {
   return jarak;
 }
 
-void PIDJarak() {
+void PID_controller() {
+  //Proportional control
   P_control = kp * error;
-  I_control = I_control + (ki * error);
-  if (I_control > 3) {
-    I_control = 3;
+  //Derivative control
+  if (dt < 0.000000001) {
+    dt = 0.000000001;
   }
-  else if (I_control < -3) {
-    I_control = -3;
-  }
-  D_control = kd * (error - previous_error);
-  pid_output = P_control + I_control + D_control;
-  previous_error = error;
+  D_control = kd * ((error - previous_error) / dt);
+  //Summing PID
+  PID_control = (P_control + D_control) * 10; //Coba saja dikali 10 atau tidak (Besaran Output PID Controller)
 }
 
 void resetPID() {
   P_control = 0;
-  I_control = 0;
   D_control = 0;
   error = 0;
   previous_error = 0;
-  pid_output = 0;
+  PID_control = 0;
 }
 
 //====Rotate Logic====//
@@ -130,13 +124,13 @@ void resetPID() {
 //    Serial.println(yaw);
 
 
-//===Logika Baca Jarak Sambil Jalan===//
-//    xSemaphoreTake(mutex, portMAX_DELAY);
-//    readPING(leftBack);
-//    readPING(leftFront);
-//    GerakDinamis(15, 15, 8, 0);
-//    xSemaphoreGive(mutex);
-//    bacaIR();
+//====Logika Baca Jarak Sambil Jalan====//
+//xSemaphoreTake(mutex, portMAX_DELAY);
+//readPING(leftBack);
+//readPING(leftFront);
+//GerakDinamis(15, 15, 8, 0);
+//xSemaphoreGive(mutex);
+//bacaIR();
 
 
 //===Logika Kamera===//
@@ -174,4 +168,15 @@ void resetPID() {
 //    xSemaphoreTake(mutex, portMAX_DELAY);
 //    height = -100;
 //    GerakDinamis(18, 37, 24, 0);
+//    xSemaphoreGive(mutex);
+
+//==Logika Standby Saat Sedang Berjalan==//
+//if (NilaiSensor >= x && (steps == 1 || steps == 3)) { //Klo gamau, coba steps 2 atau 0
+//  Standby();
+//}
+
+//===Logika Navigasi dengan acuan MPU===//
+//    navigasiMPU(0, 18);
+//    xSemaphoreTake(mutex, portMAX_DELAY);
+//    GerakDinamis_v2(18, 37, 24, lebarKiri, lebarKanan);
 //    xSemaphoreGive(mutex);

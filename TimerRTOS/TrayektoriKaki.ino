@@ -14,41 +14,42 @@ void TrayektoriSinus() {
     actual_yBL = ((yBL1 - yBL0) / 10) * 2;
     modeGerak == false;
   }
-  //  if (theta <= degAkhir) {
-  //KANAN ATAS
-  xFR = xFR0 + (((actual_xFR * theta) / 360)) * 10;
-  yFR = yFR0 + (((actual_yFR * theta) / 360)) * 10;
-  zFR = zFRp * sin(theta * (M_PI / 180));
-  //KIRI TENGAH
-  xLM = xLM0 + (((actual_xLM * theta) / 360)) * 10;
-  yLM = yLM0 + (((actual_yLM * theta) / 360)) * 10;
-  zLM = zLMp * sin(theta * (M_PI / 180));
-  //KANAN BAWAH
-  xBR = xBR0 + (((actual_xBR * theta) / 360)) * 10;
-  yBR = yBR0 + (((actual_yBR * theta) / 360)) * 10;
-  zBR = zBRp * sin(theta * (M_PI / 180));
-  //KIRI ATAS
-  xFL = xFL0 + (((actual_xFL * theta) / 360)) * 10;
-  yFL = yFL0 + (((actual_yFL * theta) / 360)) * 10;
-  zFL = zFLp * sin(theta * (M_PI / 180));
-  //KANAN TENGAH
-  xRM = xRM0 + (((actual_xRM * theta) / 360)) * 10;
-  yRM = yRM0 + (((actual_yRM * theta) / 360)) * 10;
-  zRM = zRMp * sin(theta * (M_PI / 180));
-  //KIRI BAWAH
-  xBL = xBL0 + (((actual_xBL * theta) / 360)) * 10;
-  yBL = yBL0 + (((actual_yBL * theta) / 360)) * 10;
-  zBL = zBLp * sin(theta * (M_PI / 180));
-  FR(xFR, yFR, zFR);
-  RM(xRM, yRM, zRM);
-  BR(xBR, yBR, zBR);
-  BL(xBL, yBL, zBL);
-  LM(xLM, yLM, zLM);
-  FL(xFL, yFL, zFL);
-  theta += Increment;
-  if (theta > degAkhir) {
-    theta = degAwal; //Untuk Increment Tujuan Selanjutnya
-    statusGerak = false;
+  if (theta <= degAkhir) {
+    //KANAN ATAS
+    xFR = xFR0 + (((actual_xFR * theta) / 360)) * 10;
+    yFR = yFR0 + (((actual_yFR * theta) / 360)) * 10;
+    zFR = zFRp * sin(theta * (M_PI / 180));
+    //KIRI TENGAH
+    xLM = xLM0 + (((actual_xLM * theta) / 360)) * 10;
+    yLM = yLM0 + (((actual_yLM * theta) / 360)) * 10;
+    zLM = zLMp * sin(theta * (M_PI / 180));
+    //KANAN BAWAH
+    xBR = xBR0 + (((actual_xBR * theta) / 360)) * 10;
+    yBR = yBR0 + (((actual_yBR * theta) / 360)) * 10;
+    zBR = zBRp * sin(theta * (M_PI / 180));
+    //KIRI ATAS
+    xFL = xFL0 + (((actual_xFL * theta) / 360)) * 10;
+    yFL = yFL0 + (((actual_yFL * theta) / 360)) * 10;
+    zFL = zFLp * sin(theta * (M_PI / 180));
+    //KANAN TENGAH
+    xRM = xRM0 + (((actual_xRM * theta) / 360)) * 10;
+    yRM = yRM0 + (((actual_yRM * theta) / 360)) * 10;
+    zRM = zRMp * sin(theta * (M_PI / 180));
+    //KIRI BAWAH
+    xBL = xBL0 + (((actual_xBL * theta) / 360)) * 10;
+    yBL = yBL0 + (((actual_yBL * theta) / 360)) * 10;
+    zBL = zBLp * sin(theta * (M_PI / 180));
+    FR(xFR, yFR, zFR);
+    RM(xRM, yRM, zRM);
+    BR(xBR, yBR, zBR);
+    BL(xBL, yBL, zBL);
+    LM(xLM, yLM, zLM);
+    FL(xFL, yFL, zFL);
+    theta += Increment;
+    if (theta > degAkhir) {
+      theta = degAwal; //Untuk Increment Tujuan Selanjutnya
+      statusGerak = false;
+    }
   }
   //  Serial.print("x:");
   //  Serial.println(xLM);

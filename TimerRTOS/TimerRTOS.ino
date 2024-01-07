@@ -15,7 +15,7 @@ const uint32_t timerPeriod_us = 17000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
 static SemaphoreHandle_t mutex;
-bool mut = false;
+//bool mut = false;
 //Kamera
 int pict_x = 200, pict_area, area, pict_y;//Tambah variabel area klo mau pke area //200
 int pict_x_cal = 165; // Threshold nilai tengah korban di kamera
@@ -38,9 +38,10 @@ bool statusGerak = false;
 bool modeGerak = true;
 static int steps = 0;
 float theta = 90;
-float t = 0.5;
 float tAwal, degAwal;
 float tAkhir, degAkhir;
+//Servo Capit
+float act, sdtServo, Inc, t = 0;
 //
 float xFR, yFR, zFR, xFL, yFL, zFL, xBR, yBR, zBR, xBL, yBL, zBL, xRM, yRM, zRM, xLM, yLM, zLM;
 float yFR_Awal, yFL_Awal, yBL_Awal, yBR_Awal, yRM_Awal, yLM_Awal, yFR_Akhir, yFL_Akhir, yBL_Akhir, yBR_Akhir, yRM_Akhir, yLM_Akhir;
@@ -80,11 +81,13 @@ const float standBL[3][1] = {{ 65}, { -65}, {0}};
 float P1[3][1];
 float P2[3][1];
 float arahPutar;
-//PID Jarak
-const float kp = 1.75 ; //kp
-const float ki = 0; //ki
-const float kd = 0.75; //kd
-float P_control, I_control, D_control, pid_output, previous_error, error, sudutBelok, longStep;
+//=====PID Variable=====//
+//==========PID=========//
+float error, setpoint, P_control, D_control, PID_control, Time, dt, time_prev, previous_error;
+float kp = 0.5;
+float kd = 0;
+float lebarKiri, lebarKanan;
+//================================================================================================================================//
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
   // Give semaphore to tell task that new value is ready
@@ -114,7 +117,7 @@ void setup() {
   sensor.setTimeout(500);
   sensor.startContinuous();
   //================//
-  delay(2000);
+  delay(1000);
   FR(-65, 65, 0);
   RM(-80, 0, 0);
   BR(-65, -65, 0);
@@ -122,12 +125,12 @@ void setup() {
   LM(80, 0, 0);
   FL(65, 65, 0);
   KirimIntruksiGerak(0);
-  delay(2000);
+  resetPID()
+  delay(4000);
   while (yaw < 0) {
     read_MPU();
     delay(10);
   }
-  delay(200);
   bin_sem = xSemaphoreCreateBinary();
   mutex = xSemaphoreCreateMutex();
   if (bin_sem == NULL) {
