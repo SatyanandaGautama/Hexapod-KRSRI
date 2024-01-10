@@ -1,8 +1,9 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    navigasiMPU(0, 18);
+    navigasiMPU(0, 20);
     xSemaphoreTake(mutex, portMAX_DELAY);
-    GerakDinamis_v2(18, 37, 24, lebarKiri, lebarKanan);
+    height = -100;
+    GerakDinamis_v2(20, 40, 22, lebarKiri, lebarKanan);
     xSemaphoreGive(mutex);
   }
 }
@@ -18,6 +19,11 @@ void RotateMPU(int tujuan) { //(-)Putar Kiri, (+)Putar Kanan
   if (Offset > 180) {
     Offset = tujuan - yaw - 360;
   }
+}
+
+void RotJarak(uint32_t PING1, uint32_t PING2 ) {
+  int jActual = readPING(PING1) - readPING(PING2);
+  OffsetJarak = 0 - jActual;
 }
 
 void navigasiMPU(int sdtAcuan, int maxStep) {

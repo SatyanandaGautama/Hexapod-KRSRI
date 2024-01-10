@@ -15,7 +15,6 @@ const uint32_t timerPeriod_us = 17000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
 static SemaphoreHandle_t mutex;
-//bool mut = false;
 //Kamera
 int pict_x = 200, pict_area, area, pict_y;//Tambah variabel area klo mau pke area //200
 int pict_x_cal = 165; // Threshold nilai tengah korban di kamera
@@ -33,6 +32,9 @@ uint32_t leftBack = PE11;
 uint32_t leftFront = PE12;
 int jarak;
 double duration, cm;
+int OffsetJarak;
+//IR VL53L0X
+int distance;
 //Gerakan
 bool statusGerak = false;
 bool modeGerak = true;
@@ -124,8 +126,8 @@ void setup() {
   BL(65, -65, 0);
   LM(80, 0, 0);
   FL(65, 65, 0);
-  KirimIntruksiGerak(0);
-  resetPID()
+  KirimIntruksiGerak();
+  resetPID();
   delay(4000);
   while (yaw < 0) {
     read_MPU();

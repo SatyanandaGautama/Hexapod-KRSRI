@@ -45,8 +45,8 @@ void Rotate(float rot) {
 }
 
 void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar kanan), sudut - (putar kiri)
-  if (degree > 20)degree = 20;
-  if (degree < -20)degree = -20;
+  if (degree > 40)degree = 40;
+  if (degree < -40)degree = -40;
   arahPutar = degree;
   Increment = 180 / speeds;
   if (!statusGerak) {
@@ -54,8 +54,8 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
       case 0 :
         degAwal = 0 + Increment;
         degAkhir = 180;
-        Rotate(degree);
-        Rotate(-1 * (degree));
+        Rotate(degree / 2);
+        Rotate(-1 * (degree / 2));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Akhir),  yFR0 =  yFL_Akhir, xFR1 = -(xFL_Awal), yFR1 = yFL_Awal, zFR0 = 0, zFRp = tinggi;
         //KIRI TENGAH (LM)
@@ -74,6 +74,8 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
       case 1:
         degAwal = 90 + Increment;
         degAkhir = 90;
+        Rotate(degree / 2);
+        Rotate(-1 * (degree / 2));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Awal),  yFR0 =  yFL_Awal, xFR1 = -(xFL_Akhir), yFR1 = yFL_Akhir, zFR0 = 0, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -92,8 +94,8 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
       case 2 :
         degAwal = 0 + Increment;
         degAkhir = 180;
-        Rotate(degree);
-        Rotate(-1 * (degree));
+        Rotate(degree / 2);
+        Rotate(-1 * (degree / 2));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Awal),  yFR0 =  yFL_Awal, xFR1 = -(xFL_Akhir), yFR1 = yFL_Akhir, zFR0 = 0, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -112,6 +114,8 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
       case 3 :
         degAwal = 90 + Increment;
         degAkhir = 90;
+        Rotate(degree / 2);
+        Rotate(-1 * (degree / 2));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Akhir),  yFR0 =  yFL_Akhir, xFR1 = -(xFL_Awal), yFR1 = yFL_Awal, zFR0 = 0, zFRp = tinggi;
         //KIRI TENGAH (LM)

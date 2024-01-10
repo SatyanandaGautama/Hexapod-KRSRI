@@ -1,5 +1,5 @@
 void bacaIR() {
-  int cm = sensor.readRangeContinuousMillimeters() / 10;
+  distance = sensor.readRangeContinuousMillimeters() / 10;
   //  Serial.println("IR");
   //  Serial.print("Distance: ");
   //  Serial.println(cm);

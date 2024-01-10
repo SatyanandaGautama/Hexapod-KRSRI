@@ -1,4 +1,4 @@
-void KirimIntruksiGerak(int speedss) {
+void KirimIntruksiGerak() {
   unsigned long checksum = 0;
   unsigned char position_H = 0;
   unsigned char position_L = 0;
@@ -9,9 +9,8 @@ void KirimIntruksiGerak(int speedss) {
   unsigned char jumlahServo = 6 * 3;
   unsigned char bufferDataTx[98];
   unsigned char LENGTH = (panjangData + 1) * jumlahServo + 4;//19; // (panjang data +1) x jumlah servo + 4 ===>>> lighat manual rx 28 halaman 37
-
-  speed_H = speedss >> 8; //high adresses
-  speed_L = speedss & 0xff; //low addresses karena pengiriman  data harus 16 bit tetapi dipecah menjadi 2 yaitu masing2 8bit
+  speed_H = 0; //speedss >> 8;    //high adresses
+  speed_L = 0; //speedss & 0xff;  //low addresses karena pengiriman  data harus 16 bit tetapi dipecah menjadi 2 yaitu masing2 8bit
   checksum = 0xFE + LENGTH + 0x83 + 0x1E + panjangData;
   //############# HEADER ############//
   bufferDataTx[0] = 0xFF;
@@ -29,7 +28,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 00 ##################//
   position_H = outServo[0][0] >> 8;
   position_L = outServo[0][0] & 0xff;
-  id = 10;
+  id = 1;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[7] = id;
   bufferDataTx[8] = position_L;
@@ -39,7 +38,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 01 ##################//
   position_H = outServo[0][1] >> 8;
   position_L = outServo[0][1] & 0xff;
-  id = 11;
+  id = 2;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[12] = id;
   bufferDataTx[13] = position_L;
@@ -49,7 +48,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 02 ##################//
   position_H = outServo[0][2] >> 8;
   position_L = outServo[0][2] & 0xff;
-  id = 12;
+  id = 3;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[17] = id;
   bufferDataTx[18] = position_L;
@@ -59,7 +58,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 03 ##################//
   position_H = outServo[1][0] >> 8;
   position_L = outServo[1][0] & 0xff;
-  id = 13;
+  id = 4;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[22] = id;
   bufferDataTx[23] = position_L;
@@ -69,7 +68,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 04 ##################//
   position_H = outServo[1][1] >> 8;
   position_L = outServo[1][1] & 0xff;
-  id = 14;
+  id = 5;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[27] = id;
   bufferDataTx[28] = position_L;
@@ -79,7 +78,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 05 ##################//
   position_H = outServo[1][2] >> 8;
   position_L = outServo[1][2] & 0xff;
-  id = 15;
+  id = 6;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[32] = id;
   bufferDataTx[33] = position_L;
@@ -89,7 +88,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 06 ##################//
   position_H = outServo[2][0] >> 8;
   position_L = outServo[2][0] & 0xff;
-  id = 16;
+  id = 7;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[37] = id;
   bufferDataTx[38] = position_L;
@@ -99,7 +98,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 07 ##################//
   position_H = outServo[2][1] >> 8;
   position_L = outServo[2][1] & 0xff;
-  id = 17;
+  id = 8;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[42] = id;
   bufferDataTx[43] = position_L;
@@ -109,7 +108,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 08 ##################//
   position_H = outServo[2][2] >> 8;
   position_L = outServo[2][2] & 0xff;
-  id = 18;
+  id = 9;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[47] = id;
   bufferDataTx[48] = position_L;
@@ -119,7 +118,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 09 ##################//
   position_H = outServo[3][0] >> 8;
   position_L = outServo[3][0] & 0xff;
-  id = 1;
+  id = 10;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[52] = id;
   bufferDataTx[53] = position_L;
@@ -129,7 +128,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 10 ##################//
   position_H = outServo[3][1] >> 8;
   position_L = outServo[3][1] & 0xff;
-  id = 2;
+  id = 11;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[57] = id;
   bufferDataTx[58] = position_L;
@@ -139,7 +138,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 11 ##################//
   position_H = outServo[3][2] >> 8;
   position_L = outServo[3][2] & 0xff;
-  id = 3;
+  id = 12;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[62] = id;
   bufferDataTx[63] = position_L;
@@ -149,7 +148,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 12 ##################//
   position_H = outServo[4][0] >> 8;
   position_L = outServo[4][0] & 0xff;
-  id = 4;
+  id = 13;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[67] = id;
   bufferDataTx[68] = position_L;
@@ -159,7 +158,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 13 ##################//
   position_H = outServo[4][1] >> 8;
   position_L = outServo[4][1] & 0xff;
-  id = 5;
+  id = 14;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[72] = id;
   bufferDataTx[73] = position_L;
@@ -169,7 +168,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 14 ##################//
   position_H = outServo[4][2] >> 8;
   position_L = outServo[4][2] & 0xff;
-  id = 6;
+  id = 15;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[77] = id;
   bufferDataTx[78] = position_L;
@@ -179,7 +178,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 15 ##################//
   position_H = outServo[5][0] >> 8;
   position_L = outServo[5][0] & 0xff;
-  id = 7;
+  id = 16;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[82] = id;
   bufferDataTx[83] = position_L;
@@ -189,7 +188,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 16 ##################//
   position_H = outServo[5][1] >> 8;
   position_L = outServo[5][1] & 0xff;
-  id = 8;
+  id = 17;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[87] = id;
   bufferDataTx[88] = position_L;
@@ -199,7 +198,7 @@ void KirimIntruksiGerak(int speedss) {
   //######## SERVO 17 ##################//
   position_H = outServo[5][2] >> 8;
   position_L = outServo[5][2] & 0xff;
-  id = 9;
+  id = 18;
   checksum += position_L + position_H + speed_L + speed_H + id;
   bufferDataTx[92] = id;
   bufferDataTx[93] = position_L;
