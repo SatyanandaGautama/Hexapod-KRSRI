@@ -27,6 +27,7 @@ int Offset, Tujuan;
 //MPU6050
 int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll = 0;
+int sdtAcuan;
 //PING
 uint32_t leftBack = PE11;
 uint32_t leftFront = PE12;
@@ -73,12 +74,12 @@ int height = -95;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :
-const float standFR[3][1] = {{ -65}, {65}, {0}};
+const float standFR[3][1] = {{ -55}, {55}, {0}};
 const float standRM[3][1] = {{ -80}, {0}, {0}};
-const float standBR[3][1] = {{ -65}, { -65}, {0}};
-const float standFL[3][1] = {{ 65}, {65}, {0}};
+const float standBR[3][1] = {{ -55}, { -55}, {0}};
+const float standFL[3][1] = {{ 55}, {55}, {0}};
 const float standLM[3][1] = {{ 80}, {0}, {0}};
-const float standBL[3][1] = {{ 65}, { -65}, {0}};
+const float standBL[3][1] = {{ 55}, { -55}, {0}};
 //Gerak Rotate
 float P1[3][1];
 float P2[3][1];
@@ -110,7 +111,7 @@ void setup() {
   Serial6.setTx(PC6);
   Serial6.setRx(PC7);
   Serial6.begin(115200);
-  delay(2000);
+  delay(4000);
   //====Setup IR====//
   Wire.setSDA(PC9);
   Wire.setSCL(PA8);
@@ -120,12 +121,12 @@ void setup() {
   sensor.startContinuous();
   //================//
   delay(1000);
-  FR(-65, 65, 0);
+  FR(-55, 55, 0);
   RM(-80, 0, 0);
-  BR(-65, -65, 0);
-  BL(65, -65, 0);
+  BR(-55, -55, 0);
+  BL(55, -55, 0);
   LM(80, 0, 0);
-  FL(65, 65, 0);
+  FL(55, 55, 0);
   KirimIntruksiGerak();
   resetPID();
   delay(4000);

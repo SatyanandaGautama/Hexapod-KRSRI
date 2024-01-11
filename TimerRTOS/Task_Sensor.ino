@@ -1,10 +1,44 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    navigasiMPU(0, 20);
-    xSemaphoreTake(mutex, portMAX_DELAY);
-    height = -100;
-    GerakDinamis_v2(20, 40, 22, lebarKiri, lebarKanan);
-    xSemaphoreGive(mutex);
+    RotateMPU(90);
+    while (abs(Offset) > 1) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(Offset, 15, 18);
+      xSemaphoreGive(mutex);
+      RotateMPU(90);
+    }
+    bacaIR();
+    while (distance <= 56) {
+      navigasiMPU(30);
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakDinamis_v2(15, 10, 8, 0, 0);
+      xSemaphoreGive(mutex);
+      bacaIR();
+      if (distance > 56 && (steps == 1 || steps == 3)) { //Klo gamau, coba steps 2 atau 0
+        Standby();
+        break;
+      }
+    }
+    RotateMPU(0);
+    while (abs(Offset) > 1) {
+      RotateMPU(0);
+      GerakRotasi(Offset, 15, 18);
+    }
+    Standby();
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    RotateMPU(90);
+    while (abs(Offset) > 1) {
+      RotateMPU(90);
+      GerakRotasi(Offset, 15, 18);
+    }
+    sdtAcuan = 90;
+    while (1) {
+      navigasiMPU(40);
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      height = -100;
+      GerakDinamis_v2(22, 37, 22, lebarKiri, lebarKanan);
+      xSemaphoreGive(mutex);
+    }
   }
 }
 
@@ -21,12 +55,20 @@ void RotateMPU(int tujuan) { //(-)Putar Kiri, (+)Putar Kanan
   }
 }
 
+//void setAcuan(int selisih) { //NB : selisih (-) => rotate kiri, selisih (+) => rotate kanan
+//  read_MPU();
+//  vTaskDelay(15 / portTICK_PERIOD_MS);
+//  sdtAcuan = yaw + selisih;
+//if (sdtAcuan >= 360)sdtAcuan -= 360;
+//if (sdtAcuan < 0) sdtAcuan += 360;
+//}
+
 void RotJarak(uint32_t PING1, uint32_t PING2 ) {
   int jActual = readPING(PING1) - readPING(PING2);
   OffsetJarak = 0 - jActual;
 }
 
-void navigasiMPU(int sdtAcuan, int maxStep) {
+void navigasiMPU(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
   error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
@@ -171,9 +213,10 @@ void resetPID() {
 //    }
 
 //==Gerakan Jalan Pecah 1==//
+//    navigasiMPU(0, 20);
 //    xSemaphoreTake(mutex, portMAX_DELAY);
 //    height = -100;
-//    GerakDinamis(18, 37, 24, 0);
+//    GerakDinamis_v2(20, 35, 22, lebarKiri, lebarKanan);
 //    xSemaphoreGive(mutex);
 
 //==Logika Standby Saat Sedang Berjalan==//
