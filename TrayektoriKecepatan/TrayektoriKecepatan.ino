@@ -2,8 +2,8 @@
 HardwareSerial Serial2(USART2);
 HardwareTimer Timer6(TIM6);
 String LEDStat = "OFF";
-// Timer period (in microseconds) for 40 ms
-const uint32_t timerPeriod_us = 40000 - 1;
+// Timer period (in microseconds) for 20 ms
+const uint32_t timerPeriod_us = 20000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
 // Input Trayektori Global
 //KANAN DEPAN (FR)
@@ -57,7 +57,7 @@ void setup() {
   Timer6.attachInterrupt(timer6Interrupt);
   Timer6.refresh(); //Reset Timer to 0
   Timer6.resume(); //Start the Timer
-  Standby();
+  //  Standby();
 }
 
 void loop() {
@@ -76,13 +76,13 @@ void loop() {
   //      }
   //    }
   //    else {
-  GerakDinamis(0, 30, 30, 0.125);
+  //  GerakDinamis(0, 30, 30, 0.125);
   //  }
 }
 
 void timer6Interrupt() {
-  Trayektori();
-  KirimIntruksiGerak(0);
+  //  Trayektori();
+  //  KirimIntruksiGerak(0);
   ToggleLED();
 }
 void gerak() {

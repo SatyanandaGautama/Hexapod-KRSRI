@@ -8,9 +8,9 @@ void Kaki(void *pvParameters) {
       }
       xSemaphoreGive(mutex);
     }
-    //    else {
-    //      Serial.println("NULL");
-    //    }
+    else {
+      Serial.println("NULL");
+    }
     vTaskDelay(17 / portTICK_PERIOD_MS);
   }
 }

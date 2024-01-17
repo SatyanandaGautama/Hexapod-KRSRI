@@ -1,44 +1,44 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    RotateMPU(90);
-    while (abs(Offset) > 1) {
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakRotasi(Offset, 15, 18);
-      xSemaphoreGive(mutex);
-      RotateMPU(90);
-    }
-    bacaIR();
-    while (distance <= 56) {
-      navigasiMPU(30);
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakDinamis_v2(15, 10, 8, 0, 0);
-      xSemaphoreGive(mutex);
-      bacaIR();
-      if (distance > 56 && (steps == 1 || steps == 3)) { //Klo gamau, coba steps 2 atau 0
-        Standby();
-        break;
-      }
-    }
-    RotateMPU(0);
-    while (abs(Offset) > 1) {
-      RotateMPU(0);
-      GerakRotasi(Offset, 15, 18);
-    }
-    Standby();
-    vTaskDelay(500 / portTICK_PERIOD_MS);
-    RotateMPU(90);
-    while (abs(Offset) > 1) {
-      RotateMPU(90);
-      GerakRotasi(Offset, 15, 18);
-    }
-    sdtAcuan = 90;
-    while (1) {
-      navigasiMPU(40);
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      height = -100;
-      GerakDinamis_v2(22, 37, 22, lebarKiri, lebarKanan);
-      xSemaphoreGive(mutex);
-    }
+    //    RotateMPU(90);
+    //    while (abs(Offset) > 2) {
+    //      xSemaphoreTake(mutex, portMAX_DELAY);
+    //      GerakRotasi(Offset, 15, 16);
+    //      xSemaphoreGive(mutex);
+    //      RotateMPU(90);
+    //    }
+    //    bacaIR();
+    //    while (distance <= 35) {
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    navigasiMPU(30);
+    GerakDinamis_v2(15, 10, 8, lebarKiri, lebarKanan); //15,10,8
+    xSemaphoreGive(mutex);
+    //    readSRF04();
+    //      if (distance > 35 && (steps == 1 || steps == 3)) { //Klo gamau, coba steps 2 atau 0
+    //        Standby();
+    //        break;
+    //      }
+    //    }
+    //    RotateMPU(0);
+    //    while (abs(Offset) > 2) {
+    //      RotateMPU(0);
+    //      GerakRotasi(Offset, 15, 18);
+    //    }
+    //    Standby();
+    //    vTaskDelay(500 / portTICK_PERIOD_MS);
+    //    RotateMPU(80);
+    //    while (abs(Offset) > 2) {
+    //      RotateMPU(90);
+    //      GerakRotasi(Offset, 15, 18);
+    //    }
+    //    sdtAcuan = 80;
+    //    while (1) {
+    //      navigasiMPU(40);
+    //      xSemaphoreTake(mutex, portMAX_DELAY);
+    //      height = -100;
+    //      GerakDinamis_v2(20, 37, 20, lebarKiri, lebarKanan);
+    //      xSemaphoreGive(mutex);
+    //    }
   }
 }
 
@@ -55,13 +55,13 @@ void RotateMPU(int tujuan) { //(-)Putar Kiri, (+)Putar Kanan
   }
 }
 
-//void setAcuan(int selisih) { //NB : selisih (-) => rotate kiri, selisih (+) => rotate kanan
-//  read_MPU();
-//  vTaskDelay(15 / portTICK_PERIOD_MS);
-//  sdtAcuan = yaw + selisih;
-//if (sdtAcuan >= 360)sdtAcuan -= 360;
-//if (sdtAcuan < 0) sdtAcuan += 360;
-//}
+void setAcuan(int selisih) { //NB : selisih (-) => rotate kiri, selisih (+) => rotate kanan
+  read_MPU();
+  vTaskDelay(15 / portTICK_PERIOD_MS);
+  sdtAcuan = yaw + selisih;
+  if (sdtAcuan >= 360)sdtAcuan -= 360;
+  if (sdtAcuan < 0) sdtAcuan += 360;
+}
 
 void RotJarak(uint32_t PING1, uint32_t PING2 ) {
   int jActual = readPING(PING1) - readPING(PING2);
@@ -70,7 +70,7 @@ void RotJarak(uint32_t PING1, uint32_t PING2 ) {
 
 void navigasiMPU(int maxStep) {
   read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
+  vTaskDelay(5 / portTICK_PERIOD_MS);
   error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
@@ -97,25 +97,40 @@ void navigasiMPU(int maxStep) {
   Time = millis();
   dt = (Time - time_prev) / 1000;
   previous_error = error;
-  Serial.print("E: ");
-  Serial.println(error);
+  //  Serial.print("E: ");
+  //  Serial.println(error);
   //  Serial.print(", Y: ");
   //  Serial.println(yaw);
+}
+
+void navigasiPING(int maxStep, uint32_t pingFRONT, uint32_t pingBACK) {
+
 }
 
 int readPING(uint32_t pinData) {
   pinMode(pinData, OUTPUT);
   digitalWrite(pinData, LOW);
-  vTaskDelay(2 / portTICK_PERIOD_MS); //2
+  vTaskDelay(1 / portTICK_PERIOD_MS); //2
   digitalWrite(pinData, HIGH);
-  vTaskDelay(5 / portTICK_PERIOD_MS); //5
+  vTaskDelay(1 / portTICK_PERIOD_MS); //5
   digitalWrite(pinData, LOW);
   pinMode(pinData, INPUT);
   duration = pulseIn(pinData, HIGH);
   cm = duration / 29 / 2 ;
-  jarak = cm;
+  return cm;
+}
+
+int readSRF04() {
+  digitalWrite(TRIG, LOW);
+  vTaskDelay(2 / portTICK_PERIOD_MS);
+  digitalWrite(TRIG, HIGH);
+  vTaskDelay(3 / portTICK_PERIOD_MS);
+  digitalWrite(TRIG, LOW);
+  int jarak = pulseIn(ECHO, HIGH);
+  jarak = jarak / 58;
   return jarak;
 }
+
 
 void PID_controller() {
   //Proportional control
@@ -229,3 +244,13 @@ void resetPID() {
 //    xSemaphoreTake(mutex, portMAX_DELAY);
 //    GerakDinamis_v2(18, 37, 24, lebarKiri, lebarKanan);
 //    xSemaphoreGive(mutex);
+
+//===Logika Mengatur Jumlah Step Langkah===//
+//jmlhStep = 0;
+//while (jmlhStep < 10) {
+//  navigasiMPU(0, 18);
+//  xSemaphoreTake(mutex, portMAX_DELAY);
+//  GerakDinamis_v2(18, 37, 24, lebarKiri, lebarKanan);
+//  if (steps == 0)jmlhStep++;
+//  xSemaphoreGive(mutex);
+//}

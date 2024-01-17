@@ -31,9 +31,12 @@ int sdtAcuan;
 //PING
 uint32_t leftBack = PE11;
 uint32_t leftFront = PE12;
-int jarak;
-double duration, cm;
+int cm;
+int duration;
 int OffsetJarak;
+//SRF-04
+#define ECHO PE11
+#define TRIG PE9
 //IR VL53L0X
 int distance;
 //Gerakan
@@ -80,6 +83,7 @@ const float standBR[3][1] = {{ -55}, { -55}, {0}};
 const float standFL[3][1] = {{ 55}, {55}, {0}};
 const float standLM[3][1] = {{ 80}, {0}, {0}};
 const float standBL[3][1] = {{ 55}, { -55}, {0}};
+int jmlhStep;
 //Gerak Rotate
 float P1[3][1];
 float P2[3][1];
@@ -112,6 +116,9 @@ void setup() {
   Serial6.setRx(PC7);
   Serial6.begin(115200);
   delay(4000);
+  //====Setup SRF04====//
+  pinMode(ECHO, INPUT);
+  pinMode(TRIG, OUTPUT);
   //====Setup IR====//
   Wire.setSDA(PC9);
   Wire.setSCL(PA8);
@@ -132,7 +139,8 @@ void setup() {
   delay(4000);
   while (yaw < 0) {
     read_MPU();
-    delay(10);
+    delay(15);
+    Serial.println(yaw);
   }
   bin_sem = xSemaphoreCreateBinary();
   mutex = xSemaphoreCreateMutex();
