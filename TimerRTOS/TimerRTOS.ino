@@ -6,9 +6,9 @@ HardwareSerial Serial6(USART6);//Serial Maixbit Camera
 #include <semphr.h>
 #define configUSE_16_BIT_TICKS  1
 //======Sensor IR ToF=====//
-#include <Wire.h>
-#include <VL53L0X.h>
-VL53L0X sensor;
+//#include <Wire.h>
+//#include <VL53L0X.h>
+//VL53L0X sensor;
 //========================//
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
@@ -27,18 +27,17 @@ int Offset, Tujuan;
 //MPU6050
 int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll = 0;
-int sdtAcuan;
+int sdtAcuan = 0, yawSebelum = 0;
 //PING
-uint32_t leftBack = PE11;
-uint32_t leftFront = PE12;
-int cm;
-int duration;
-int OffsetJarak;
+uint32_t rightBack = PE11;
+uint32_t rightFront = PE12;
+int cm, duration, OffsetJarak, offsets, j2;
 //SRF-04
-#define ECHO PE11
+#define ECHO PE13
 #define TRIG PE9
+int jarak;
 //IR VL53L0X
-int distance;
+//int distance;
 //Gerakan
 bool statusGerak = false;
 bool modeGerak = true;
@@ -72,17 +71,17 @@ int outServo[6][3];
 //Variabel Invers Kinematik
 const float cx = 22;
 const int fm = 58;
-const int tb = 80;
+const int tb = 85; //80
 int height = -95;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :
-const float standFR[3][1] = {{ -55}, {55}, {0}};
-const float standRM[3][1] = {{ -80}, {0}, {0}};
-const float standBR[3][1] = {{ -55}, { -55}, {0}};
-const float standFL[3][1] = {{ 55}, {55}, {0}};
-const float standLM[3][1] = {{ 80}, {0}, {0}};
-const float standBL[3][1] = {{ 55}, { -55}, {0}};
+const float standFR[3][1] = {{ -57}, {57}, {0}};
+const float standRM[3][1] = {{ -77}, {0}, {0}};
+const float standBR[3][1] = {{ -57}, { -57}, {0}};
+const float standFL[3][1] = {{ 57}, {57}, {0}};
+const float standLM[3][1] = {{ 77}, {0}, {0}};
+const float standBL[3][1] = {{ 57}, { -57}, {0}};
 int jmlhStep;
 //Gerak Rotate
 float P1[3][1];
@@ -91,10 +90,13 @@ float arahPutar;
 //=====PID Variable=====//
 //==========PID=========//
 float error, setpoint, P_control, D_control, PID_control, Time, dt, time_prev, previous_error;
-float kp = 0.5;
+float kp = 0.6;
 float kd = 0;
-float lebarKiri, lebarKanan;
+float lebarKiri, lebarKanan, lebarTengah;
 //================================================================================================================================//
+bool Sensors = true;
+bool stateMPU = false;
+
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
   // Give semaphore to tell task that new value is ready
@@ -120,27 +122,26 @@ void setup() {
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
   //====Setup IR====//
-  Wire.setSDA(PC9);
-  Wire.setSCL(PA8);
-  Wire.begin();
-  sensor.init();
-  sensor.setTimeout(500);
-  sensor.startContinuous();
+  //  Wire.setSDA(PC9);
+  //  Wire.setSCL(PA8);
+  //  Wire.begin();
+  //  sensor.init();
+  //  sensor.setTimeout(500);
+  //  sensor.startContinuous();
   //================//
   delay(1000);
-  FR(-55, 55, 0);
-  RM(-80, 0, 0);
-  BR(-55, -55, 0);
-  BL(55, -55, 0);
-  LM(80, 0, 0);
-  FL(55, 55, 0);
+  FR(-57, 57, 0);
+  RM(-77, 0, 0);
+  BR(-57, -57, 0);
+  BL(57, -57, 0);
+  LM(77, 0, 0);
+  FL(57, 57, 0);
   KirimIntruksiGerak();
   resetPID();
   delay(4000);
   while (yaw < 0) {
     read_MPU();
     delay(15);
-    Serial.println(yaw);
   }
   bin_sem = xSemaphoreCreateBinary();
   mutex = xSemaphoreCreateMutex();
@@ -155,7 +156,7 @@ void setup() {
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
-              1024,
+              512,
               NULL,
               2, //Priority Lebih Tinggi
               NULL);

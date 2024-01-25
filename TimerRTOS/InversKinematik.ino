@@ -1,6 +1,6 @@
 void FR(float x, float y, float h) { //Kanan Atas (KUADRANT 2)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 180);
-  sdtcoxa = (round(angle1 - legoffset[2]) + 195) * 3.41;
+  sdtcoxa = ((round(angle1 - legoffset[2]) + 195) - 2) * 3.41;
   z = height + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
@@ -139,7 +139,7 @@ void LM (float x, float y, float h) { //Kiri Tengah (Kuadrant 1 atau 4)
 
 void FL (float x, float y, float h) { //Kiri Atas (KUADRANT 1)
   angle1 = round ((atan(y / x) * 180 / M_PI));
-  sdtcoxa = ((round(angle1 - legoffset[1]) + 105) + 17) * 3.41;
+  sdtcoxa = ((round(angle1 - legoffset[1]) + 105) + 20) * 3.41;
   z = height + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;

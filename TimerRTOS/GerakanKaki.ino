@@ -45,8 +45,8 @@ void Rotate(float rot) {
 }
 
 void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar kanan), sudut - (putar kiri)
-  if (degree > 40)degree = 40;
-  if (degree < -40)degree = -40;
+  if (degree > 30)degree = 30;
+  if (degree < -30)degree = -30;
   arahPutar = degree;
   Increment = 180 / speeds;
   if (!statusGerak) {
@@ -74,8 +74,8 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
       case 1:
         degAwal = 90 + Increment;
         degAkhir = 90;
-        Rotate(degree / 2);
-        Rotate(-1 * (degree / 2));
+        //        Rotate(degree / 2);
+        //        Rotate(-1 * (degree / 2));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Awal),  yFR0 =  yFL_Awal, xFR1 = -(xFL_Akhir), yFR1 = yFL_Akhir, zFR0 = 0, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -114,8 +114,8 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
       case 3 :
         degAwal = 90 + Increment;
         degAkhir = 90;
-        Rotate(degree / 2);
-        Rotate(-1 * (degree / 2));
+        //        Rotate(degree / 2);
+        //        Rotate(-1 * (degree / 2));
         //KANAN DEPAN (FR)
         xFR0 = -(xFL_Akhir),  yFR0 =  yFL_Akhir, xFR1 = -(xFL_Awal), yFR1 = yFL_Awal, zFR0 = 0, zFRp = tinggi;
         //KIRI TENGAH (LM)
@@ -138,16 +138,21 @@ void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar ka
 }
 
 void Standby() {
+  steps = 0;
+  theta = 0;
+  degAkhir = 0;
   //KANAN DEPAN (FR)
-  xFR0 = -55,  yFR0 = 55, xFR1 = -55, yFR1 = 55, zFR0 = 0, zFRp = 0;
+  xFR0 = -57,  yFR0 = 57, xFR1 = -57, yFR1 = 57, zFR0 = 0, zFRp = 0;
   //KIRI TENGAH (LM)
   xLM0 = 80, yLM0 = 0, xLM1 = 80, yLM1 = 0, zLM0 = 0, zLMp = 0;
   //KANAN BELAKANG (BR)
-  xBR0 = -55, yBR0 = -55, xBR1 = -55,  yBR1 = -55, zBR0 = 0, zBRp = 0;
+  xBR0 = -57, yBR0 = -57, xBR1 = -57,  yBR1 = -57, zBR0 = 0, zBRp = 0;
   //KIRI DEPAN (FL)
-  xFL0 = 55, yFL0 = 55, xFL1 = 55,  yFL1 = 55, zFL0 = 0, zFLp = 0;
+  xFL0 = 57, yFL0 = 57, xFL1 = 57,  yFL1 = 57, zFL0 = 0, zFLp = 0;
   //KANAN TENGAH (RM)
   xRM0 = -80, yRM0 = 0, xRM1 = -80, yRM1 = 0, zRM0 = 0, zRMp = 0;
   //KIRI BELAKANG (BL)
-  xBL0 = 55, yBL0 = -55, xBL1 = 55,  yBL1 = -55, zBL0 = 0, zBLp = 0;
+  xBL0 = 57, yBL0 = -57, xBL1 = 57,  yBL1 = -57, zBL0 = 0, zBLp = 0;
+  modeGerak = true;
+  statusGerak = false;
 }

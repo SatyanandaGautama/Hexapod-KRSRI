@@ -1,15 +1,24 @@
-float moveServo(float sdtAwal, float sdtTujuan, float kecepatan) { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
+float moveDynamixel(float sdtAwal, float sdtTujuan, float kecepatan) { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
   if (t <= 180) {
     Inc = 180 / kecepatan;
     act = ((sdtTujuan - sdtAwal) / 10) * 2;
-    sdtServo = sdtAwal + (((act * t) / 360)) * 10;
+    sdtServo = (sdtAwal + (((act * t) / 360)) * 10) * 3.41;
     t += Inc;
     if (t > 180)t = 0;
     return sdtServo;
   }
 }
-
-void moveDynamixel(int servoID, int positions) {
+float moveServo(float sdtAwals, float sdtTujuans, float kecepatans) { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
+  if (t <= 180) {
+    Inc = 180 / kecepatans;
+    act = ((sdtTujuans - sdtAwals) / 10) * 2;
+    sdtServo = (sdtAwals + (((act * t) / 360)) * 10) * 3.41;
+    t += Inc;
+    if (t > 180)t = 0;
+    return sdtServo;
+  }
+}
+void kirimDynamixel(int servoID, int positions) {
   unsigned long checksums = 0;
   unsigned char positions_H = 0;
   unsigned char positions_L = 0;
