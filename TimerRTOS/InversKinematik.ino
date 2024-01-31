@@ -1,7 +1,7 @@
 void FR(float x, float y, float h) { //Kanan Atas (KUADRANT 2)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 180);
   sdtcoxa = ((round(angle1 - legoffset[2]) + 195) - 2) * 3.41;
-  z = height + h;
+  z = heightRight + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -32,17 +32,17 @@ void RM (float x, float y, float h) { //Kanan Tengah (Kuadrant 2 atau 3)
   if (sdtcoxa < 180)sdtcoxa += 180;
   sdtcoxa *= 3.41;
 
-  z = height + h;
+  z = heightRight + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
   alpha = atan(z / alas);
   beta = acos((fm * fm + c * c - tb * tb) / (2 * fm * c));
   theta2 = alpha + beta;
-  sdtfemur = (300 - (90 + round ((theta2 * 180 / M_PI)))) * 3.41;
+  sdtfemur = ((300 - (90 + round ((theta2 * 180 / M_PI)))) + 2) * 3.41;
 
   theta3 = acos((tb * tb + fm * fm - c * c) / (2 * tb * fm));
-  sdttibia = (300 - (90 - (round((theta3 * 180 / M_PI) - 90)))) * 3.41;
+  sdttibia = (300 - (90 - (round((theta3 * 180 / M_PI) - 90)))) * 3.41; //45
   outServo[1][0] = round(sdtcoxa);
   outServo[1][1] = round(sdtfemur);
   outServo[1][2] = round(sdttibia);
@@ -58,7 +58,7 @@ void RM (float x, float y, float h) { //Kanan Tengah (Kuadrant 2 atau 3)
 void BR (float x, float y, float h) { //Kanan Bawah (KUADRANT 3)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 180); //Kanan Bawah
   sdtcoxa = (round(angle1 - legoffset[4]) + 105) * 3.41;
-  z = height + h;
+  z = heightRight + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -84,7 +84,7 @@ void BR (float x, float y, float h) { //Kanan Bawah (KUADRANT 3)
 void BL (float x, float y, float h) { //Kiri Bawah (KUADRANT 4)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 360);
   sdtcoxa = (round(angle1 - legoffset[5]) + 195) * 3.41;
-  z = height + h;
+  z = heightLeft + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -109,7 +109,7 @@ void BL (float x, float y, float h) { //Kiri Bawah (KUADRANT 4)
 }
 
 void LM (float x, float y, float h) { //Kiri Tengah (Kuadrant 1 atau 4)
-  z = height + h;
+  z = heightLeft + h;
   angle1 = round ((atan(y / x) * 180 / M_PI));
   sdtcoxa = round(angle1 - legoffset[0]) + 150;
   if (sdtcoxa > 180)sdtcoxa -= 360;
@@ -121,7 +121,7 @@ void LM (float x, float y, float h) { //Kiri Tengah (Kuadrant 1 atau 4)
   alpha = atan(z / alas);
   beta = acos((fm * fm + c * c - tb * tb) / (2 * fm * c));
   theta2 = alpha + beta;
-  sdtfemur = (90 + round ((theta2 * 180 / M_PI))) * 3.41;
+  sdtfemur = ((90 + round ((theta2 * 180 / M_PI))) - 2) * 3.41;
 
   theta3 = acos((tb * tb + fm * fm - c * c) / (2 * tb * fm));
   sdttibia = ((90 - (round((theta3 * 180 / M_PI) - 90)))) * 3.41;
@@ -140,7 +140,7 @@ void LM (float x, float y, float h) { //Kiri Tengah (Kuadrant 1 atau 4)
 void FL (float x, float y, float h) { //Kiri Atas (KUADRANT 1)
   angle1 = round ((atan(y / x) * 180 / M_PI));
   sdtcoxa = ((round(angle1 - legoffset[1]) + 105) + 20) * 3.41;
-  z = height + h;
+  z = heightLeft + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -150,7 +150,7 @@ void FL (float x, float y, float h) { //Kiri Atas (KUADRANT 1)
   sdtfemur = (90 + round ((theta2 * 180 / M_PI))) * 3.41;
 
   theta3 = acos((tb * tb + fm * fm - c * c) / (2 * tb * fm));
-  sdttibia = ((90 - (round((theta3 * 180 / M_PI) - 90)))) * 3.41;
+  sdttibia = (((90 - (round((theta3 * 180 / M_PI) - 90)))) + 3) * 3.41;
   outServo[5][0] = round(sdtcoxa);
   outServo[5][1] = round(sdtfemur);
   outServo[5][2] = round(sdttibia);

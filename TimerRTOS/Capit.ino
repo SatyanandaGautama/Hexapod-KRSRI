@@ -8,6 +8,7 @@ float moveDynamixel(float sdtAwal, float sdtTujuan, float kecepatan) { //Kecepat
     return sdtServo;
   }
 }
+
 float moveServo(float sdtAwals, float sdtTujuans, float kecepatans) { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
   if (t <= 180) {
     Inc = 180 / kecepatans;
@@ -18,6 +19,7 @@ float moveServo(float sdtAwals, float sdtTujuans, float kecepatans) { //Kecepata
     return sdtServo;
   }
 }
+
 void kirimDynamixel(int servoID, int positions) {
   unsigned long checksums = 0;
   unsigned char positions_H = 0;

@@ -5,11 +5,8 @@ HardwareSerial Serial6(USART6);//Serial Maixbit Camera
 #include <STM32FreeRTOS.h>
 #include <semphr.h>
 #define configUSE_16_BIT_TICKS  1
-//======Sensor IR ToF=====//
-//#include <Wire.h>
-//#include <VL53L0X.h>
-//VL53L0X sensor;
-//========================//
+//SharpIR
+float distances;
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
@@ -70,25 +67,25 @@ float Increment;
 int outServo[6][3];
 //Variabel Invers Kinematik
 const float cx = 22;
-const int fm = 58;
-const int tb = 85; //80
-int height = -95;
+const int fm = 53;
+const int tb = 70; //80
+int heightRight = -92;
+int heightLeft = -92;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :
-const float standFR[3][1] = {{ -57}, {57}, {0}};
-const float standRM[3][1] = {{ -77}, {0}, {0}};
-const float standBR[3][1] = {{ -57}, { -57}, {0}};
-const float standFL[3][1] = {{ 57}, {57}, {0}};
-const float standLM[3][1] = {{ 77}, {0}, {0}};
-const float standBL[3][1] = {{ 57}, { -57}, {0}};
+const float standFR[3][1] = {{ -52}, {52}, {0}};
+const float standRM[3][1] = {{ -72}, {0}, {0}};
+const float standBR[3][1] = {{ -52}, { -52}, {0}};
+const float standFL[3][1] = {{ 52}, {52}, {0}};
+const float standLM[3][1] = {{ 72}, {0}, {0}};
+const float standBL[3][1] = {{ 52}, { -52}, {0}};
 int jmlhStep;
 //Gerak Rotate
 float P1[3][1];
 float P2[3][1];
 float arahPutar;
 //=====PID Variable=====//
-//==========PID=========//
 float error, setpoint, P_control, D_control, PID_control, Time, dt, time_prev, previous_error;
 float kp = 0.6;
 float kd = 0;
@@ -96,6 +93,7 @@ float lebarKiri, lebarKanan, lebarTengah;
 //================================================================================================================================//
 bool Sensors = true;
 bool stateMPU = false;
+bool turunMPU = false;
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -117,28 +115,13 @@ void setup() {
   Serial6.setTx(PC6);
   Serial6.setRx(PC7);
   Serial6.begin(115200);
-  delay(4000);
   //====Setup SRF04====//
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
-  //====Setup IR====//
-  //  Wire.setSDA(PC9);
-  //  Wire.setSCL(PA8);
-  //  Wire.begin();
-  //  sensor.init();
-  //  sensor.setTimeout(500);
-  //  sensor.startContinuous();
-  //================//
-  delay(1000);
-  FR(-57, 57, 0);
-  RM(-77, 0, 0);
-  BR(-57, -57, 0);
-  BL(57, -57, 0);
-  LM(77, 0, 0);
-  FL(57, 57, 0);
-  KirimIntruksiGerak();
-  resetPID();
   delay(4000);
+  StandbyAwal();
+  resetPID();
+  delay(3000);
   while (yaw < 0) {
     read_MPU();
     delay(15);
