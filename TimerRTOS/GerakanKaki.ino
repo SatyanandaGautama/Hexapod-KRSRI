@@ -142,35 +142,50 @@ void Standby() {
   theta = 0;
   degAkhir = 0;
   //KANAN DEPAN (FR)
-  xFR0 = -52,  yFR0 = 52, xFR1 = -52, yFR1 = 52, zFR0 = 0, zFRp = 0;
+  xFR0 = -55,  yFR0 = 55, xFR1 = -55, yFR1 = 55, zFR0 = 0, zFRp = 0;
   //KIRI TENGAH (LM)
-  xLM0 = 72, yLM0 = 0, xLM1 = 72, yLM1 = 0, zLM0 = 0, zLMp = 0;
+  xLM0 = 75, yLM0 = 0, xLM1 = 75, yLM1 = 0, zLM0 = 0, zLMp = 0;
   //KANAN BELAKANG (BR)
-  xBR0 = -52, yBR0 = -52, xBR1 = -52,  yBR1 = -52, zBR0 = 0, zBRp = 0;
+  xBR0 = -55, yBR0 = -55, xBR1 = -55,  yBR1 = -55, zBR0 = 0, zBRp = 0;
   //KIRI DEPAN (FL)
-  xFL0 = 52, yFL0 = 52, xFL1 = 52,  yFL1 = 52, zFL0 = 0, zFLp = 0;
+  xFL0 = 55, yFL0 = 55, xFL1 = 55,  yFL1 = 55, zFL0 = 0, zFLp = 0;
   //KANAN TENGAH (RM)
-  xRM0 = -72, yRM0 = 0, xRM1 = -72, yRM1 = 0, zRM0 = 0, zRMp = 0;
+  xRM0 = -75, yRM0 = 0, xRM1 = -75, yRM1 = 0, zRM0 = 0, zRMp = 0;
   //KIRI BELAKANG (BL)
-  xBL0 = 52, yBL0 = -52, xBL1 = 52,  yBL1 = -52, zBL0 = 0, zBLp = 0;
+  xBL0 = 55, yBL0 = -55, xBL1 = 55,  yBL1 = -55, zBL0 = 0, zBLp = 0;
   modeGerak = true;
   statusGerak = false;
 }
 
 void StandbyAwal() {
-  FR(-52, 52, 20);
-  RM(-72, 0, 20);
-  BR(-52, -52, 20);
-  BL(52, -52, 20);
-  LM(72, 0, 20);
-  FL(52, 52, 20);
+  FR(-55, 55, 20);
+  RM(-75, 0, 20);
+  BR(-55, -55, 20);
+  BL(55, -55, 20);
+  LM(75, 0, 20);
+  FL(55, 55, 20);
   KirimIntruksiGerak(512);
   delay(500);
-  FR(-52, 52, 0);
-  RM(-72, 0, 0);
-  BR(-52, -52, 0);
-  BL(52, -52, 0);
-  LM(72, 0, 0);
-  FL(52, 52, 0);
+  FR(-55, 55, 0);
+  RM(-75, 0, 0);
+  BR(-55, -55, 0);
+  BL(55, -55, 0);
+  LM(75, 0, 0);
+  FL(55, 55, 0);
   KirimIntruksiGerak(512);
+}
+
+void naikTangga() {
+  offsetCX[0] = 0;
+  offsetCX[1] = 0;
+  offsetCX[2] = 30;
+  offsetCX[3] = -34;
+  rightFM = 37;
+  rightTB = 37;
+  leftFM = 12;
+  leftTB = 7;//
+  midRightFM = 46;
+  midRightTB = 58;
+  midLeftFM = 8;
+  midLeftTB = -14;//
 }

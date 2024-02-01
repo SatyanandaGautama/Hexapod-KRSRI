@@ -74,12 +74,14 @@ int heightLeft = -92;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :
-const float standFR[3][1] = {{ -52}, {52}, {0}};
-const float standRM[3][1] = {{ -72}, {0}, {0}};
-const float standBR[3][1] = {{ -52}, { -52}, {0}};
-const float standFL[3][1] = {{ 52}, {52}, {0}};
-const float standLM[3][1] = {{ 72}, {0}, {0}};
-const float standBL[3][1] = {{ 52}, { -52}, {0}};
+const float standFR[3][1] = {{ -55}, {55}, {0}}; //52
+const float standRM[3][1] = {{ -75}, {0}, {0}}; //72
+const float standBR[3][1] = {{ -55}, { -55}, {0}};
+const float standFL[3][1] = {{ 55}, {55}, {0}};
+const float standLM[3][1] = {{ 75}, {0}, {0}};
+const float standBL[3][1] = {{ 55}, { -55}, {0}};
+float offsetCX[4] = {0};//0 = FR, 1 = BR, 2 = BL, 3 = FL
+float midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0;
 int jmlhStep;
 //Gerak Rotate
 float P1[3][1];

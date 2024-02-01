@@ -528,3 +528,11 @@ void resetPID() {
 //    GerakGeser(15, 20, 15, lebarKiri, lebarKanan, lebarTengah);
 //    xSemaphoreGive(mutex);
 //    baca_IR();
+
+//===Gerakan Naik Tangga===//
+void GerakNaikTangga() {
+  naikTangga();
+  xSemaphoreTake(mutex, portMAX_DELAY);
+  GerakGeser_v2(5, 28, 5, 28, 35, 28, 0, 0, 0);
+  xSemaphoreGive(mutex);
+}
