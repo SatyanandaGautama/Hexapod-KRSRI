@@ -1,1 +1,1 @@
-Hexapod Autonomous RObot
+Hexapod Autonomous Robot
