@@ -1,7 +1,7 @@
 void FR(float x, float y, float h) { //Kanan Atas (KUADRANT 2)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 180);
   sdtcoxa = ((((round(angle1 - legoffset[2]) + 195) - 2)) + offsetCX[0]) * 3.41;
-  z = heightRight + h;
+  z = heightFront + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -26,13 +26,12 @@ void FR(float x, float y, float h) { //Kanan Atas (KUADRANT 2)
 }
 
 void RM (float x, float y, float h) { //Kanan Tengah (Kuadrant 2 atau 3)
-  angle1 = round ((atan(y / x) * 180 / M_PI));
+  angle1 = round ((atan(y / x) * 180 / M_PI) + 180);
   sdtcoxa = round(angle1 - legoffset[3]) + 150;
   if (sdtcoxa > 180)sdtcoxa -= 360;
-  if (sdtcoxa < 180)sdtcoxa += 180;
   sdtcoxa *= 3.41;
 
-  z = heightRight + h;
+  z = heightMid + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -58,7 +57,7 @@ void RM (float x, float y, float h) { //Kanan Tengah (Kuadrant 2 atau 3)
 void BR (float x, float y, float h) { //Kanan Bawah (KUADRANT 3)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 180); //Kanan Bawah
   sdtcoxa = ((round(angle1 - legoffset[4]) + 105) + offsetCX[1]) * 3.41;
-  z = heightRight + h;
+  z = heightBack + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -84,7 +83,7 @@ void BR (float x, float y, float h) { //Kanan Bawah (KUADRANT 3)
 void BL (float x, float y, float h) { //Kiri Bawah (KUADRANT 4)
   angle1 = round ((atan(y / x) * 180 / M_PI) + 360);
   sdtcoxa = ((round(angle1 - legoffset[5]) + 195) + offsetCX[2]) * 3.41;
-  z = heightLeft + h;
+  z = heightBack + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));
@@ -109,7 +108,7 @@ void BL (float x, float y, float h) { //Kiri Bawah (KUADRANT 4)
 }
 
 void LM (float x, float y, float h) { //Kiri Tengah (Kuadrant 1 atau 4)
-  z = heightLeft + h;
+  z = heightMid + h;
   angle1 = round ((atan(y / x) * 180 / M_PI));
   sdtcoxa = round(angle1 - legoffset[0]) + 150;
   if (sdtcoxa > 180)sdtcoxa -= 360;
@@ -140,7 +139,7 @@ void LM (float x, float y, float h) { //Kiri Tengah (Kuadrant 1 atau 4)
 void FL (float x, float y, float h) { //Kiri Atas (KUADRANT 1)
   angle1 = round ((atan(y / x) * 180 / M_PI));
   sdtcoxa = (((round(angle1 - legoffset[1]) + 105) + 20) + offsetCX[3]) * 3.41;
-  z = heightLeft + h;
+  z = heightFront + h;
   P = sqrt((x * x) + (y * y));
   alas = P - cx;
   c = sqrt((alas * alas) + (z * z));

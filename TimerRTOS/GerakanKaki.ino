@@ -142,20 +142,44 @@ void Standby() {
   theta = 0;
   degAkhir = 0;
   //KANAN DEPAN (FR)
-  xFR0 = -55,  yFR0 = 55, xFR1 = -55, yFR1 = 55, zFR0 = 0, zFRp = 0;
+  xFR0 = -55,  yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
   //KIRI TENGAH (LM)
-  xLM0 = 75, yLM0 = 0, xLM1 = 75, yLM1 = 0, zLM0 = 0, zLMp = 0;
+  xLM0 = 75, yLM0 = 0, xLM1 = 75, yLM1 = 0, zLMp = 0;
   //KANAN BELAKANG (BR)
-  xBR0 = -55, yBR0 = -55, xBR1 = -55,  yBR1 = -55, zBR0 = 0, zBRp = 0;
+  xBR0 = -55, yBR0 = -55, xBR1 = -55,  yBR1 = -55, zBRp = 0;
   //KIRI DEPAN (FL)
-  xFL0 = 55, yFL0 = 55, xFL1 = 55,  yFL1 = 55, zFL0 = 0, zFLp = 0;
+  xFL0 = 55, yFL0 = 55, xFL1 = 55,  yFL1 = 55, zFLp = 0;
   //KANAN TENGAH (RM)
-  xRM0 = -75, yRM0 = 0, xRM1 = -75, yRM1 = 0, zRM0 = 0, zRMp = 0;
+  xRM0 = -75, yRM0 = 0, xRM1 = -75, yRM1 = 0, zRMp = 0;
   //KIRI BELAKANG (BL)
-  xBL0 = 55, yBL0 = -55, xBL1 = 55,  yBL1 = -55, zBL0 = 0, zBLp = 0;
+  xBL0 = 55, yBL0 = -55, xBL1 = 55,  yBL1 = -55, zBLp = 0;
   modeGerak = true;
   statusGerak = false;
 }
+
+//void Standby(float Inc = Increment * 2) {
+//  if (modeGerak) {
+//    Trayektori = false;
+//    steps = 0;
+//    theta = 0;
+//    Increment = Inc;
+//    degAwal = 0 + Increment;
+//    degAkhir = 180;
+//    //KANAN DEPAN (FR)
+//    xFR0 = xFR,  yFR0 = yFR, xFR1 = -55, yFR1 = 55, zFR0 = zFR, zFRp = 0;
+//    //KIRI TENGAH (LM)
+//    xLM0 = xLM, yLM0 = yLM, xLM1 = 75, yLM1 = 0, zLM0 = zLM, zLMp = 0;
+//    //KANAN BELAKANG (BR)
+//    xBR0 = xBR, yBR0 = yBR, xBR1 = -55,  yBR1 = -55, zBR0 = zBR, zBRp = 0;
+//    //KIRI DEPAN (FL)
+//    xFL0 = xFL, yFL0 = yFL, xFL1 = 55,  yFL1 = 55, zFL0 = zFL, zFLp = 0;
+//    //KANAN TENGAH (RM)
+//    xRM0 = xRM, yRM0 = yRM, xRM1 = -75, yRM1 = 0, zRM0 = zRM, zRMp = 0;
+//    //KIRI BELAKANG (BL)
+//    xBL0 = xBL, yBL0 = yBL, xBL1 = 55,  yBL1 = -55, zBL0 = zBL, zBLp = 0;
+//    modeGerak = false;
+//  }
+//}
 
 void StandbyAwal() {
   FR(-55, 55, 20);
@@ -176,8 +200,8 @@ void StandbyAwal() {
 }
 
 void naikTangga() {
-  offsetCX[0] = 0;
-  offsetCX[1] = 0;
+  read_MPU();
+  vTaskDelay(15 / portTICK_PERIOD_MS);
   offsetCX[2] = 30;
   offsetCX[3] = -34;
   rightFM = 37;

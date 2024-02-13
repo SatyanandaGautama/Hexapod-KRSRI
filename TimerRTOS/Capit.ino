@@ -13,7 +13,7 @@ float moveServo(float sdtAwals, float sdtTujuans, float kecepatans) { //Kecepata
   if (t <= 180) {
     Inc = 180 / kecepatans;
     act = ((sdtTujuans - sdtAwals) / 10) * 2;
-    sdtServo = (sdtAwals + (((act * t) / 360)) * 10) * 3.41;
+    sdtServo = sdtAwals + (((act * t) / 360)) * 10;
     t += Inc;
     if (t > 180)t = 0;
     return sdtServo;
