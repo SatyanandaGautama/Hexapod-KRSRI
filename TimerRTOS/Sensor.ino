@@ -18,7 +18,9 @@ void RotateMPU(int selisih = 0, bool rot = false) { //(-)Putar Kiri, (+)Putar Ka
 }
 
 void RotJarak(uint32_t PING1, uint32_t PING2 ) {
-  OffsetJarak = (readPING(PING1) - readPING(PING2)) * 1.7;
+  j2 = readPING(PING1);
+  j3 = readPING(PING2);
+  OffsetJarak = (j2 - j3) * 2.5;
 }
 
 //void RotJarak(uint32_t PING1, uint32_t PING2, int t, int s, bool mpu) {//PING1 = depan, PING2 = belakang, mpu = true (Baca MPU)
@@ -59,7 +61,7 @@ void navigasiMPU_Maju(int maxStep) {
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
-  if (Offset > 180) {
+  if (error > 180) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
@@ -94,7 +96,7 @@ void navigasiMPU_Mundur(int maxStep) {
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
-  if (Offset > 180) {
+  if (error > 180) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
@@ -129,7 +131,7 @@ void navigasiMPU_Kiri(int maxStep) {
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
-  if (Offset > 180) {
+  if (error > 180) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
@@ -166,7 +168,7 @@ void navigasiMPU_Kanan(int maxStep) {
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
-  if (Offset > 180) {
+  if (error > 180) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
@@ -626,3 +628,20 @@ void GerakSetelahTangga() {
 //while (1) {
 //  GerakNaikTangga();
 //}
+
+void BacaSensor() {
+  baca_IR(IRfront);
+  Serial.print("IR Front : ");
+  Serial.println(distances);
+  baca_IR(IRback);
+  Serial.print("IR Back : ");
+  Serial.println(distances);
+  Serial.print("Right Front : ");
+  Serial.println(readPING(rightFront));
+  Serial.print("Right Back : ");
+  Serial.println(readPING(rightBack));
+  Serial.print("Left Front : ");
+  Serial.println(readPING(leftFront));
+  Serial.print("Left Back : ");
+  Serial.println(readPING(leftBack));
+}

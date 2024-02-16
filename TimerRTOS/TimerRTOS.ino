@@ -30,14 +30,14 @@ int sdtAcuan = 0, yawSebelum = 0;
 //PING
 uint32_t rightBack = PE11;//E11
 uint32_t rightFront = PE12;//E12
-uint32_t leftBack = PE8; //E10
+uint32_t leftBack = PE8; //E10 Asli
 uint32_t leftFront = PE10 ; //E8
 int cm, duration, OffsetJarak, offsets, j2;
 int j3;
 //SRF-04
-#define ECHO_Back PE13
-#define TRIG PE9
-#define ECHO_Front PE14
+//#define ECHO_Back PE13
+//#define TRIG PE9
+//#define ECHO_Front PE14
 int jarak;
 //IR VL53L0X
 //int distance;
@@ -76,15 +76,15 @@ int outServo[6][3];
 const float cx = 22;
 const int fm = 53;
 const int tb = 70;
-int heightFront = -94, heightMid = -94, heightBack = -94;
+int heightFront = -92, heightMid = -92, heightBack = -92;//kelereng -94
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = {0, 45, 135, 180, 225, 315};
 //Koordinat Awal (Standby) per Kaki :
 const float standFR[3][1] = {{ -55}, {55}, {0}}; //
-const float standRM[3][1] = {{ -75}, {0}, {0}}; //
+const float standRM[3][1] = {{ -76}, {0}, {0}}; //
 const float standBR[3][1] = {{ -55}, { -55}, {0}};
 const float standFL[3][1] = {{ 55}, {55}, {0}};
-const float standLM[3][1] = {{ 75}, {0}, {0}};
+const float standLM[3][1] = {{ 76}, {0}, {0}};
 const float standBL[3][1] = {{ 55}, { -55}, {0}};
 float offsetCX[4] = {0};//0 = FR, 1 = BR, 2 = BL, 3 = FL
 float midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0;
@@ -127,9 +127,9 @@ void setup() {
   Serial6.setRx(PC7);
   Serial6.begin(115200);
   //====Setup SRF04====//
-  pinMode(ECHO_Back, INPUT);
-  pinMode(ECHO_Front, INPUT);
-  pinMode(TRIG, OUTPUT);
+  //  pinMode(ECHO_Back, INPUT);
+  //  pinMode(ECHO_Front, INPUT);
+  //  pinMode(TRIG, OUTPUT);
   delay(4000);
   StandbyAwal();
   resetPID();
