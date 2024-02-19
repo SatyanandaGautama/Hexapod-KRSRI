@@ -1,6 +1,6 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    //=== Logika Strat sampai SZ-1 ===//
+    //========= Dari Start sampai SZ-1 ============//
     RotateMPU(90, true);
     while (abs(Offset) > 0 || (steps == 0 || steps == 2)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
@@ -15,6 +15,7 @@ void Sensor(void *pvParameters) {
       RotJarak(rightFront, rightBack);
       xSemaphoreGive(mutex);
     }
+    //===Maju Dari Start===//
     baca_IR(IRback);
     while (distances < 26 || (steps == 0 || steps == 2)) {
       navigasiMaju(20, 20, rightFront, rightBack);
@@ -25,7 +26,7 @@ void Sensor(void *pvParameters) {
     }
     RotateMPU(-90, true);
     while (abs(Offset) > 1 || (steps == 0 || steps == 2)) {
-      GerakRotasi(Offset, 18, 18);
+      GerakRotasi(Offset, 20, 16);
       RotateMPU();
     }
     xSemaphoreTake(mutex, portMAX_DELAY);
@@ -33,7 +34,7 @@ void Sensor(void *pvParameters) {
     xSemaphoreGive(mutex);
     RotateMPU(88, true);
     while (abs(Offset) > 1 || (steps == 0 || steps == 2)) {
-      GerakRotasi(Offset, 18, 18);
+      GerakRotasi(Offset, 20, 16);
       RotateMPU();
     }
     RotJarak(rightFront, rightBack);
@@ -91,7 +92,7 @@ void Sensor(void *pvParameters) {
         break;
       }
     }
-    //===Jalan Turunan 1===//
+    //===Jalan Turunan 1 (Memastikan agar lewat dari Jalan Pecah)===//
     while ((pitch <= -15 && pitch > -30) && turunMPU == true) {
       navigasiMPU_Maju(30);
       xSemaphoreTake(mutex, portMAX_DELAY);
@@ -111,6 +112,7 @@ void Sensor(void *pvParameters) {
       RotJarak(rightFront, rightBack);
       xSemaphoreGive(mutex);
     }
+    //===Geser Turunan 1===//
     j3 = readPING(rightFront);
     offsets = (20 - j3) * 5;
     while ( (j3 > 20 + 2) || (steps == 0 || steps == 2)) { //Geser Kanan
@@ -160,7 +162,7 @@ void Sensor(void *pvParameters) {
         break;
       }
     }
-    //===Jalan Berbatu===//
+    //===Jalan Berbatu Menuju SZ-1===//
     heightFront = -92;
     heightMid = -92;
     heightBack = -92;
@@ -188,20 +190,20 @@ void Sensor(void *pvParameters) {
     }
     //======Geser SZ-1======//
     j3 = readPING(rightFront);
-    offsets = (13 - j3) * 5;
-    while ((j3 > 13 + 2) || (steps == 0 || steps == 2)) { //Geser Kanan
+    offsets = (12 - j3) * 5;
+    while ((j3 > 12 + 2) || (steps == 0 || steps == 2)) { //Geser Kanan
       navigasiKanan(offsets + 5, rightFront, rightBack);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakGeser(offsets, 26, 26, lebarKiri, lebarKanan, lebarTengah);
       xSemaphoreGive(mutex);
-      offsets = (13 - j3) * 5;
+      offsets = (12 - j3) * 5;
     }
-    while ((j3 < 13 - 2) || (steps == 0 || steps == 2)) { //Geser Kiri
+    while ((j3 < 12 - 2) || (steps == 0 || steps == 2)) { //Geser Kiri
       navigasiKiri(offsets + 5, rightFront, rightBack);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakGeser(offsets, 26, 26, lebarKiri, lebarKanan, lebarTengah);
       xSemaphoreGive(mutex);
-      offsets = (13 - j3) * 5;
+      offsets = (12 - j3) * 5;
     }
     RotJarak(rightFront, rightBack);
     while (abs(OffsetJarak) > 1 || (steps == 0 || steps == 2)) {
@@ -210,6 +212,7 @@ void Sensor(void *pvParameters) {
       RotJarak(rightFront, rightBack);
       xSemaphoreGive(mutex);
     }
+    //====Rotate SZ-1====//
     RotateMPU(90, true);
     while (abs(Offset) > 3 || (steps == 0 || steps == 2)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
@@ -224,28 +227,30 @@ void Sensor(void *pvParameters) {
       RotJarak(leftFront, leftBack);
       xSemaphoreGive(mutex);
     }
+    //====Geser SZ-1====//
     j3 = readPING(leftFront);
-    while ((j3 < 10 - 2) || (steps == 0 || steps == 2)) { //Geser Kanan
+    while ((j3 < 9 - 2) || (steps == 0 || steps == 2)) { //Geser Kanan
       navigasiKanan(22, leftFront, leftBack);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakGeser(22, 30, 30, lebarKiri, lebarKanan, lebarTengah);
       xSemaphoreGive(mutex);
     }
-    while ((j3 > 10 + 2) || (steps == 0 || steps == 2)) { //Geser Kiri
+    while ((j3 > 9 + 2) || (steps == 0 || steps == 2)) { //Geser Kiri
       navigasiKiri(22, leftFront, leftBack);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakGeser(22, 30, 30, lebarKiri, lebarKanan, lebarTengah);
       xSemaphoreGive(mutex);
     }
+    //===Mundur SZ-1===//
     heightFront = -94;
     heightMid = -94;
     heightBack = -94;
     sdtAcuan = yaw;
     baca_IR(IRfront);
     while (distances < 11 || (steps == 0 || steps == 2)) {
-      navigasiMPU_Mundur(22);
+      navigasiMPU_Mundur(24);
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakDinamis(-20, 30, 22, lebarKiri, lebarKanan);
+      GerakDinamis(-20, 30, 24, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
       baca_IR(IRfront);
     }
@@ -256,7 +261,8 @@ void Sensor(void *pvParameters) {
       RotJarak(leftFront, leftBack);
       xSemaphoreGive(mutex);
     }
-    RotateMPU(-32, true);
+    //===Rotate dan taruh korban SZ-1===//
+    RotateMPU(-35, true);
     while (abs(Offset) > 3 || (steps == 0 || steps == 2)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakRotasi(Offset, 27, 30);
@@ -266,7 +272,7 @@ void Sensor(void *pvParameters) {
     xSemaphoreTake(mutex, portMAX_DELAY);
     Standby();
     xSemaphoreGive(mutex);
-    RotateMPU(32, true);
+    RotateMPU(35, true);
     while (abs(Offset) > 3 || (steps == 0 || steps == 2)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakRotasi(Offset, 27, 30);
@@ -280,11 +286,13 @@ void Sensor(void *pvParameters) {
       RotJarak(leftFront, leftBack);
       xSemaphoreGive(mutex);
     }
-    //==========SZ-1 sampai SZ-2=========//
+    //==================================================================================================//
+
+    //================Dari SZ-1 Menuju SZ-2==============//
     sdtAcuan = yaw;
     baca_IR(IRfront);
     while (distances < 31 || (steps == 0 || steps == 2)) {
-      navigasiMPU_Mundur(22);
+      navigasiMPU_Mundur(24);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakDinamis(-20, 30, 22, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
@@ -430,7 +438,7 @@ void Sensor(void *pvParameters) {
       RotJarak(leftFront, leftBack);
       xSemaphoreGive(mutex);
     }
-    RotateMPU(-20, true);
+    RotateMPU(-22, true);
     while (abs(Offset) > 2 || (steps == 0 || steps == 2)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakRotasi(Offset, 30, 32);
@@ -440,6 +448,7 @@ void Sensor(void *pvParameters) {
     while (1) {
       Standby();
     }
+    //==============================================================================//
   }
 }
 
