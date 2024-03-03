@@ -8,7 +8,14 @@ HardwareSerial Serial6(USART6);//Serial Maixbit Camera
 //SharpIR
 #define IRfront PA0
 #define IRback PC1
+//Servo
+#include <Servo.h>
+Servo capit1, capit2, pegangan;
 float distances, filtered_IR;
+bool moveServ = true;
+bool moveDyn = true;
+bool movePeg = true;
+bool moveBody = true;
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
@@ -35,9 +42,8 @@ uint32_t leftFront = PE10 ; //E8
 int cm, duration, OffsetJarak, offsets, j2;
 int j3;
 //SRF-04
-//#define ECHO_Back PE13
-//#define TRIG PE9
-//#define ECHO_Front PE14
+#define ECHO PE13
+#define TRIG PE9
 int jarak;
 //IR VL53L0X
 //int distance;
@@ -127,13 +133,20 @@ void setup() {
   Serial6.setRx(PC7);
   Serial6.begin(115200);
   //====Setup SRF04====//
-  //  pinMode(ECHO_Back, INPUT);
-  //  pinMode(ECHO_Front, INPUT);
-  //  pinMode(TRIG, OUTPUT);
-  delay(4000);
+  pinMode(ECHO, INPUT);
+  pinMode(TRIG, OUTPUT);
+  capit1.attach(PE15);
+  capit2.attach(PB11);
+  pegangan.attach(PE14);
+  delay(3000);
   StandbyAwal();
   resetPID();
-  delay(3000);
+  delay(500);
+  capit1.write(130);//180 Kondisi Tutup
+  capit2.write(50);//0 Kondisi Tutup
+  pegangan.write(92);
+  kirimDynamixel(0, 820);
+  delay(1000);
   while (yaw < 0) {
     read_MPU();
     delay(15);

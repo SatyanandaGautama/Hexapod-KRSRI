@@ -1,9 +1,9 @@
-void RotateMPU(int selisih = 0, bool rot = false) { //(-)Putar Kiri, (+)Putar Kanan
+void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar Kanan
   if (rot) {
     read_MPU();
     vTaskDelay(15 / portTICK_PERIOD_MS);
     tujuan = yaw + selisih;
-    if (tujuan >= 360)tujuan -= 360;
+    if (tujuan >= 360) tujuan -= 360;
     if (tujuan < 0) tujuan += 360;
   }
   read_MPU();
@@ -17,10 +17,12 @@ void RotateMPU(int selisih = 0, bool rot = false) { //(-)Putar Kiri, (+)Putar Ka
   }
 }
 
-void RotJarak(uint32_t PING1, uint32_t PING2 ) {
+void RotJarak(uint32_t PING1, uint32_t PING2) {
   j2 = readPING(PING1);
   j3 = readPING(PING2);
   OffsetJarak = (j2 - j3) * 2.5;
+  if (OffsetJarak > 20) OffsetJarak = 20;
+  if (OffsetJarak < -20) OffsetJarak = -20;
 }
 
 //void RotJarak(uint32_t PING1, uint32_t PING2, int t, int s, bool mpu) {//PING1 = depan, PING2 = belakang, mpu = true (Baca MPU)
@@ -57,7 +59,7 @@ void RotJarak(uint32_t PING1, uint32_t PING2 ) {
 void navigasiMPU_Maju(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
-  error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
+  error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
@@ -65,17 +67,15 @@ void navigasiMPU_Maju(int maxStep) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarKanan = PID_control;
     lebarKiri = 0;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarKanan = 0;
     lebarKiri = PID_control;
-  }
-  else {
+  } else {
     lebarKiri = 0;
     lebarKanan = 0;
   }
@@ -92,7 +92,7 @@ void navigasiMPU_Maju(int maxStep) {
 void navigasiMPU_Mundur(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
-  error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
+  error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
@@ -100,17 +100,15 @@ void navigasiMPU_Mundur(int maxStep) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarKanan = 0;
     lebarKiri = PID_control;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarKiri = 0;
     lebarKanan = PID_control;
-  }
-  else {
+  } else {
     lebarKiri = 0;
     lebarKanan = 0;
   }
@@ -127,7 +125,7 @@ void navigasiMPU_Mundur(int maxStep) {
 void navigasiMPU_Kiri(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
-  error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
+  error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
@@ -135,19 +133,17 @@ void navigasiMPU_Kiri(int maxStep) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarKiri = 0;
     lebarKanan = PID_control;
     lebarTengah = PID_control;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarTengah = -PID_control;
     lebarKiri = -PID_control;
     lebarKanan = 0;
-  }
-  else {
+  } else {
     lebarKiri = 0;
     lebarKanan = 0;
   }
@@ -164,7 +160,7 @@ void navigasiMPU_Kiri(int maxStep) {
 void navigasiMPU_Kanan(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
-  error = sdtAcuan - yaw; //error (+) => belok kanan, error (-) => belok kiri
+  error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
   }
@@ -172,19 +168,17 @@ void navigasiMPU_Kanan(int maxStep) {
     error = sdtAcuan - yaw - 360;
   }
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarTengah = -PID_control;
     lebarKiri = -PID_control;
     lebarKanan = 0;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarKiri = 0;
     lebarKanan = PID_control;
     lebarTengah = PID_control;
-  }
-  else {
+  } else {
     lebarKiri = 0;
     lebarKanan = 0;
   }
@@ -204,17 +198,15 @@ void navigasiMaju(int setpoint, int maxStep, uint32_t pingFront, uint32_t pingBa
   error = j3 - j2;
   //  if (error != 0) { //error (+) => belok kanan, error (-) => belok kiri
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarKanan = PID_control;
     lebarKiri = 0;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarKiri = PID_control;
     lebarKanan = 0;
-  }
-  else {
+  } else {
     lebarKiri = 0;
     lebarKanan = 0;
   }
@@ -251,17 +243,15 @@ void navigasiMundur(int setpoint, int maxStep, uint32_t pingFront, uint32_t ping
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   //  if (error != 0) { //error (+) => belok kanan, error (-) => belok kiri
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarKiri = 0;
     lebarKanan = (PID_control) * -1;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarKiri = (PID_control) * -1;
     lebarKanan = 0;
-  }
-  else {
+  } else {
     lebarKiri = 0;
     lebarKanan = 0;
   }
@@ -297,19 +287,17 @@ void navigasiKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   error = j3 - j2;
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarTengah = -PID_control;
     lebarKiri = -PID_control;
     lebarKanan = 0;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarKiri = 0;
     lebarKanan = PID_control;
     lebarTengah = PID_control;
-  }
-  else {
+  } else {
     lebarTengah = 0;
     lebarKiri = 0;
     lebarKanan = 0;
@@ -328,19 +316,17 @@ void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   error = j3 - j2;
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
-  if (PID_control >= maxStep )PID_control = maxStep;
-  if (PID_control <= maxStep * -1)PID_control = maxStep * -1;
-  if (PID_control > 0 ) {//PID_control(+) = belok kanan
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
     lebarKiri = 0;
     lebarKanan = PID_control;
     lebarTengah = PID_control;
-  }
-  else if (PID_control < 0) {//PID_control(-) = belok kiri
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
     lebarTengah = -PID_control;
     lebarKiri = -PID_control;
     lebarKanan = 0;
-  }
-  else {
+  } else {
     lebarTengah = 0;
     lebarKiri = 0;
     lebarKanan = 0;
@@ -366,27 +352,16 @@ int readPING(uint32_t pinData) {
   return cm;
 }
 
-//void readSRF_Front() {
-//  digitalWrite(TRIG, LOW);
-//  vTaskDelay(2 / portTICK_PERIOD_MS);
-//  digitalWrite(TRIG, HIGH);
-//  vTaskDelay(5 / portTICK_PERIOD_MS);
-//  digitalWrite(TRIG, LOW);
-//  jarak = pulseIn(ECHO_Front, HIGH);
-//  jarak = jarak / 58;
-//  //  Serial.println(jarak);
-//}
-//
-//void readSRF_Back() {
-//  digitalWrite(TRIG, LOW);
-//  vTaskDelay(1 / portTICK_PERIOD_MS);
-//  digitalWrite(TRIG, HIGH);
-//  vTaskDelay(2 / portTICK_PERIOD_MS);
-//  digitalWrite(TRIG, LOW);
-//  jarak = pulseIn(ECHO_Back, HIGH);
-//  jarak = jarak / 58;
-//  //  Serial.println(jarak);
-//}
+void readSRF() {
+  digitalWrite(TRIG, LOW);
+  vTaskDelay(2 / portTICK_PERIOD_MS);
+  digitalWrite(TRIG, HIGH);
+  vTaskDelay(5 / portTICK_PERIOD_MS);
+  digitalWrite(TRIG, LOW);
+  jarak = pulseIn(ECHO, HIGH);
+  jarak = jarak / 58;
+  Serial.println(jarak);
+}
 
 void baca_IR(uint32_t PinIR) {
   distances = IR(PinIR);
@@ -396,13 +371,13 @@ void baca_IR(uint32_t PinIR) {
 }
 
 int IR(uint32_t _irPin) {
-  int ir_val[25]; int distanceCM;
+  int ir_val[25];
+  int distanceCM;
   for (int i = 0; i < 25; i++) {
     ir_val[i] = analogRead(_irPin);
   }
   sort(ir_val, 25);
-  distanceCM = 27.728 * pow(map(ir_val[25 / 2], 0,
-                                1023, 0, 5000) / 1000.0, -1.2045);
+  distanceCM = 27.728 * pow(map(ir_val[25 / 2], 0, 1023, 0, 5000) / 1000.0, -1.2045);
   return distanceCM;
 }
 
@@ -430,7 +405,7 @@ void PID_controller() {
   }
   D_control = kd * ((error - previous_error) / dt);
   //Summing PID
-  PID_control = (P_control + D_control) * 10; //Coba saja dikali 10 atau tidak (Besaran Output PID Controller)
+  PID_control = (P_control + D_control) * 10;  //Coba saja dikali 10 atau tidak (Besaran Output PID Controller)
 }
 
 void resetPID() {
@@ -450,11 +425,11 @@ void beforeTangga() {
   rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 37);
   rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 37);
   leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 25);
-  leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 12);//
+  leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 12);  //
   midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 46);
   midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
   midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 10);
-  midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 0, -16);//
+  midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 0, -16);  //
 }
 
 void afterTangga() {
@@ -466,11 +441,11 @@ void afterTangga() {
   rightFM = map(filtered_Roll, rollTangga, rollAwal, 37, 0);
   rightTB = map(filtered_Roll, rollTangga, rollAwal, 37, 0);
   leftFM = map(filtered_Roll, rollTangga, rollAwal, 12, 0);
-  leftTB = map(filtered_Roll, rollTangga, rollAwal, 7, 0);//
+  leftTB = map(filtered_Roll, rollTangga, rollAwal, 7, 0);  //
   midRightFM = map(filtered_Roll, rollTangga, rollAwal, 46, 0);
   midRightTB = map(filtered_Roll, rollTangga, rollAwal, 58, 0);
   midLeftFM = map(filtered_Roll, rollTangga, rollAwal, 8, 0);
-  midLeftTB = map(filtered_Roll, rollTangga, rollAwal, -14, 0);//
+  midLeftTB = map(filtered_Roll, rollTangga, rollAwal, -14, 0);  //
 }
 
 //===Gerakan Naik Tangga===//

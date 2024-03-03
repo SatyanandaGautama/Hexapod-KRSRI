@@ -2,18 +2,13 @@ void Kaki(void *pvParameters) {
   while (1) {
     xSemaphoreTake(bin_sem, portMAX_DELAY);
     if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
-      //      if (Trayektori) {
       TrayektoriSinus();
-      //      }
-      //      else {
-      //        TrayektoriLinier();
-      //      }
       if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
         KirimIntruksiGerak(0);
       }
-      if (Sensors) {
-        Sensors = false;
-      }
+      //      if (Sensors) {
+      //        Sensors = false;
+      //      }
       xSemaphoreGive(mutex);
     }
     vTaskDelay(17 / portTICK_PERIOD_MS);
@@ -38,7 +33,7 @@ void TransformasiGerak(float lebarY, float lbrKiri, float lbrKanan) {
 }
 
 void GerakDinamis(float Lebar, float tinggi, int speeds, float lKiri, float lKanan) { //lebarY : maju (+), mundur (-)
-  Trayektori = true;
+  //  Trayektori = true;
   if (!statusGerak) {
     Increment = 180 / speeds;
     switch (steps) {

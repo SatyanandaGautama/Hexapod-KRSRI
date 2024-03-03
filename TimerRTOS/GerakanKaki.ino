@@ -45,8 +45,8 @@ void Rotate(float rot) {
 }
 
 void GerakRotasi(float degree, float tinggi, float speeds) { //Sudut + (putar kanan), sudut - (putar kiri)
-  if (degree > 30)degree = 30;
-  if (degree < -30)degree = -30;
+  if (degree > 20)degree = 20;
+  if (degree < -20)degree = -20;
   arahPutar = degree;
   Increment = 180 / speeds;
   if (!statusGerak) {

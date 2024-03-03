@@ -22,49 +22,49 @@ void BodyMaju(int speeds, int panjang) {//gerakan saat ambil korban
 }
 
 void BodyMundur(int speeds) {
-  if (!statusGerak) {
-    theta = 0;
-    Increment = 180 / speeds;
-    degAwal = 0;
-    degAkhir = 180;
-    //KANAN DEPAN (FR)
-    xFR0 = -55,  yFR0 = 65, xFR1 = -65, yFR1 = 15, zFRp = 0;
-    //KIRI TENGAH (LM)
-    xLM0 = 80, yLM0 = 0, xLM1 = 80, yLM1 = -50, zLMp = 0;
-    //KANAN BELAKANG (BR)
-    xBR0 = -65, yBR0 = -65, xBR1 = -65,  yBR1 = -100, zBRp = 0;
-    //KIRI DEPAN (FL)
-    xFL0 = 65, yFL0 = 65, xFL1 = 65,  yFL1 = 15, zFLp = 0;
-    //KANAN TENGAH (RM)
-    xRM0 = -80, yRM0 = 0, xRM1 = -80, yRM1 = -50, zRMp = 0;
-    //KIRI BELAKANG (BL)
-    xBL0 = 65, yBL0 = -65, xBL1 = 65,  yBL1 = -100, zBLp = 0;
-    modeGerak = true;
-    statusGerak = true;
-  }
+  //  if (!statusGerak) {
+  theta = 0;
+  Increment = 180 / speeds;
+  degAwal = 0;
+  degAkhir = 180;
+  //KANAN DEPAN (FR)
+  xFR0 = -100.4,  yFR0 = 19.2, xFR1 = -100.4, yFR1 = 25.2, zFRp = 0;
+  //KIRI TENGAH (LM)
+  xLM0 = 70, yLM0 = 40, xLM1 = 70, yLM1 = 70, zLMp = 0;
+  //KANAN BELAKANG (BR)
+  xBR0 = -1.4, yBR0 = -75.2, xBR1 = -1.4,  yBR1 = -35.2, zBRp = 0;
+  //KIRI DEPAN (FL)
+  xFL0 = 1.4, yFL0 = 75.2, xFL1 = 1.4,  yFL1 = 102, zFLp = 0;
+  //KANAN TENGAH (RM)
+  xRM0 = -70, yRM0 = -40, xRM1 = -70, yRM1 = 0, zRMp = 0;
+  //KIRI BELAKANG (BL)
+  xBL0 = 100.4, yBL0 = -19.2, xBL1 = 100.4,  yBL1 = -1, zBLp = 0;
+  modeGerak = true;
+  statusGerak = true;
+  //  }
 }
 
 void YawKanan(int speeds) {
-  if (!statusGerak) {
-    theta = 0;
-    Increment = 180 / speeds;
-    degAwal = 0;
-    degAkhir = 180;
-    //KANAN DEPAN (FR)
-    xFR0 = -55,  yFR0 = 65, xFR1 = -65, yFR1 = 15, zFRp = 0;
-    //KIRI TENGAH (LM)
-    xLM0 = 80, yLM0 = 0, xLM1 = 80, yLM1 = -50, zLMp = 0;
-    //KANAN BELAKANG (BR)
-    xBR0 = -65, yBR0 = -65, xBR1 = -65,  yBR1 = -100, zBRp = 0;
-    //KIRI DEPAN (FL)
-    xFL0 = 65, yFL0 = 65, xFL1 = 65,  yFL1 = 15, zFLp = 0;
-    //KANAN TENGAH (RM)
-    xRM0 = -80, yRM0 = 0, xRM1 = -80, yRM1 = -50, zRMp = 0;
-    //KIRI BELAKANG (BL)
-    xBL0 = 65, yBL0 = -65, xBL1 = 65,  yBL1 = -100, zBLp = 0;
-    modeGerak = true;
-    statusGerak = true;
-  }
+  //  if (!statusGerak) {
+  theta = 0;
+  Increment = 180 / speeds;
+  degAwal = 0;
+  degAkhir = 180;
+  //KANAN DEPAN (FR)
+  xFR0 = -55,  yFR0 = 55, xFR1 = -100.4, yFR1 = 19.2, zFRp = 0;
+  //KIRI TENGAH (LM)
+  xLM0 = 75, yLM0 = 0, xLM1 = 70, yLM1 = 40, zLMp = 0;
+  //KANAN BELAKANG (BR)
+  xBR0 = -55, yBR0 = -55, xBR1 = -1.4,  yBR1 = -75.2, zBRp = 0;
+  //KIRI DEPAN (FL)
+  xFL0 = 55, yFL0 = 55, xFL1 = 1.4,  yFL1 = 75.2, zFLp = 0;
+  //KANAN TENGAH (RM)
+  xRM0 = -75, yRM0 = 0, xRM1 = -70, yRM1 = -40, zRMp = 0;
+  //KIRI BELAKANG (BL)
+  xBL0 = 55, yBL0 = -55, xBL1 = 100.4,  yBL1 = -19.2, zBLp = 0;
+  modeGerak = true;
+  statusGerak = true;
+  //}
 }
 
 void YawKiri(int speeds) {
