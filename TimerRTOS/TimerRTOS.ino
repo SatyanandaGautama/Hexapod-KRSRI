@@ -6,16 +6,12 @@ HardwareSerial Serial6(USART6);//Serial Maixbit Camera
 #include <semphr.h>
 #define configUSE_16_BIT_TICKS  1
 //SharpIR
-#define IRfront PA0
-#define IRback PC1
+#define IRfront PA0 //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
+#define IRback PC0
 //Servo
 #include <Servo.h>
 Servo capit1, capit2, pegangan;
-float distances, filtered_IR;
-bool moveServ = true;
-bool moveDyn = true;
-bool movePeg = true;
-bool moveBody = true;
+int distances;
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
 const int prescaler = 84 - 1; // 1 MHz
@@ -35,27 +31,28 @@ int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll, rollAwal = 0, rollTangga = -15;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
-uint32_t rightBack = PE11;//E11
-uint32_t rightFront = PE12;//E12
-uint32_t leftBack = PE8; //E10 Asli
-uint32_t leftFront = PE10 ; //E8
-int cm, duration, OffsetJarak, offsets, j2;
-int j3;
+uint32_t rightBack = PE11;
+uint32_t rightFront = PE12;
+uint32_t leftBack = PE8;
+uint32_t leftFront = PE10;
+int cm, duration, OffsetJarak, offsets, jBack, jFront;
 //SRF-04
 #define ECHO PE13
 #define TRIG PE9
 int jarak;
-//IR VL53L0X
-//int distance;
 //Gerakan
 bool statusGerak = false;
 bool modeGerak = true;
-static int steps = 0;
+int steps = 0;
 float theta = 90;
 float tAwal, degAwal;
 float tAkhir, degAkhir;
 //Servo Capit
-float act, sdtServo, Inc, t = 0;
+float actServo, actDyn, Inc, sdtServoAwal, sdtServoAkhir, sdtDynAwal, sdtDynAkhir, tDyn = 0, tServo = 0;
+int stepss = 0, sdtDyn, sdtServo;
+bool moveDyn = false;
+bool movePeg = false;
+bool Capit = false;
 //
 float xFR, yFR, zFR, xFL, yFL, zFL, xBR, yBR, zBR, xBL, yBL, zBL, xRM, yRM, zRM, xLM, yLM, zLM;
 float yFR_Awal, yFL_Awal, yBL_Awal, yBR_Awal, yRM_Awal, yLM_Awal, yFR_Akhir, yFL_Akhir, yBL_Akhir, yBR_Akhir, yRM_Akhir, yLM_Akhir;
@@ -108,7 +105,6 @@ float lebarKiri, lebarKanan, lebarTengah;
 bool Sensors = true;
 bool stateMPU = false;
 bool turunMPU = false;
-bool Trayektori = true;
 float filter_weight = 1; //Untuk filter roll naik tangga = 0.2
 float filtered_Roll;
 
@@ -135,17 +131,17 @@ void setup() {
   //====Setup SRF04====//
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
-  capit1.attach(PE15);
-  capit2.attach(PB11);
+  capit1.attach(PE15); //Capit Kiri (Saat Robot ke Arah Depan)
+  capit2.attach(PB11); //Capit Kanan
   pegangan.attach(PE14);
-  delay(3000);
+  delay(2000);
   StandbyAwal();
   resetPID();
-  delay(500);
-  capit1.write(130);//180 Kondisi Tutup
-  capit2.write(50);//0 Kondisi Tutup
-  pegangan.write(92);
-  kirimDynamixel(0, 820);
+  delay(3000);
+  kirimDynamixel(820);
+  pegangan.write(82);
+  capit1.write(140);  //180 Kondisi Tutup //130 Buka
+  capit2.write(40);    //0 Kondisi Tutup   //50 Buka
   delay(1000);
   while (yaw < 0) {
     read_MPU();
@@ -164,7 +160,7 @@ void setup() {
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
-              512,
+              1024, //awal 512
               NULL,
               2, //Priority Lebih Tinggi
               NULL);

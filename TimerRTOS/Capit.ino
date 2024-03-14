@@ -1,82 +1,120 @@
-//while ((moveServ || moveDyn) || movePeg) {
-//  if (movePeg) {
-//    pegangan.write(movePegangan(50 , 72, 20));
-//  }
-//  if (moveDyn) {
-//    kirimDynamixel(512, moveDynamixel(240, 110, 200));
-//  }
-//}
-int moveDynamixel(float sdtAwal, float sdtTujuan, float kecepatan) { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
-  if (t <= 180) {
-    Inc = 180 / kecepatan;
-    act = ((sdtTujuan - sdtAwal) / 10) * 2;
-    sdtServo = (sdtAwal + (((act * t) / 360)) * 10) * 3.41;
-    t += Inc;
-    if (t > 180) {
+void moveDynamixel() { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
+  if (tDyn <= 180) {
+    actDyn = ((sdtDynAkhir - sdtDynAwal) / 10) * 2;
+    sdtDyn = (sdtDynAwal + (((actDyn * tDyn) / 360)) * 10) * 3.41;
+    tDyn += Inc;
+    if (tDyn > 180) {
       moveDyn = false;
-      //      t = 0;
+      tDyn = 0;
     }
   }
 }
 
-float movePegangan(float sdtAwals, float sdtTujuans, float kecepatans) { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
-  //  if (moveServ) {
-  Inc = 180 / kecepatans;
-  act = ((sdtTujuans - sdtAwals) / 10) * 2;
-  sdtServo = sdtAwals + (((act * t) / 360)) * 10;
-  t += Inc;
-  if (t > 180) {
-    movePeg = false;
-    t = 0;
+void movePegangan() { //Kecepatan (Jumlah Titik) = Kecepatan Saat body maju ambil korban.
+  if (tServo <= 180) {
+    actServo = ((sdtServoAkhir - sdtServoAwal) / 10) * 2;
+    sdtServo = sdtServoAwal + (((actServo * tServo) / 360)) * 10;
+    tServo += Inc;
+    if (tServo > 180) {
+      movePeg = false;
+      tServo = 0;
+    }
   }
-  return sdtServo;
 }
 
-//void kirimDynamixel(int speedss, int positions) {
-//  unsigned long checksum = 0;
-//  unsigned char position_H = 0;
-//  unsigned char position_L = 0;
-//  unsigned char speed_H = 0;
-//  unsigned char speed_L = 0;
-//  unsigned char id;
-//  unsigned char panjangData = 4;
-//  unsigned char jumlahServo = 1;
-//  unsigned char bufferDataTx[98];
-//  unsigned char LENGTH = (panjangData + 1) * jumlahServo + 4;//19; // (panjang data +1) x jumlah servo + 4 ===>>> lighat manual rx 28 halaman 37
-//  speed_H = speedss >> 8;    //high adresses
-//  speed_L = speedss & 0xff;  //low addresses karena pengiriman  data harus 16 bit tetapi dipecah menjadi 2 yaitu masing2 8bit
-//  checksum = 0xFE + LENGTH + 0x83 + 0x1E + panjangData;
-//  //############# HEADER ############//
-//  bufferDataTx[0] = 0xFF;
-//  bufferDataTx[1] = 0xFF;
-//  //######## BROADCAST INTRUCTION ############//
-//  bufferDataTx[2] = 0xFE;
-//  //######## LENGTH ############//
-//  bufferDataTx[3] = LENGTH;
-//  //######## SYNC WRITE ############//
-//  bufferDataTx[4] = 0x83;
-//  //######## FISRT ADDRESS ############//
-//  bufferDataTx[5] = 0x1E;
-//  //######## LENGTH OF DATA ############//
-//  bufferDataTx[6] = panjangData;
-//  //######## SERVO 00 ##################//
-//  position_H = positions >> 8;
-//  position_L = positions & 0xff;
-//  id = 19;
-//  checksum += position_L + position_H + speed_L + speed_H + id;
-//  bufferDataTx[7] = id;
-//  bufferDataTx[8] = position_L;
-//  bufferDataTx[9] = position_H;
-//  bufferDataTx[10] = speed_L;
-//  bufferDataTx[11] = speed_H;
-//  //############# checksum ##############//
-//  checksum = (~checksum) & 0xFF; //only use lower bytes hal.49
-//  bufferDataTx[12] = checksum;
-//  sendData(13, bufferDataTx);
-//}
-//
+void taruhKorban1(int kecepatan) {
+  if (!moveDyn && !movePeg) {
+    Capit = true;
+    Inc = 180 / kecepatan;
+    switch (stepss) {
+      case 0 : //Turunkan Capit
+        sdtServoAwal = 82, sdtServoAkhir = 62;
+        sdtDynAwal = 240, sdtDynAkhir = 117;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1 : //Buka Capit
+        capit1.write(145);
+        capit2.write(35);
+        sdtServoAwal = 62, sdtServoAkhir = 62;
+        sdtDynAwal = 117, sdtDynAkhir = 117;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 2 :
+        sdtServoAwal = 62, sdtServoAkhir = 102;
+        sdtDynAwal = 117, sdtDynAkhir = 117;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 3 : //Naikkan Capit
+        sdtServoAwal = 102, sdtServoAkhir = 82;
+        sdtDynAwal = 117, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 4 :
+        sdtServoAwal = 82, sdtServoAkhir = 82;
+        sdtDynAwal = 240, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+    }
+    stepss ++;
+    if (stepss > 5) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
 
-void kirimDynamixel(int speedss, int positions) {
+void taruhKorban2(int kecepatan) {
+  if (!moveDyn && !movePeg) {
+    Capit = true;
+    Inc = 180 / kecepatan;
+    switch (stepss) {
+      case 0 : //Turunkan Capit
+        sdtServoAwal = 82, sdtServoAkhir = 50;
+        sdtDynAwal = 240, sdtDynAkhir = 134;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1 : //Buka Capit
+        capit1.write(145);
+        capit2.write(35);
+        sdtServoAwal = 50, sdtServoAkhir = 50;
+        sdtDynAwal = 134, sdtDynAkhir = 134;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 2 :
+        sdtServoAwal = 50, sdtServoAkhir = 92;
+        sdtDynAwal = 134, sdtDynAkhir = 134;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 3 : //Naikkan Capit
+        sdtServoAwal = 92, sdtServoAkhir = 82;
+        sdtDynAwal = 134, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 4 :
+        sdtServoAwal = 82, sdtServoAkhir = 82;
+        sdtDynAwal = 240, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+    }
+    stepss ++;
+    if (stepss > 5) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
+
+void kirimDynamixel(int positions) {
   unsigned long checksums = 0;
   unsigned char positions_H = 0;
   unsigned char positions_L = 0;
@@ -85,10 +123,10 @@ void kirimDynamixel(int speedss, int positions) {
   unsigned char id;
   unsigned char lengthTotalData = 4;
   unsigned char jumlahServo = 1;
-  unsigned char bufferData[98];
+  unsigned char bufferData[13];
   unsigned char lengthTotal = (lengthTotalData + 1) * jumlahServo + 4;//19; // (panjang data +1) x jumlah servo + 4 ===>>> lighat manual rx 28 halaman 37
-  speeds_H = speedss >> 8;    //high adresses
-  speeds_L = speedss & 0xff;  //low addresses karena pengiriman  data harus 16 bit tetapi dipecah menjadi 2 yaitu masing2 8bit
+  speeds_H = 780 >> 8;    //high adresses
+  speeds_L = 780 & 0xff;  //low addresses karena pengiriman  data harus 16 bit tetapi dipecah menjadi 2 yaitu masing2 8bit
   checksums = 0xFE + lengthTotal + 0x83 + 0x1E + lengthTotalData;
   //############# HEADER ############//
   bufferData[0] = 0xFF;

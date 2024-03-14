@@ -6,6 +6,12 @@ void Kaki(void *pvParameters) {
       if (!isnan(sdtcoxa) && !isnan(sdtfemur) && !isnan(sdttibia)) {
         KirimIntruksiGerak(0);
       }
+      if (Capit == true) {
+        movePegangan();
+        moveDynamixel();
+        pegangan.write(sdtServo);
+        kirimDynamixel(sdtDyn);
+      }
       //      if (Sensors) {
       //        Sensors = false;
       //      }

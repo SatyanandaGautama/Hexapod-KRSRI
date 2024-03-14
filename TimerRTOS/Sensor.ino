@@ -18,43 +18,12 @@ void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar K
 }
 
 void RotJarak(uint32_t PING1, uint32_t PING2) {
-  j2 = readPING(PING1);
-  j3 = readPING(PING2);
-  OffsetJarak = (j2 - j3) * 2.5;
-  if (OffsetJarak > 20) OffsetJarak = 20;
-  if (OffsetJarak < -20) OffsetJarak = -20;
+  jFront = readPING(PING1);
+  jBack = readPING(PING2);
+  OffsetJarak = (jFront - jBack) * 2.5;
+  if (OffsetJarak > 25) OffsetJarak = 25;
+  if (OffsetJarak < -25) OffsetJarak = -25;
 }
-
-//void RotJarak(uint32_t PING1, uint32_t PING2, int t, int s, bool mpu) {//PING1 = depan, PING2 = belakang, mpu = true (Baca MPU)
-//  if (mpu) {
-//    read_MPU();
-//    vTaskDelay(15 / portTICK_PERIOD_MS);
-//    yawSebelum = yaw;
-//    OffsetJarak = (readPING(PING1) - readPING(PING2)) * 1.7;
-//    while (abs(OffsetJarak) > 0 || (steps == 0 || steps == 2)) {
-//      xSemaphoreTake(mutex, portMAX_DELAY);
-//      GerakRotasi(OffsetJarak, t, s);
-//      OffsetJarak = (readPING(PING1) - readPING(PING2)) * 1.7;
-//      xSemaphoreGive(mutex);
-//    }
-//    sdtAcuan = yawSebelum;
-//    while (sdtAcuan == yawSebelum) {
-//      read_MPU();
-//      vTaskDelay(15 / portTICK_PERIOD_MS);
-//      sdtAcuan = yaw;
-//    }
-//    sdtAcuan = yaw;
-//  }
-//  else {
-//    OffsetJarak = (readPING(PING1) - readPING(PING2)) * 1.7;
-//    while (abs(OffsetJarak) > 0 || (steps == 0 || steps == 2)) {
-//      xSemaphoreTake(mutex, portMAX_DELAY);
-//      GerakRotasi(OffsetJarak, t, s);
-//      OffsetJarak = (readPING(PING1) - readPING(PING2)) * 1.7;
-//      xSemaphoreGive(mutex);
-//    }
-//  }
-//}
 
 void navigasiMPU_Maju(int maxStep) {
   read_MPU();
@@ -193,9 +162,9 @@ void navigasiMPU_Kanan(int maxStep) {
 }
 
 void navigasiMaju(int setpoint, int maxStep, uint32_t pingFront, uint32_t pingBack) {
-  j3 = readPING(pingFront);
-  j2 = readPING(pingBack);
-  error = j3 - j2;
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;
   //  if (error != 0) { //error (+) => belok kanan, error (-) => belok kiri
   PID_controller();
   if (PID_control >= maxStep) PID_control = maxStep;
@@ -217,29 +186,29 @@ void navigasiMaju(int setpoint, int maxStep, uint32_t pingFront, uint32_t pingBa
   //    Serial.print("E: ");
   //    Serial.println(error);
   //}
-  //else if ( error == 0 && (j3 >= setpoint + 4 || j3 <= setpoint - 4)) {
-  //  offsets = setpoint - j3;
-  //  while ( j3 > setpoint + 2) {//Geser Kanan
+  //else if ( error == 0 && (jFront >= setpoint + 4 || jFront <= setpoint - 4)) {
+  //  offsets = setpoint - jFront;
+  //  while ( jFront > setpoint + 2) {//Geser Kanan
   //    xSemaphoreTake(mutex, portMAX_DELAY);
   //    GerakGeser(offsets, 20, 12, 0, 0, 0);
   //    xSemaphoreGive(mutex);
-  //    j3 = readPING(pingFront);
-  //    offsets = setpoint - j3;
+  //    jFront = readPING(pingFront);
+  //    offsets = setpoint - jFront;
   //  }
-  //  while (j3 < setpoint - 2) {//Geser Kiri
+  //  while (jFront < setpoint - 2) {//Geser Kiri
   //    xSemaphoreTake(mutex, portMAX_DELAY);
   //    GerakGeser(offsets, 20, 12, 0, 0, 0);
   //    xSemaphoreGive(mutex);
-  //    j3 = readPING(pingFront);
-  //    offsets = setpoint - j3;
+  //    jFront = readPING(pingFront);
+  //    offsets = setpoint - jFront;
   //  }
   //}
 }
 
 void navigasiMundur(int setpoint, int maxStep, uint32_t pingFront, uint32_t pingBack) {
-  j3 = readPING(pingFront);
-  j2 = readPING(pingBack);
-  error = j3 - j2;
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   //  if (error != 0) { //error (+) => belok kanan, error (-) => belok kiri
   PID_controller();
@@ -262,29 +231,29 @@ void navigasiMundur(int setpoint, int maxStep, uint32_t pingFront, uint32_t ping
   //    Serial.print("E: ");
   //    Serial.println(error);
   //  }
-  //  else if ( error == 0 && (j3 >= 20 || j3 <= 10)) {
-  //    offsets = setpoint - j3;
-  //    while ( j3 > setpoint + 2) {//Geser Kanan
+  //  else if ( error == 0 && (jFront >= 20 || jFront <= 10)) {
+  //    offsets = setpoint - jFront;
+  //    while ( jFront > setpoint + 2) {//Geser Kanan
   //      xSemaphoreTake(mutex, portMAX_DELAY);
   //      GerakGeser(offsets, 20, 20, 0, 0, 0);
   //      xSemaphoreGive(mutex);
-  //      j3 = readPING(pingFront);
-  //      offsets = setpoint - j3;
+  //      jFront = readPING(pingFront);
+  //      offsets = setpoint - jFront;
   //    }
-  //    while (j3 < setpoint - 2) {//Geser Kiri
+  //    while (jFront < setpoint - 2) {//Geser Kiri
   //      xSemaphoreTake(mutex, portMAX_DELAY);
   //      GerakGeser(offsets, 20, 20, 0, 0, 0);
   //      xSemaphoreGive(mutex);
-  //      j3 = readPING(pingFront);
-  //      offsets = setpoint - j3;
+  //      jFront = readPING(pingFront);
+  //      offsets = setpoint - jFront;
   //    }
   //  }
 }
 
 void navigasiKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
-  j3 = readPING(pingFront);
-  j2 = readPING(pingBack);
-  error = j3 - j2;
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
   if (PID_control >= maxStep) PID_control = maxStep;
@@ -311,9 +280,9 @@ void navigasiKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
 }
 
 void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
-  j3 = readPING(pingFront);
-  j2 = readPING(pingBack);
-  error = j3 - j2;
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
   if (PID_control >= maxStep) PID_control = maxStep;
@@ -352,21 +321,20 @@ int readPING(uint32_t pinData) {
   return cm;
 }
 
-void readSRF() {
-  digitalWrite(TRIG, LOW);
-  vTaskDelay(2 / portTICK_PERIOD_MS);
-  digitalWrite(TRIG, HIGH);
-  vTaskDelay(5 / portTICK_PERIOD_MS);
-  digitalWrite(TRIG, LOW);
-  jarak = pulseIn(ECHO, HIGH);
-  jarak = jarak / 58;
-  Serial.println(jarak);
-}
+//void readSRF() {
+//  digitalWrite(TRIG, LOW);
+//  vTaskDelay(2 / portTICK_PERIOD_MS);
+//  digitalWrite(TRIG, HIGH);
+//  vTaskDelay(5 / portTICK_PERIOD_MS);
+//  digitalWrite(TRIG, LOW);
+//  jarak = pulseIn(ECHO, HIGH);
+//  jarak = jarak / 58;
+//  Serial.println(jarak);
+//}
 
 void baca_IR(uint32_t PinIR) {
   distances = IR(PinIR);
-  //  filtered_IR = ((1 - filter_weight) * filtered_IR) + (filter_weight * distances);
-  //  Serial.println(distances);
+  Serial.println(distances);
   vTaskDelay(2 / portTICK_PERIOD_MS);
 }
 
