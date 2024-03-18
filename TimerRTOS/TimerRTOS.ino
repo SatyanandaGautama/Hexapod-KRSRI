@@ -5,6 +5,10 @@ HardwareSerial Serial6(USART6);//Serial Maixbit Camera
 #include <STM32FreeRTOS.h>
 #include <semphr.h>
 #define configUSE_16_BIT_TICKS  1
+//HuskyLens Camera
+#include "HUSKYLENS.h"
+HUSKYLENS huskylens;
+HUSKYLENSResult result;
 //SharpIR
 #define IRfront PA0 //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
 #define IRback PC0
@@ -118,30 +122,42 @@ void timerInterrupt() {
 void setup() {
   Serial.setTx(PA9);
   Serial.setRx(PA10);
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial2.setTx(PA2);
   Serial2.setRx(PA3);
   Serial2.begin(1000000);
   Serial3.setTx(PD8);
   Serial3.setRx(PD9);
   Serial3.begin(115200);
-  Serial6.setTx(PC6);
-  Serial6.setRx(PC7);
-  Serial6.begin(115200);
   //====Setup SRF04====//
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
   capit1.attach(PE15); //Capit Kiri (Saat Robot ke Arah Depan)
   capit2.attach(PB11); //Capit Kanan
   pegangan.attach(PE14);
-  delay(2000);
+  delay(3000);
+  //===Setup HuskyLens===//
+  //  Serial6.setTx(PC6);
+  //  Serial6.setRx(PC7);
+  //  Serial6.begin(9600);
+  //  delay(2000);
+  //  while (!huskylens.begin(Serial6))
+  //  {
+  //    Serial.println(F("Begin failed!"));
+  //    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
+  //    Serial.println(F("2.Please recheck the connection."));
+  //    delay(100);
+  //  }
+  //  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING); //Switch the algorithm to object tracking.
+  //===Setup HuskyLens===//
+  delay(3000);
   StandbyAwal();
   resetPID();
-  delay(3000);
+  delay(2000);
   kirimDynamixel(820);
-  pegangan.write(82);
-  capit1.write(140);  //180 Kondisi Tutup //130 Buka
-  capit2.write(40);    //0 Kondisi Tutup   //50 Buka
+  pegangan.write(72);
+  capit1.write(130);  //180 Kondisi Tutup //130 Buka
+  capit2.write(50);    //0 Kondisi Tutup   //50 Buka
   delay(1000);
   while (yaw < 0) {
     read_MPU();

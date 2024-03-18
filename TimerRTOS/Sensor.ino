@@ -321,20 +321,20 @@ int readPING(uint32_t pinData) {
   return cm;
 }
 
-//void readSRF() {
-//  digitalWrite(TRIG, LOW);
-//  vTaskDelay(2 / portTICK_PERIOD_MS);
-//  digitalWrite(TRIG, HIGH);
-//  vTaskDelay(5 / portTICK_PERIOD_MS);
-//  digitalWrite(TRIG, LOW);
-//  jarak = pulseIn(ECHO, HIGH);
-//  jarak = jarak / 58;
-//  Serial.println(jarak);
-//}
+void readSRF() {
+  digitalWrite(TRIG, LOW);
+  vTaskDelay(2 / portTICK_PERIOD_MS);
+  digitalWrite(TRIG, HIGH);
+  vTaskDelay(5 / portTICK_PERIOD_MS);
+  digitalWrite(TRIG, LOW);
+  jarak = pulseIn(ECHO, HIGH);
+  jarak = jarak / 58;
+  //  Serial.println(jarak);
+}
 
 void baca_IR(uint32_t PinIR) {
   distances = IR(PinIR);
-  Serial.println(distances);
+  //  Serial.println(distances);
   vTaskDelay(2 / portTICK_PERIOD_MS);
 }
 
@@ -572,6 +572,38 @@ void GerakSetelahTangga() {
 //  GerakNaikTangga();
 //}
 
+//=== Gerakan Mengambil Korban ===//
+//    while (1) {
+//      xSemaphoreTake(mutex, portMAX_DELAY);
+//      BodyMundur(25);
+//      xSemaphoreGive(mutex);
+//      if (Capit == false) {
+//        break;
+//      }
+//    }
+//    readSRF();
+//    while (jarak > 7) {
+//      xSemaphoreTake(mutex, portMAX_DELAY);
+//      BodyMaju(30);
+//      xSemaphoreGive(mutex);
+//      if (Capit == false)break;
+//      readSRF();
+//    }
+//    xSemaphoreTake(mutex, portMAX_DELAY);
+//    stepss = 0;
+//    xSemaphoreGive(mutex);
+//    while (1) {
+//      xSemaphoreTake(mutex, portMAX_DELAY);
+//      BodyBalik(25);
+//      xSemaphoreGive(mutex);
+//      if (Capit == false) {
+//        break;
+//      }
+//    }
+//    while (1) {
+//      Serial.println("1");
+//    }
+
 void BacaSensor() {
   baca_IR(IRfront);
   Serial.print("IR Front : ");
@@ -587,4 +619,34 @@ void BacaSensor() {
   Serial.println(readPING(leftFront));
   Serial.print("Left Back : ");
   Serial.println(readPING(leftBack));
+}
+
+void AmbilKorban() {
+  while (1) {
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    BodyMundur(25);
+    xSemaphoreGive(mutex);
+    if (Capit == false) {
+      break;
+    }
+  }
+  readSRF();
+  while (jarak > 6) {
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    BodyMaju(50);
+    xSemaphoreGive(mutex);
+    if (Capit == false)break;
+    readSRF();
+  }
+  xSemaphoreTake(mutex, portMAX_DELAY);
+  stepss = 0;
+  xSemaphoreGive(mutex);
+  while (1) {
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    BodyBalik(25);
+    xSemaphoreGive(mutex);
+    if (Capit == false) {
+      break;
+    }
+  }
 }

@@ -1,6 +1,120 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    baca_IR(IRfront);
+    //===Test Gerakan Ambil Korban K1===//
+    //    huskylens.request();
+    //    if (huskylens.available()) {
+    //      while (1) {
+    //        read_maix();
+    //        if (result.xCenter > 165) {
+    //          while (result.xCenter > 165 || (steps == 1 || steps == 3)) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            GerakRotasi(5, 15, 38);
+    //            xSemaphoreGive(mutex);
+    //            read_maix();
+    //          }
+    //        }
+    //        else if (result.xCenter < 155) {
+    //          while (result.xCenter < 155 || (steps == 1 || steps == 3)) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            GerakRotasi(-5, 15, 38);
+    //            xSemaphoreGive(mutex);
+    //            read_maix();
+    //          }
+    //        }
+    //        else {
+    //          Standby();
+    //          AmbilKorban();
+    //          while (1) {
+    //            Serial.println("1");
+    //          }
+    //        }
+    //      }
+    //    }
+    //    else {
+    //      if (Sensors == true) {
+    //        jmlhStep = 0;
+    //        while (jmlhStep < 4 || (steps == 1 || steps == 3)) {
+    //          xSemaphoreTake(mutex, portMAX_DELAY);
+    //          if (steps == 0 && statusGerak == false) {
+    //            jmlhStep++;
+    //          }
+    //          GerakRotasi(5, 15, 36);
+    //          xSemaphoreGive(mutex);
+    //          huskylens.request();
+    //          if (huskylens.available()) {
+    //            while (1) {
+    //              read_maix();
+    //              if (result.xCenter > 165) {
+    //                while (result.xCenter > 165 || (steps == 1 || steps == 3)) {
+    //                  xSemaphoreTake(mutex, portMAX_DELAY);
+    //                  GerakRotasi(5, 15, 38);
+    //                  xSemaphoreGive(mutex);
+    //                  read_maix();
+    //                }
+    //              }
+    //              else if (result.xCenter < 155) {
+    //                while (result.xCenter < 155 || (steps == 1 || steps == 3)) {
+    //                  xSemaphoreTake(mutex, portMAX_DELAY);
+    //                  GerakRotasi(-5, 15, 38);
+    //                  xSemaphoreGive(mutex);
+    //                  read_maix();
+    //                }
+    //              }
+    //              else {
+    //                Standby();
+    //                AmbilKorban();
+    //                while (1) {
+    //                  Serial.println("1");
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //        Sensors = false;
+    //      }
+    //      else {
+    //        jmlhStep = 0;
+    //        while (jmlhStep < 4 || (steps == 1 || steps == 3)) {
+    //          xSemaphoreTake(mutex, portMAX_DELAY);
+    //          if (steps == 0 && statusGerak == false) {
+    //            jmlhStep++;
+    //          }
+    //          GerakRotasi(-5, 15, 36);
+    //          xSemaphoreGive(mutex);
+    //          huskylens.request();
+    //          if (huskylens.available()) {
+    //            while (1) {
+    //              read_maix();
+    //              if (result.xCenter > 165) {
+    //                while (result.xCenter > 165 || (steps == 1 || steps == 3)) {
+    //                  xSemaphoreTake(mutex, portMAX_DELAY);
+    //                  GerakRotasi(5, 15, 38);
+    //                  xSemaphoreGive(mutex);
+    //                  read_maix();
+    //                }
+    //              }
+    //              else if (result.xCenter < 155) {
+    //                while (result.xCenter < 155 || (steps == 1 || steps == 3)) {
+    //                  xSemaphoreTake(mutex, portMAX_DELAY);
+    //                  GerakRotasi(-5, 15, 38);
+    //                  xSemaphoreGive(mutex);
+    //                  read_maix();
+    //                }
+    //              }
+    //              else {
+    //                Standby();
+    //                AmbilKorban();
+    //                while (1) {
+    //                  Serial.println("1");
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
+    //===Test Gerakan Ambil Korban K1===//
+
     //    //========= Dari Start sampai SZ-1 ============//
     //    RotateMPU(90, true);
     //    while (abs(Offset) > 0 || (steps == 1 || steps == 3)) {
@@ -483,6 +597,7 @@ void Sensor(void *pvParameters) {
     //== == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == //
   }
 }
+
 
 
 

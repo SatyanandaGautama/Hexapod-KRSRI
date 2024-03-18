@@ -1,46 +1,179 @@
 void BodyMaju(int speeds) {//gerakan saat ambil korban
   if (!statusGerak) {
-    theta = 0;
+    Capit = true;
     Increment = 180 / speeds;
-    degAwal = 0;
-    degAkhir = 180;
-    //KANAN DEPAN (FR)
-    xFR0 = -55,  yFR0 = 100, xFR1 = -55, yFR1 = 10, zFRp = 0;
-    //KIRI TENGAH (LM)
-    xLM0 = 76, yLM0 = 45, xLM1 = 76, yLM1 = -45, zLMp = 0;
-    //KANAN BELAKANG (BR)
-    xBR0 = -55, yBR0 = -10, xBR1 = -55,  yBR1 = -100, zBRp = 0;
-    //KIRI DEPAN (FL)
-    xFL0 = 55, yFL0 = 100, xFL1 = 55,  yFL1 = 10, zFLp = 0;
-    //KANAN TENGAH (RM)
-    xRM0 = -76, yRM0 = 45, xRM1 = -76, yRM1 = -45, zRMp = 0;
-    //KIRI BELAKANG (BL)
-    xBL0 = 55, yBL0 = -10, xBL1 = 55,  yBL1 = -100, zBLp = 0;
-    modeGerak = true;
-    statusGerak = true;
+    Inc = 180 / speeds;
+    switch (stepss) {
+      case 0: //Body & Capit Maju
+        theta = 0;
+        degAwal = 0;
+        degAkhir = 180;
+        //KANAN DEPAN (FR)
+        xFR0 = -55,  yFR0 = 105, xFR1 = -55, yFR1 = 10, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = 76, yLM0 = 50, xLM1 = 76, yLM1 = -45, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55, yBR0 = -5, xBR1 = -55,  yBR1 = -86, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = 55, yFL0 = 105, xFL1 = 55,  yFL1 = 10, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = -45, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55, yBL0 = -5, xBL1 = 55,  yBL1 = -86, zBLp = 0;
+        sdtServoAwal = 56, sdtServoAkhir = 52;//??
+        sdtDynAwal = 120, sdtDynAkhir = 125;//??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 1:
+        //KANAN DEPAN (FR)
+        xFR0 = -55,  yFR0 = 10, xFR1 = -55, yFR1 = 10, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = 76, yLM0 = -45, xLM1 = 76, yLM1 = -45, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55, yBR0 = -86, xBR1 = -55,  yBR1 = -86, zBRp = 0; //BR MAKS 105
+        //KIRI DEPAN (FL)
+        xFL0 = 55, yFL0 = 10, xFL1 = 55,  yFL1 = 10, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = -76, yRM0 = -45, xRM1 = -76, yRM1 = -45, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55, yBL0 = -86, xBL1 = 55,  yBL1 = -86, zBLp = 0;
+        sdtServoAwal = 52, sdtServoAkhir = 52;//??
+        sdtDynAwal = 125, sdtDynAkhir = 125;//??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+    }
+    stepss ++;
+    if (stepss > 2) {
+      Capit = false;
+      stepss = 0;
+    }
   }
 }
 
-void bodyBalik(int speeds) {
+
+void BodyBalik(int speeds) {
   if (!statusGerak) {
-    theta = 0;
+    Capit = true;
     Increment = 180 / speeds;
-    degAwal = 0;
-    degAkhir = 180;
-    //KANAN DEPAN (FR)
-    xFR0 = xFR,  yFR0 = yFR, xFR1 = -55, yFR1 = 55, zFRp = 0;
-    //KIRI TENGAH (LM)
-    xLM0 = xLM, yLM0 = yLM, xLM1 = 76, yLM1 = 0, zLMp = 0;
-    //KANAN BELAKANG (BR)
-    xBR0 = xBR, yBR0 = yBR, xBR1 = -55,  yBR1 = -55, zBRp = 0;
-    //KIRI DEPAN (FL)
-    xFL0 = xFL, yFL0 = yFL, xFL1 = 55,  yFL1 = 55, zFLp = 0;
-    //KANAN TENGAH (RM)
-    xRM0 = xRM, yRM0 = yRM, xRM1 = -76, yRM1 = 0, zRMp = 0;
-    //KIRI BELAKANG (BL)
-    xBL0 = xBL, yBL0 = yBL, xBL1 = 55,  yBL1 = -55, zBLp = 0;
-    modeGerak = true;
-    statusGerak = true;
+    Inc = 180 / speeds;
+    switch (stepss) {
+      case 0: //Capit Korban
+        theta = 0;
+        degAwal = 0;
+        degAkhir = 180;
+        capit1.write(179);
+        capit2.write(1);
+        //KANAN DEPAN (FR)
+        xFR0 = xFR,  yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM, yLM0 = yLM, xLM1 = xLM, yLM1 = yLM, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR, yBR0 = yBR, xBR1 = xBR,  yBR1 = yBR, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL, yFL0 = yFL, xFL1 = xFL,  yFL1 = yFL, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL, yBL0 = yBL, xBL1 = xBL,  yBL1 = yBL, zBLp = 0;
+        sdtServoAwal = 52, sdtServoAkhir = 52;
+        sdtDynAwal = 125, sdtDynAkhir = 125;
+        modeGerak = true;
+        statusGerak = true;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1: //Pegangan Naik
+        //KANAN DEPAN (FR)
+        xFR0 = xFR,  yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM, yLM0 = yLM, xLM1 = xLM, yLM1 = yLM, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR, yBR0 = yBR, xBR1 = xBR,  yBR1 = yBR, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL, yFL0 = yFL, xFL1 = xFL,  yFL1 = yFL, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL, yBL0 = yBL, xBL1 = xBL,  yBL1 = yBL, zBLp = 0;
+        sdtServoAwal = 52, sdtServoAkhir = 110;
+        sdtDynAwal = 125, sdtDynAkhir = 125;
+        modeGerak = true;
+        statusGerak = true;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 2: //Naikkan Capit
+        //KANAN DEPAN (FR)
+        xFR0 = xFR,  yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM, yLM0 = yLM, xLM1 = xLM, yLM1 = yLM, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR, yBR0 = yBR, xBR1 = xBR,  yBR1 = yBR, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL, yFL0 = yFL, xFL1 = xFL,  yFL1 = yFL, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL, yBL0 = yBL, xBL1 = xBL,  yBL1 = yBL, zBLp = 0;
+        sdtServoAwal = 110, sdtServoAkhir = 82;
+        sdtDynAwal = 125, sdtDynAkhir = 240;
+        modeGerak = true;
+        statusGerak = true;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 3: //Body Balik
+        //KANAN DEPAN (FR)
+        xFR0 = xFR,  yFR0 = yFR, xFR1 = -55, yFR1 = 55, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM, yLM0 = yLM, xLM1 = 76, yLM1 = 0, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR, yBR0 = yBR, xBR1 = -55,  yBR1 = -55, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL, yFL0 = yFL, xFL1 = 55,  yFL1 = 55, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM, yRM0 = yRM, xRM1 = -76, yRM1 = 0, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL, yBL0 = yBL, xBL1 = 55,  yBL1 = -55, zBLp = 0;
+        sdtServoAwal = 82, sdtServoAkhir = 82;//??
+        sdtDynAwal = 240, sdtDynAkhir = 240;//??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 4:
+        //KANAN DEPAN (FR)
+        xFR0 = -55,  yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = 76, yLM0 = 0, xLM1 = 76, yLM1 = 0, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55, yBR0 = -55, xBR1 = -55,  yBR1 = -55, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = 55, yFL0 = 55, xFL1 = 55,  yFL1 = 55, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = -76, yRM0 = 0, xRM1 = -76, yRM1 = 0, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55, yBL0 = -55, xBL1 = 55,  yBL1 = -55, zBLp = 0;
+        sdtServoAwal = 82, sdtServoAkhir = 82;//??
+        sdtDynAwal = 240, sdtDynAkhir = 240;//??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+    }
+    stepss ++;
+    if (stepss > 5) {
+      Capit = false;
+      stepss = 0;
+    }
   }
 }
 
@@ -93,41 +226,21 @@ void BodyMundur(int speeds) {
         modeGerak = true;
         statusGerak = true;
         break;
-      case 2: //Body & Capit Maju
+      case 2:
         //KANAN DEPAN (FR)
-        xFR0 = -55,  yFR0 = 105, xFR1 = -55, yFR1 = 10, zFRp = 0;
+        xFR0 = -55,  yFR0 = 105, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)
-        xLM0 = 76, yLM0 = 50, xLM1 = 76, yLM1 = -45, zLMp = 0;
+        xLM0 = 76, yLM0 = 50, xLM1 = 76, yLM1 = 50, zLMp = 0;
         //KANAN BELAKANG (BR)
-        xBR0 = -55, yBR0 = -5, xBR1 = -55,  yBR1 = -86, zBRp = 0;
+        xBR0 = -55, yBR0 = -5, xBR1 = -55,  yBR1 = -5, zBRp = 0;
         //KIRI DEPAN (FL)
-        xFL0 = 55, yFL0 = 105, xFL1 = 55,  yFL1 = 10, zFLp = 0;
+        xFL0 = 55, yFL0 = 105, xFL1 = 55,  yFL1 = 105, zFLp = 0;
         //KANAN TENGAH (RM)
-        xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = -45, zRMp = 0;
+        xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
-        xBL0 = 55, yBL0 = -5, xBL1 = 55,  yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 56, sdtServoAkhir = 52;//??
-        sdtDynAwal = 120, sdtDynAkhir = 125;//??
-        moveDyn = true;
-        movePeg = true;
-        modeGerak = true;
-        statusGerak = true;
-        break;
-      case 3: //Body & Capit Maju
-        //KANAN DEPAN (FR)
-        xFR0 = -55,  yFR0 = 10, xFR1 = -55, yFR1 = 10, zFRp = 0;
-        //KIRI TENGAH (LM)
-        xLM0 = 76, yLM0 = -45, xLM1 = 76, yLM1 = -45, zLMp = 0;
-        //KANAN BELAKANG (BR)
-        xBR0 = -55, yBR0 = -86, xBR1 = -55,  yBR1 = -86, zBRp = 0; //BR MAKS 105
-        //KIRI DEPAN (FL)
-        xFL0 = 55, yFL0 = 10, xFL1 = 55,  yFL1 = 10, zFLp = 0;
-        //KANAN TENGAH (RM)
-        xRM0 = -76, yRM0 = -45, xRM1 = -76, yRM1 = -45, zRMp = 0;
-        //KIRI BELAKANG (BL)
-        xBL0 = 55, yBL0 = -86, xBL1 = 55,  yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 52, sdtServoAkhir = 52;//??
-        sdtDynAwal = 125, sdtDynAkhir = 125;//??
+        xBL0 = 55, yBL0 = -5, xBL1 = 55,  yBL1 = -5, zBLp = 0;
+        sdtServoAwal = 56, sdtServoAkhir = 56;//??
+        sdtDynAwal = 120, sdtDynAkhir = 120;//??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -135,12 +248,13 @@ void BodyMundur(int speeds) {
         break;
     }
     stepss ++;
-    if (stepss > 4) {
+    if (stepss > 3) {
       Capit = false;
       stepss = 0;
     }
   }
 }
+
 //Test gerak body mundur + turun capit:
 //if (modeGerak) {
 //  while (1) {
