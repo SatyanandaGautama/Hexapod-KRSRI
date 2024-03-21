@@ -20,8 +20,8 @@ void BodyMaju(int speeds) {//gerakan saat ambil korban
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = -45, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55,  yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 56, sdtServoAkhir = 52;//??
-        sdtDynAwal = 120, sdtDynAkhir = 125;//??
+        sdtServoAwal = 59, sdtServoAkhir = 59;//??
+        sdtDynAwal = 120, sdtDynAkhir = 120;//??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -40,8 +40,8 @@ void BodyMaju(int speeds) {//gerakan saat ambil korban
         xRM0 = -76, yRM0 = -45, xRM1 = -76, yRM1 = -45, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -86, xBL1 = 55,  yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 52, sdtServoAkhir = 52;//??
-        sdtDynAwal = 125, sdtDynAkhir = 125;//??
+        sdtServoAwal = 59, sdtServoAkhir = 59;//??
+        sdtDynAwal = 120, sdtDynAkhir = 120;//??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -81,8 +81,8 @@ void BodyBalik(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL,  yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 52, sdtServoAkhir = 52;
-        sdtDynAwal = 125, sdtDynAkhir = 125;
+        sdtServoAwal = 59, sdtServoAkhir = 59;
+        sdtDynAwal = 120, sdtDynAkhir = 120;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -101,8 +101,8 @@ void BodyBalik(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL,  yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 52, sdtServoAkhir = 110;
-        sdtDynAwal = 125, sdtDynAkhir = 125;
+        sdtServoAwal = 59, sdtServoAkhir = 120;
+        sdtDynAwal = 120, sdtDynAkhir = 120;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -121,8 +121,8 @@ void BodyBalik(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL,  yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 110, sdtServoAkhir = 82;
-        sdtDynAwal = 125, sdtDynAkhir = 240;
+        sdtServoAwal = 120, sdtServoAkhir = 82;
+        sdtDynAwal = 120, sdtDynAkhir = 240;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -219,7 +219,7 @@ void BodyMundur(int speeds) {
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55,  yBL1 = -5, zBLp = 0;
-        sdtServoAwal = 82, sdtServoAkhir = 56;//??
+        sdtServoAwal = 82, sdtServoAkhir = 59;//??
         sdtDynAwal = 240, sdtDynAkhir = 120;//??
         moveDyn = true;
         movePeg = true;
@@ -239,7 +239,7 @@ void BodyMundur(int speeds) {
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55,  yBL1 = -5, zBLp = 0;
-        sdtServoAwal = 56, sdtServoAkhir = 56;//??
+        sdtServoAwal = 59, sdtServoAkhir = 59;//??
         sdtDynAwal = 120, sdtDynAkhir = 120;//??
         moveDyn = true;
         movePeg = true;

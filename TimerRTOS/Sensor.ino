@@ -631,7 +631,7 @@ void AmbilKorban() {
     }
   }
   readSRF();
-  while (jarak > 6) {
+  while (jarak > 5) {
     xSemaphoreTake(mutex, portMAX_DELAY);
     BodyMaju(50);
     xSemaphoreGive(mutex);

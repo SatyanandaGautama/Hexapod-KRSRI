@@ -136,7 +136,8 @@ void setup() {
   capit2.attach(PB11); //Capit Kanan
   pegangan.attach(PE14);
   delay(3000);
-  //===Setup HuskyLens===//
+  //INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
+  //  //===Setup HuskyLens===//
   //  Serial6.setTx(PC6);
   //  Serial6.setRx(PC7);
   //  Serial6.begin(9600);
@@ -149,8 +150,8 @@ void setup() {
   //    delay(100);
   //  }
   //  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING); //Switch the algorithm to object tracking.
-  //===Setup HuskyLens===//
-  delay(3000);
+  //  //===Setup HuskyLens===//
+  //  delay(3000);
   StandbyAwal();
   resetPID();
   delay(2000);

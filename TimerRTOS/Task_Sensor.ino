@@ -1,120 +1,6 @@
 void Sensor(void *pvParameters) {
   while (1) {
-    //===Test Gerakan Ambil Korban K1===//
-    //    huskylens.request();
-    //    if (huskylens.available()) {
-    //      while (1) {
-    //        read_maix();
-    //        if (result.xCenter > 165) {
-    //          while (result.xCenter > 165 || (steps == 1 || steps == 3)) {
-    //            xSemaphoreTake(mutex, portMAX_DELAY);
-    //            GerakRotasi(5, 15, 38);
-    //            xSemaphoreGive(mutex);
-    //            read_maix();
-    //          }
-    //        }
-    //        else if (result.xCenter < 155) {
-    //          while (result.xCenter < 155 || (steps == 1 || steps == 3)) {
-    //            xSemaphoreTake(mutex, portMAX_DELAY);
-    //            GerakRotasi(-5, 15, 38);
-    //            xSemaphoreGive(mutex);
-    //            read_maix();
-    //          }
-    //        }
-    //        else {
-    //          Standby();
-    //          AmbilKorban();
-    //          while (1) {
-    //            Serial.println("1");
-    //          }
-    //        }
-    //      }
-    //    }
-    //    else {
-    //      if (Sensors == true) {
-    //        jmlhStep = 0;
-    //        while (jmlhStep < 4 || (steps == 1 || steps == 3)) {
-    //          xSemaphoreTake(mutex, portMAX_DELAY);
-    //          if (steps == 0 && statusGerak == false) {
-    //            jmlhStep++;
-    //          }
-    //          GerakRotasi(5, 15, 36);
-    //          xSemaphoreGive(mutex);
-    //          huskylens.request();
-    //          if (huskylens.available()) {
-    //            while (1) {
-    //              read_maix();
-    //              if (result.xCenter > 165) {
-    //                while (result.xCenter > 165 || (steps == 1 || steps == 3)) {
-    //                  xSemaphoreTake(mutex, portMAX_DELAY);
-    //                  GerakRotasi(5, 15, 38);
-    //                  xSemaphoreGive(mutex);
-    //                  read_maix();
-    //                }
-    //              }
-    //              else if (result.xCenter < 155) {
-    //                while (result.xCenter < 155 || (steps == 1 || steps == 3)) {
-    //                  xSemaphoreTake(mutex, portMAX_DELAY);
-    //                  GerakRotasi(-5, 15, 38);
-    //                  xSemaphoreGive(mutex);
-    //                  read_maix();
-    //                }
-    //              }
-    //              else {
-    //                Standby();
-    //                AmbilKorban();
-    //                while (1) {
-    //                  Serial.println("1");
-    //                }
-    //              }
-    //            }
-    //          }
-    //        }
-    //        Sensors = false;
-    //      }
-    //      else {
-    //        jmlhStep = 0;
-    //        while (jmlhStep < 4 || (steps == 1 || steps == 3)) {
-    //          xSemaphoreTake(mutex, portMAX_DELAY);
-    //          if (steps == 0 && statusGerak == false) {
-    //            jmlhStep++;
-    //          }
-    //          GerakRotasi(-5, 15, 36);
-    //          xSemaphoreGive(mutex);
-    //          huskylens.request();
-    //          if (huskylens.available()) {
-    //            while (1) {
-    //              read_maix();
-    //              if (result.xCenter > 165) {
-    //                while (result.xCenter > 165 || (steps == 1 || steps == 3)) {
-    //                  xSemaphoreTake(mutex, portMAX_DELAY);
-    //                  GerakRotasi(5, 15, 38);
-    //                  xSemaphoreGive(mutex);
-    //                  read_maix();
-    //                }
-    //              }
-    //              else if (result.xCenter < 155) {
-    //                while (result.xCenter < 155 || (steps == 1 || steps == 3)) {
-    //                  xSemaphoreTake(mutex, portMAX_DELAY);
-    //                  GerakRotasi(-5, 15, 38);
-    //                  xSemaphoreGive(mutex);
-    //                  read_maix();
-    //                }
-    //              }
-    //              else {
-    //                Standby();
-    //                AmbilKorban();
-    //                while (1) {
-    //                  Serial.println("1");
-    //                }
-    //              }
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
-    //===Test Gerakan Ambil Korban K1===//
-
+    //Coding Gerak dari Start sampai SZ-2 + Deteksi Korban 1
     //    //========= Dari Start sampai SZ-1 ============//
     //    RotateMPU(90, true);
     //    while (abs(Offset) > 0 || (steps == 1 || steps == 3)) {
@@ -139,15 +25,139 @@ void Sensor(void *pvParameters) {
     //      xSemaphoreGive(mutex);
     //      baca_IR(IRback);
     //    }
-    //    RotateMPU(-90, true);
+    //    RotateMPU(-91, true);
     //    while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
-    //      GerakRotasi(Offset, 20, 16);
+    //      GerakRotasi(Offset, 20, 26);
     //      RotateMPU();
     //    }
-    //    xSemaphoreTake(mutex, portMAX_DELAY);
-    //    Standby();
-    //    xSemaphoreGive(mutex);
-    //    RotateMPU(88, true);
+    //    baca_IR(IRback);
+    //    while (distances > 4 || (steps == 1 || steps == 3)) {
+    //      xSemaphoreTake(mutex, portMAX_DELAY);
+    //      GerakDinamis(-15, 15, 26, 0, 0);
+    //      xSemaphoreGive(mutex);
+    //      baca_IR(IRback);
+    //    }
+    //    RotateMPU(-12, true);
+    //    while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
+    //      GerakRotasi(Offset, 18, 30);
+    //      RotateMPU();
+    //    }
+    //    //===Test Gerakan Ambil Korban K1===//
+    //    huskylens.request();
+    //    if (huskylens.available()) {
+    //      while (Sensors == true) {
+    //        read_maix();
+    //        if (result.xCenter > 170) {
+    //          while (result.xCenter > 170 || (steps == 1 || steps == 3)) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            GerakRotasi(5, 15, 38);
+    //            xSemaphoreGive(mutex);
+    //            read_maix();
+    //          }
+    //        }
+    //        else if (result.xCenter < 160) {
+    //          while (result.xCenter < 160 || (steps == 1 || steps == 3)) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            GerakRotasi(-5, 15, 38);
+    //            xSemaphoreGive(mutex);
+    //            read_maix();
+    //          }
+    //        }
+    //        else {
+    //          Standby();
+    //          while (1) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            BodyMundur(25);
+    //            xSemaphoreGive(mutex);
+    //            if (Capit == false) {
+    //              break;
+    //            }
+    //          }
+    //          readSRF();
+    //          while (jarak > 4) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            BodyMaju(50);
+    //            xSemaphoreGive(mutex);
+    //            if (Capit == false)break;
+    //            readSRF();
+    //          }
+    //          xSemaphoreTake(mutex, portMAX_DELAY);
+    //          stepss = 0;
+    //          xSemaphoreGive(mutex);
+    //          while (1) {
+    //            xSemaphoreTake(mutex, portMAX_DELAY);
+    //            BodyBalik(25);
+    //            xSemaphoreGive(mutex);
+    //            if (Capit == false) {
+    //              Sensors = false;
+    //              break;
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
+    //    else {
+    //      while (Sensors == true) {
+    //        xSemaphoreTake(mutex, portMAX_DELAY);
+    //        GerakRotasi(5, 15, 36);
+    //        xSemaphoreGive(mutex);
+    //        huskylens.request();
+    //        if (huskylens.available()) {
+    //          while (Sensors == true) {
+    //            read_maix();
+    //            if (result.xCenter > 170) {
+    //              while (result.xCenter > 170 || (steps == 1 || steps == 3)) {
+    //                xSemaphoreTake(mutex, portMAX_DELAY);
+    //                GerakRotasi(5, 15, 38);
+    //                xSemaphoreGive(mutex);
+    //                read_maix();
+    //              }
+    //            }
+    //            else if (result.xCenter < 160) {
+    //              while (result.xCenter < 160 || (steps == 1 || steps == 3)) {
+    //                xSemaphoreTake(mutex, portMAX_DELAY);
+    //                GerakRotasi(-5, 15, 38);
+    //                xSemaphoreGive(mutex);
+    //                read_maix();
+    //              }
+    //            }
+    //            else {
+    //              Standby();
+    //              while (1) {
+    //                xSemaphoreTake(mutex, portMAX_DELAY);
+    //                BodyMundur(25);
+    //                xSemaphoreGive(mutex);
+    //                if (Capit == false) {
+    //                  break;
+    //                }
+    //              }
+    //              readSRF();
+    //              while (jarak > 4) {
+    //                xSemaphoreTake(mutex, portMAX_DELAY);
+    //                BodyMaju(50);
+    //                xSemaphoreGive(mutex);
+    //                if (Capit == false)break;
+    //                readSRF();
+    //              }
+    //              xSemaphoreTake(mutex, portMAX_DELAY);
+    //              stepss = 0;
+    //              xSemaphoreGive(mutex);
+    //              while (1) {
+    //                xSemaphoreTake(mutex, portMAX_DELAY);
+    //                BodyBalik(25);
+    //                xSemaphoreGive(mutex);
+    //                if (Capit == false) {
+    //                  Sensors = false;
+    //                  break;
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
+    //    //===Test Gerakan Ambil Korban K1===//
+    //    RotateMPU(90, true);
     //    while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
     //      GerakRotasi(Offset, 20, 16);
     //      RotateMPU();
@@ -594,7 +604,7 @@ void Sensor(void *pvParameters) {
     //    while (1) {
     //      Standby();
     //    }
-    //== == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == //
+    //    //== == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == //
   }
 }
 
