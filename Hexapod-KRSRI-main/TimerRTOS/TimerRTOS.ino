@@ -1,16 +1,16 @@
-HardwareSerial Serial2(USART2);//Serial Driver Servo
-HardwareSerial Serial3(USART3);//Serial Arduino Nano
-HardwareSerial Serial6(USART6);//Serial Maixbit Camera
+HardwareSerial Serial2(USART2);  //Serial Driver Servo
+HardwareSerial Serial3(USART3);  //Serial Arduino Nano
+HardwareSerial Serial6(USART6);  //Serial Maixbit Camera
 #include <HardwareTimer.h>
 #include <STM32FreeRTOS.h>
 #include <semphr.h>
-#define configUSE_16_BIT_TICKS  1
+#define configUSE_16_BIT_TICKS 1
 //HuskyLens Camera
 #include "HUSKYLENS.h"
 HUSKYLENS huskylens;
 HUSKYLENSResult result;
 //SharpIR
-#define IRfront PA0 //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
+#define IRfront PA0  //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
 #define IRback PC0
 //Servo
 #include <Servo.h>
@@ -18,30 +18,31 @@ Servo capit1, capit2, pegangan;
 int distances;
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
-const int prescaler = 84 - 1; // 1 MHz
+const int prescaler = 84 - 1;  // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
 static SemaphoreHandle_t mutex;
 //Kamera
-int pict_x = 200, pict_area, area, pict_y;//Tambah variabel area klo mau pke area //200
-int pict_x_cal = 165; // Threshold nilai tengah korban di kamera
-int pict_area_cal = 7500; // Threshold area blob (jarak korban) di kamera
-int pict_y_cal = 0; //Ganti nilai 0 dengan nilai y ketika pas capit dengan korban
+int pict_x = 200, pict_area, area, pict_y;  //Tambah variabel area klo mau pke area //200
+int pict_x_cal = 165;                       // Threshold nilai tengah korban di kamera
+int pict_area_cal = 7500;                   // Threshold area blob (jarak korban) di kamera
+int pict_y_cal = 0;                         //Ganti nilai 0 dengan nilai y ketika pas capit dengan korban
 bool tengah = 0;
 //Rotate MPU
 bool rot = true;
 int Offset, tujuan;
 //MPU6050
-int yaw = -1; // -1 Untuk looping menunggu kalibrasi selesai
+int yaw = -1;  // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll, rollAwal = 0, rollTangga = -15;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
+uint32_t belakang = PC2;
 uint32_t rightBack = PE11;
 uint32_t rightFront = PE12;
-uint32_t leftBack = PE8;
-uint32_t leftFront = PE10;
+uint32_t leftBack = PE8;    //E8
+uint32_t leftFront = PE10;  //E10
 int cm, duration, OffsetJarak, offsets, jBack, jFront;
 //SRF-04
-#define ECHO PE13
+#define ECHO PB0
 #define TRIG PE9
 int jarak;
 //Gerakan
@@ -69,13 +70,13 @@ float xFR0, yFR0, xFR1, yFR1, zFR0, zFRp;
 //KIRI TENGAH (LM)
 float xLM0, yLM0, xLM1, yLM1, zLM0, zLMp;
 //KANAN BELAKANG (BR)
-float xBR0, yBR0, xBR1,  yBR1, zBR0, zBRp;
+float xBR0, yBR0, xBR1, yBR1, zBR0, zBRp;
 //KIRI DEPAN (FL)
-float xFL0, yFL0, xFL1,  yFL1, zFL0, zFLp;
+float xFL0, yFL0, xFL1, yFL1, zFL0, zFLp;
 //KANAN TENGAH (RM)
 float xRM0, yRM0, xRM1, yRM1, zRM0, zRMp;
 //KIRI BELAKANG (BL)
-float xBL0, yBL0, xBL1,  yBL1, zBL0, zBLp;
+float xBL0, yBL0, xBL1, yBL1, zBL0, zBLp;
 float Increment;
 //Variabel simpan sudut tiap servo
 int outServo[6][3];
@@ -83,17 +84,17 @@ int outServo[6][3];
 const float cx = 22;
 const int fm = 53;
 const int tb = 70;
-int heightFront = -92, heightMid = -92, heightBack = -92;//kelereng -94
+int heightFront = -92, heightMid = -92, heightBack = -92;  //kelereng -94
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
-const int legoffset[6] = {0, 45, 135, 180, 225, 315};
+const int legoffset[6] = { 0, 45, 135, 180, 225, 315 };
 //Koordinat Awal (Standby) per Kaki :
-const float standFR[3][1] = {{ -55}, {55}, {0}}; //
-const float standRM[3][1] = {{ -76}, {0}, {0}}; //
-const float standBR[3][1] = {{ -55}, { -55}, {0}};
-const float standFL[3][1] = {{ 55}, {55}, {0}};
-const float standLM[3][1] = {{ 76}, {0}, {0}};
-const float standBL[3][1] = {{ 55}, { -55}, {0}};
-float offsetCX[4] = {0};//0 = FR, 1 = BR, 2 = BL, 3 = FL
+const float standFR[3][1] = { { -55 }, { 55 }, { 0 } };
+const float standRM[3][1] = { { -76 }, { 0 }, { 0 } };
+const float standBR[3][1] = { { -55 }, { -55 }, { 0 } };
+const float standFL[3][1] = { { 55 }, { 55 }, { 0 } };
+const float standLM[3][1] = { { 76 }, { 0 }, { 0 } };
+const float standBL[3][1] = { { 55 }, { -55 }, { 0 } };
+float offsetCX[4] = { 0 };  //0 = FR, 1 = BR, 2 = BL, 3 = FL
 float midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0;
 int jmlhStep;
 //Gerak Rotate
@@ -109,8 +110,13 @@ float lebarKiri, lebarKanan, lebarTengah;
 bool Sensors = true;
 bool stateMPU = false;
 bool turunMPU = false;
-float filter_weight = 1; //Untuk filter roll naik tangga = 0.2
+float filter_weight = 0.2;  //Untuk filter roll naik tangga = 0.2
 float filtered_Roll;
+float filtered_IR;
+int sdtfix;
+int dist;
+float weight = 0.8;
+int sdtMaju;
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -129,37 +135,36 @@ void setup() {
   Serial3.setTx(PD8);
   Serial3.setRx(PD9);
   Serial3.begin(115200);
-  //====Setup SRF04====//
+  //====Setup SRF04====//n
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
-  capit1.attach(PE15); //Capit Kiri (Saat Robot ke Arah Depan)
-  capit2.attach(PB11); //Capit Kanan
+  capit1.attach(PE15);  //Capit Kiri (Saat Robot ke Arah Depan)
+  capit2.attach(PB11);  //Capit Kanan
   pegangan.attach(PE14);
-  delay(3000);
-  //INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
-  //  //===Setup HuskyLens===//
-  //  Serial6.setTx(PC6);
-  //  Serial6.setRx(PC7);
-  //  Serial6.begin(9600);
-  //  delay(2000);
-  //  while (!huskylens.begin(Serial6))
-  //  {
-  //    Serial.println(F("Begin failed!"));
-  //    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
-  //    Serial.println(F("2.Please recheck the connection."));
-  //    delay(100);
-  //  }
-  //  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING); //Switch the algorithm to object tracking.
-  //  //===Setup HuskyLens===//
-  //  delay(3000);
-  StandbyAwal();
-  resetPID();
   delay(2000);
   kirimDynamixel(820);
   pegangan.write(72);
-  capit1.write(130);  //180 Kondisi Tutup //130 Buka
-  capit2.write(50);    //0 Kondisi Tutup   //50 Buka
+  capit1.write(135);  // 165 tutup 135 buka
+  capit2.write(40);   // 8 tutup 40 buka
+  delay(500);
+  // INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
+  // === Setup HuskyLens ===  //
+  Serial6.setTx(PC6);
+  Serial6.setRx(PC7);
+  Serial6.begin(9600);
   delay(1000);
+  while (!huskylens.begin(Serial6)) {
+    Serial.println(F("Begin failed!"));
+    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
+    Serial.println(F("2.Please recheck the connection."));
+    delay(100);
+  }
+  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
+  //===Setup HuskyLens===//
+  delay(2000);
+  StandbyAwal();
+  resetPID();
+  delay(2000);
   while (yaw < 0) {
     read_MPU();
     delay(15);
@@ -173,21 +178,21 @@ void setup() {
               "Sensor",
               1024,
               NULL,
-              1, //Priority Lebih Rendah
+              1,  //Priority Lebih Rendah
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
-              1024, //awal 512
+              1024,  //awal 512
               NULL,
-              2, //Priority Lebih Tinggi
+              2,  //Priority Lebih Tinggi
               NULL);
-  Timer6.pause(); //Stop the Timer
-  Timer6.setPrescaleFactor(prescaler); //Set the prescaler to achieve 1us per tick (assuming 84MHz clock)
+  Timer6.pause();                       //Stop the Timer
+  Timer6.setPrescaleFactor(prescaler);  //Set the prescaler to achieve 1us per tick (assuming 84MHz clock)
   Timer6.setOverflow(timerPeriod_us, MICROSEC_FORMAT);
   Timer6.attachInterrupt(timerInterrupt);
   Timer6.setMode(1, TIMER_OUTPUT_COMPARE);
-  Timer6.refresh(); //Reset timer to 0
-  Timer6.resume();  //Start the timer
+  Timer6.refresh();  //Reset timer to 0
+  Timer6.resume();   //Start the timer
   vTaskStartScheduler();
 }
 

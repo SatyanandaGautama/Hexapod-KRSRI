@@ -1,3 +1,93 @@
+
+void GerakRotasiV2(float degree, float tinggi, float speeds) { //Sudut + (putar kanan), sudut - (putar kiri)
+  if (degree > 25)degree = 25;
+  if (degree < -25)degree = -25;
+  arahPutar = degree;
+  Increment = 180 / speeds;
+  if (!statusGerak) {
+    switch (steps) {
+      case 0 :
+        degAwal = 0 + Increment;
+        degAkhir = 180;
+        Rotate(degree / 2);
+        Rotate(-1 * (degree / 2));
+        //KANAN DEPAN (FR)
+        xFR0 = -(xFL_Akhir),  yFR0 =  yFL_Akhir, xFR1 = -(xFL_Awal), yFR1 = yFL_Awal, zFR0 = 0, zFRp = tinggi;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Awal,  yLM0 =  yLM_Awal, xLM1 = xLM_Akhir, yLM1 = yLM_Akhir, zLM0 = 0, zLMp = tinggi;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55,  yBR0 =  -55, xBR1 = -55, yBR1 = -55, zBR0 = 0, zBRp = tinggi;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Akhir,  yFL0 =  yFL_Akhir, xFL1 = xFL_Awal, yFL1 = yFL_Awal, zFL0 = 0, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = -(xLM_Awal),  yRM0 =  yLM_Awal, xRM1 = -(xLM_Akhir), yRM1 = yLM_Akhir, zRM0 = 0, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55,  yBL0 = -55, xBL1 = 55, yBL1 = -55, zBL0 = 0, zBLp = 0;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 1:
+        degAwal = 90 + Increment;
+        degAkhir = 90;
+        //KANAN DEPAN (FR)
+        xFR0 = -(xFL_Awal),  yFR0 =  yFL_Awal, xFR1 = -(xFL_Akhir), yFR1 = yFL_Akhir, zFR0 = 0, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Akhir,  yLM0 =  yLM_Akhir, xLM1 = xLM_Awal, yLM1 = yLM_Awal, zLM0 = 0, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55,  yBR0 =  -55, xBR1 = -55, yBR1 = -55, zBR0 = 0, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Awal,  yFL0 =  yFL_Awal, xFL1 = xFL_Akhir, yFL1 = yFL_Akhir, zFL0 = 0, zFLp = tinggi;
+        //KANAN TENGAH (RM)
+        xRM0 = -(xLM_Akhir),  yRM0 =  yLM_Akhir, xRM1 = -(xLM_Awal), yRM1 = yLM_Awal, zRM0 = 0, zRMp = tinggi;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55,  yBL0 = -55, xBL1 = 55, yBL1 = -55, zBL0 = 0, zBLp = tinggi;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 2 :
+        degAwal = 0 + Increment;
+        degAkhir = 180;
+        Rotate(degree / 2);
+        Rotate(-1 * (degree / 2));
+        //KANAN DEPAN (FR)
+        xFR0 = -(xFL_Awal),  yFR0 =  yFL_Awal, xFR1 = -(xFL_Akhir), yFR1 = yFL_Akhir, zFR0 = 0, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Akhir,  yLM0 =  yLM_Akhir, xLM1 = xLM_Awal, yLM1 = yLM_Awal, zLM0 = 0, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55,  yBR0 =  -55, xBR1 = -55, yBR1 = -55, zBR0 = 0, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Awal,  yFL0 =  yFL_Awal, xFL1 = xFL_Akhir, yFL1 = yFL_Akhir, zFL0 = 0, zFLp = tinggi;
+        //KANAN TENGAH (RM)
+        xRM0 = -(xLM_Akhir),  yRM0 =  yLM_Akhir, xRM1 = -(xLM_Awal), yRM1 = yLM_Awal, zRM0 = 0, zRMp = tinggi;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55,  yBL0 = -55, xBL1 = 55, yBL1 = -55, zBL0 = 0, zBLp = tinggi;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 3 :
+        degAwal = 90 + Increment;
+        degAkhir = 90;
+        //KANAN DEPAN (FR)
+        xFR0 = -(xFL_Akhir),  yFR0 =  yFL_Akhir, xFR1 = -(xFL_Awal), yFR1 = yFL_Awal, zFR0 = 0, zFRp = tinggi;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Awal,  yLM0 =  yLM_Awal, xLM1 = xLM_Akhir, yLM1 = yLM_Akhir, zLM0 = 0, zLMp = tinggi;
+        //KANAN BELAKANG (BR)
+        xBR0 = -55,  yBR0 =  -55, xBR1 = -55, yBR1 = -55, zBR0 = 0, zBRp = tinggi;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Akhir,  yFL0 =  yFL_Akhir, xFL1 = xFL_Awal, yFL1 = yFL_Awal, zFL0 = 0, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = -(xLM_Awal),  yRM0 =  yLM_Awal, xRM1 = -(xLM_Akhir), yRM1 = yLM_Akhir, zRM0 = 0, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = 55,  yBL0 = -55, xBL1 = 55, yBL1 = -55, zBL0 = 0, zBLp = 0;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+    }
+    steps++;
+    if (steps > 3) steps = 0;
+  }
+}
+
 void Rotate(float rot) {
   rot = rot / 180 * M_PI;
   float rotasi[3][3] = {{cos(rot), -sin(rot), 0},
@@ -182,7 +272,7 @@ void Standby() {
 //}
 
 void StandbyAwal() {
-  FR(-55, 55, 20);
+  FR(-55, 55, 20);  
   RM(-75, 0, 20);
   BR(-55, -55, 20);
   BL(55, -55, 20);

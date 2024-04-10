@@ -20,7 +20,7 @@ void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar K
 void RotJarak(uint32_t PING1, uint32_t PING2) {
   jFront = readPING(PING1);
   jBack = readPING(PING2);
-  OffsetJarak = (jFront - jBack) * 2.5;
+  OffsetJarak = (jFront - jBack) * 3; //2.5
   if (OffsetJarak > 25) OffsetJarak = 25;
   if (OffsetJarak < -25) OffsetJarak = -25;
 }
@@ -279,10 +279,39 @@ void navigasiKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   //    Serial.println(error);
 }
 
+// void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
+//   jFront = readPING(pingFront);
+//   jBack = readPING(pingBack);
+//   error = jFront - jBack;
+//   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
+//   PID_controller();
+//   if (PID_control >= maxStep) PID_control = maxStep;
+//   if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+//   if (PID_control > 0) {  //PID_control(+) = belok kanan
+//     lebarKiri = 0;
+//     lebarKanan = PID_control;
+//     lebarTengah = PID_control;
+//   } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+//     lebarTengah = -PID_control;
+//     lebarKiri = -PID_control;
+//     lebarKanan = 0;
+//   } else {
+//     lebarTengah = 0;
+//     lebarKiri = 0;
+//     lebarKanan = 0;
+//   }
+//   time_prev = Time;
+//   Time = millis();
+//   dt = (Time - time_prev) / 1000;
+//   previous_error = error;
+//   //    Serial.print("E: ");
+//   //    Serial.println(error);
+// }
+
 void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   jFront = readPING(pingFront);
   jBack = readPING(pingBack);
-  error = jFront - jBack;
+  error = jBack - jFront;  //jFront - jBack
   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
   if (PID_control >= maxStep) PID_control = maxStep;
@@ -307,6 +336,7 @@ void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   //    Serial.print("E: ");
   //    Serial.println(error);
 }
+
 
 int readPING(uint32_t pinData) {
   pinMode(pinData, OUTPUT);
@@ -619,6 +649,14 @@ void BacaSensor() {
   Serial.println(readPING(leftFront));
   Serial.print("Left Back : ");
   Serial.println(readPING(leftBack));
+  Serial.print("Back : ");
+  Serial.println(readPING(belakang));
+  read_MPU();
+  vTaskDelay(15 / portTICK_PERIOD_MS);
+  Serial.print("Yaw :");
+  Serial.println(yaw);
+  Serial.print("Pitch :");
+  Serial.println(yaw);
 }
 
 void AmbilKorban() {
@@ -635,7 +673,7 @@ void AmbilKorban() {
     xSemaphoreTake(mutex, portMAX_DELAY);
     BodyMaju(50);
     xSemaphoreGive(mutex);
-    if (Capit == false)break;
+    if (Capit == false) break;
     readSRF();
   }
   xSemaphoreTake(mutex, portMAX_DELAY);
