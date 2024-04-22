@@ -9,7 +9,7 @@ void BodyMaju(int speeds) {  //gerakan saat ambil korban
         degAwal = 0;
         degAkhir = 180;
         //KANAN DEPAN (FR)
-        xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 10, zFRp = 0; //Coba ganti 5 atau 0
+        xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 10, zFRp = 0;  //Coba ganti 5 atau 0
         //KIRI TENGAH (LM)
         xLM0 = 76, yLM0 = 50, xLM1 = 76, yLM1 = -45, zLMp = 0;
         //KANAN BELAKANG (BR)
@@ -28,6 +28,8 @@ void BodyMaju(int speeds) {  //gerakan saat ambil korban
         statusGerak = true;
         break;
       case 1:
+        Increment = 180 / 5;
+        Inc = 180 / 5;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 10, xFR1 = -55, yFR1 = 10, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -69,7 +71,7 @@ void BodyBalik(int speeds) {
         degAwal = 0;
         degAkhir = 180;
         capit1.write(170);  // 167 tutup 135 buka
-        capit2.write(5);    // 8 tutup 40 buka
+        // capit2.write(5);    // 8 tutup 40 buka
         //KANAN DEPAN (FR)
         xFR0 = xFR, yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -150,6 +152,8 @@ void BodyBalik(int speeds) {
         statusGerak = true;
         break;
       case 4:
+        Increment = 180 / 5;
+        Inc = 180 / 5;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -228,6 +232,8 @@ void BodyMundur(int speeds) {
         statusGerak = true;
         break;
       case 2:
+        Increment = 180 / 5;
+        Inc = 180 / 5;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -267,9 +273,9 @@ void BodyMaju_K2(int speeds) {  //gerakan saat ambil korban
         degAwal = 0;
         degAkhir = 180;
         //KANAN DEPAN (FR)
-        xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 0, zFRp = 0; //10
+        xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 0, zFRp = 0;  //10
         //KIRI TENGAH (LM)
-        xLM0 = 76, yLM0 = 50, xLM1 = 76, yLM1 = -55, zLMp = 0; //45
+        xLM0 = 76, yLM0 = 50, xLM1 = 76, yLM1 = -55, zLMp = 0;  //45
         //KANAN BELAKANG (BR)
         xBR0 = -55, yBR0 = -5, xBR1 = -55, yBR1 = -86, zBRp = 0;
         //KIRI DEPAN (FL)
@@ -286,6 +292,8 @@ void BodyMaju_K2(int speeds) {  //gerakan saat ambil korban
         statusGerak = true;
         break;
       case 1:
+        Increment = 180 / 5;
+        Inc = 180 / 5;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 0, xFR1 = -55, yFR1 = 0, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -327,7 +335,7 @@ void BodyBalik_K2(int speeds) {
         degAwal = 0;
         degAkhir = 180;
         capit1.write(170);  // 167 tutup 135 buka
-        capit2.write(5);    // 8 tutup 40 buka
+        // capit2.write(5);  // 8 tutup 40 buka
         //KANAN DEPAN (FR)
         xFR0 = xFR, yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -408,6 +416,8 @@ void BodyBalik_K2(int speeds) {
         statusGerak = true;
         break;
       case 4:
+        Increment = 180 / 5;
+        Inc = 180 / 5;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -488,8 +498,8 @@ void BodyMundur_K2(int speeds) {
         statusGerak = true;
         break;
       case 2:
-        Increment = 180 / 35;
-        Inc = 180 / 35;
+        Increment = 180 / 5;
+        Inc = 180 / 5;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)

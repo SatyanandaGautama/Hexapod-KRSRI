@@ -12,9 +12,10 @@ HUSKYLENSResult result;
 //SharpIR
 #define IRfront PA0  //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
 #define IRback PC0
+#define IRright PC4
 //Servo
 #include <Servo.h>
-Servo capit1, capit2, pegangan;
+Servo capit1, capit2, pegangan, bodyKanan;
 int distances;
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
@@ -32,7 +33,7 @@ bool rot = true;
 int Offset, tujuan;
 //MPU6050
 int yaw = -1;  // -1 Untuk looping menunggu kalibrasi selesai
-int pitch, roll, rollAwal = 0, rollTangga = -15;
+int pitch, roll, rollAwal = 0, rollTangga = 15;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
 uint32_t belakang = PC2;
@@ -112,10 +113,10 @@ bool stateMPU = false;
 bool turunMPU = false;
 float filter_weight = 0.2;  //Untuk filter roll naik tangga = 0.2
 float filtered_Roll;
-float filtered_IR;
+float filtered_IR, filtered_jFront, filtered_jBack;
 int sdtfix;
 int dist;
-float weight = 0.8;
+float weight = 0.3, weight_PING = 0.6;
 int sdtMaju;
 
 void timerInterrupt() {
@@ -125,28 +126,34 @@ void timerInterrupt() {
   // Exit from ISR (Vanilla FreeRTOS)
   portYIELD_FROM_ISR(task_woken);
 }
+
 void setup() {
-  Serial.setTx(PA9);
-  Serial.setRx(PA10);
-  Serial.begin(9600);
   Serial2.setTx(PA2);
   Serial2.setRx(PA3);
   Serial2.begin(1000000);
+  delay(3000);
   Serial3.setTx(PD8);
   Serial3.setRx(PD9);
   Serial3.begin(115200);
+  Serial.setTx(PA9);
+  Serial.setRx(PA10);
+  Serial.begin(9600);
+  delay(2000);
   //====Setup SRF04====//n
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
-  capit1.attach(PE15);  //Capit Kiri (Saat Robot ke Arah Depan)
-  capit2.attach(PB11);  //Capit Kanan
+  capit1.attach(PE15);
+  bodyKanan.attach(PE13);
+  //Capit Kiri (Saat Robot ke Arah Depan)
+  // capit2.attach(PB11);  //Capit Kanan
   pegangan.attach(PE14);
-  delay(2000);
+  delay(500);
   kirimDynamixel(820);
   pegangan.write(72);
   capit1.write(135);  // 165 tutup 135 buka
-  capit2.write(40);   // 8 tutup 40 buka
-  delay(500);
+  // capit2.write(40);  // 8 tutup 40 buka
+  bodyKanan.write(360);
+  delay(2000);
   // INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
   // === Setup HuskyLens ===  //
   Serial6.setTx(PC6);
@@ -163,8 +170,8 @@ void setup() {
   //===Setup HuskyLens===//
   delay(2000);
   StandbyAwal();
+  delay(4000);
   resetPID();
-  delay(2000);
   while (yaw < 0) {
     read_MPU();
     delay(15);
@@ -182,7 +189,7 @@ void setup() {
               NULL);
   xTaskCreate(Kaki,
               "Kaki",
-              1024,  //awal 512
+              512,  //awal 512
               NULL,
               2,  //Priority Lebih Tinggi
               NULL);
@@ -197,5 +204,4 @@ void setup() {
 }
 
 void loop() {
-
 }

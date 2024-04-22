@@ -135,7 +135,7 @@ void TransformasiGeser(float lebarX, float lbrKiri, float lbrKanan, float lbrTen
   //KIRI DEPAN (FL)
   xFL_Awal = (standFL[0][0] + lebarX) - lbrKanan, xFL_Akhir = (standFL[0][0] - lebarX) + lbrKanan;
   //KANAN TENGAH (RM)
-  xRM_Awal = (standRM[0][0] + lebarX) - lbrTengah, xRM_Akhir = (standRM[0][0] - lebarX) + lbrTengah; //+ lbrKanan;
+  xRM_Awal = (standRM[0][0] + lebarX) - lbrTengah, xRM_Akhir = (standRM[0][0] - lebarX) + lbrTengah;  //+ lbrKanan;
   //KIRI BELAKANG (BL)
   xBL_Awal = (standBL[0][0] + lebarX) - lbrKiri, xBL_Akhir = (standBL[0][0] - lebarX) + lbrKiri;
 }

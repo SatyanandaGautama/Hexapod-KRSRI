@@ -20,7 +20,9 @@ void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar K
 void RotJarak(uint32_t PING1, uint32_t PING2) {
   jFront = readPING(PING1);
   jBack = readPING(PING2);
-  OffsetJarak = (jFront - jBack) * 3; //2.5
+  filtered_jFront = ((1 - weight_PING) * filtered_jFront) + (weight_PING * jFront);
+  filtered_jBack = ((1 - weight_PING) * filtered_jBack) + (weight_PING * jBack);
+  OffsetJarak = (round(filtered_jFront) - round(filtered_jBack)) * 3;  //2.5
   if (OffsetJarak > 25) OffsetJarak = 25;
   if (OffsetJarak < -25) OffsetJarak = -25;
 }
@@ -595,12 +597,12 @@ void GerakSetelahTangga() {
 //    baca_IR();
 
 //===Logika Naik Tangga===//
-//while (roll > -15) {
-//  TransisiNaikTangga();
-//}
-//while (1) {
-//  GerakNaikTangga();
-//}
+// while (roll < 15) {
+//   GerakSebelumTangga();
+// }
+// while (1) {
+//   GerakNaikTangga();
+// }
 
 //=== Gerakan Mengambil Korban ===//
 //    while (1) {
