@@ -448,6 +448,122 @@ void afterTangga() {
   midLeftTB = map(filtered_Roll, rollTangga, rollAwal, -14, 0);  //
 }
 
+void navigasiKanan_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;
+  //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
+  PID_controller();
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
+    lebarTengah = -PID_control;
+    lebarKiri = -PID_control;
+    lebarKanan = 0;
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+    lebarKiri = 0;
+    lebarKanan = PID_control;
+    lebarTengah = PID_control;
+  } else {
+    lebarTengah = 0;
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  time_prev = Time;
+  Time = millis();
+  dt = (Time - time_prev) / 1000;
+  previous_error = error;
+  //    Serial.print("E: ");
+  //    Serial.println(error);
+}
+
+void navigasiKiri_pingKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jBack - jFront;  //jFront - jBack
+  //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
+  PID_controller();
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
+    lebarKiri = 0;
+    lebarKanan = PID_control;
+    lebarTengah = PID_control;
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+    lebarTengah = -PID_control;
+    lebarKiri = -PID_control;
+    lebarKanan = 0;
+  } else {
+    lebarTengah = 0;
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  time_prev = Time;
+  Time = millis();
+  dt = (Time - time_prev) / 1000;
+  previous_error = error;
+  //    Serial.print("E: ");
+  //    Serial.println(error);
+}
+
+void navigasiKanan_pingKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;
+  //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
+  PID_controller();
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
+    lebarTengah = -PID_control;
+    lebarKiri = 0;
+    lebarKanan = -PID_control;
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+    lebarKiri = PID_control;
+    lebarKanan = 0;
+    lebarTengah = PID_control;
+  } else {
+    lebarTengah = 0;
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  time_prev = Time;
+  Time = millis();
+  dt = (Time - time_prev) / 1000;
+  previous_error = error;
+  //    Serial.print("E: ");
+  //    Serial.println(error);
+}
+
+void navigasiKiri_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
+  jFront = readPING(pingFront);
+  jBack = readPING(pingBack);
+  error = jFront - jBack;  //jFront - jBack
+  //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
+  PID_controller();
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
+    lebarKiri = 0;
+    lebarKanan = PID_control;
+    lebarTengah = PID_control;
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+    lebarTengah = -PID_control;
+    lebarKiri = -PID_control;
+    lebarKanan = 0;
+  } else {
+    lebarTengah = 0;
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  time_prev = Time;
+  Time = millis();
+  dt = (Time - time_prev) / 1000;
+  previous_error = error;
+  //    Serial.print("E: ");
+  //    Serial.println(error);
+}
+
 //===Gerakan Naik Tangga===//
 void GerakSebelumTangga() {
   beforeTangga();

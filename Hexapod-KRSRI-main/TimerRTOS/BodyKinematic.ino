@@ -20,16 +20,16 @@ void BodyMaju(int speeds) {  //gerakan saat ambil korban
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = -45, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55, yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 12, sdtServoAkhir = 12;  //??
-        sdtDynAwal = 140, sdtDynAkhir = 140;    //??
+        sdtServoAwal = 24, sdtServoAkhir = 24;  //??
+        sdtDynAwal = 135, sdtDynAkhir = 135;    //??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
         statusGerak = true;
         break;
       case 1:
-        Increment = 180 / 5;
-        Inc = 180 / 5;
+        Increment = 180 / 3;
+        Inc = 180 / 3;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 10, xFR1 = -55, yFR1 = 10, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -42,8 +42,8 @@ void BodyMaju(int speeds) {  //gerakan saat ambil korban
         xRM0 = -76, yRM0 = -45, xRM1 = -76, yRM1 = -45, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -86, xBL1 = 55, yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 12, sdtServoAkhir = 12;  //??
-        sdtDynAwal = 140, sdtDynAkhir = 140;    //??
+        sdtServoAwal = 24, sdtServoAkhir = 24;  //??
+        sdtDynAwal = 135, sdtDynAkhir = 135;    //??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -70,8 +70,8 @@ void BodyBalik(int speeds) {
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
-        capit1.write(170);  // 167 tutup 135 buka
-        // capit2.write(5);    // 8 tutup 40 buka
+        //        capit1.write(170);  // 167 tutup 135 buka
+        capit2.write(8);    // 8 tutup 40 buka
         //KANAN DEPAN (FR)
         xFR0 = xFR, yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -84,8 +84,8 @@ void BodyBalik(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL, yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 12, sdtServoAkhir = 12;
-        sdtDynAwal = 140, sdtDynAkhir = 140;
+        sdtServoAwal = 24, sdtServoAkhir = 24;
+        sdtDynAwal = 135, sdtDynAkhir = 135;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -104,8 +104,8 @@ void BodyBalik(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL, yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 12, sdtServoAkhir = 120;
-        sdtDynAwal = 140, sdtDynAkhir = 140;
+        sdtServoAwal = 24, sdtServoAkhir = 120;
+        sdtDynAwal = 135, sdtDynAkhir = 135;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -125,7 +125,7 @@ void BodyBalik(int speeds) {
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL, yBL1 = yBL, zBLp = 0;
         sdtServoAwal = 120, sdtServoAkhir = 82;
-        sdtDynAwal = 140, sdtDynAkhir = 240;
+        sdtDynAwal = 135, sdtDynAkhir = 240;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -152,8 +152,8 @@ void BodyBalik(int speeds) {
         statusGerak = true;
         break;
       case 4:
-        Increment = 180 / 5;
-        Inc = 180 / 5;
+        Increment = 180 / 3;
+        Inc = 180 / 3;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -224,8 +224,8 @@ void BodyMundur(int speeds) {
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55, yBL1 = -5, zBLp = 0;
-        sdtServoAwal = 82, sdtServoAkhir = 12;  //59
-        sdtDynAwal = 240, sdtDynAkhir = 140;    //120
+        sdtServoAwal = 82, sdtServoAkhir = 24;  //59
+        sdtDynAwal = 240, sdtDynAkhir = 135;    //120
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -246,8 +246,8 @@ void BodyMundur(int speeds) {
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55, yBL1 = -5, zBLp = 0;
-        sdtServoAwal = 12, sdtServoAkhir = 12;  //??
-        sdtDynAwal = 140, sdtDynAkhir = 140;    //??
+        sdtServoAwal = 24, sdtServoAkhir = 24;  //12??
+        sdtDynAwal = 135, sdtDynAkhir = 135;    //140??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -284,16 +284,16 @@ void BodyMaju_K2(int speeds) {  //gerakan saat ambil korban
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = -55, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55, yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 10, sdtServoAkhir = 10;  //??
-        sdtDynAwal = 144, sdtDynAkhir = 144;    //??
+        sdtServoAwal = 24, sdtServoAkhir = 24;  //??
+        sdtDynAwal = 135, sdtDynAkhir = 135;    //??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
         statusGerak = true;
         break;
       case 1:
-        Increment = 180 / 5;
-        Inc = 180 / 5;
+        Increment = 180 / 3;
+        Inc = 180 / 3;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 0, xFR1 = -55, yFR1 = 0, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -306,8 +306,8 @@ void BodyMaju_K2(int speeds) {  //gerakan saat ambil korban
         xRM0 = -76, yRM0 = -55, xRM1 = -76, yRM1 = -55, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -86, xBL1 = 55, yBL1 = -86, zBLp = 0;
-        sdtServoAwal = 10, sdtServoAkhir = 10;  //??
-        sdtDynAwal = 144, sdtDynAkhir = 144;    //??
+        sdtServoAwal = 24, sdtServoAkhir = 24;  //??
+        sdtDynAwal = 135, sdtDynAkhir = 135;    //??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
@@ -334,8 +334,8 @@ void BodyBalik_K2(int speeds) {
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
-        capit1.write(170);  // 167 tutup 135 buka
-        // capit2.write(5);  // 8 tutup 40 buka
+        //        capit1.write(170);  // 167 tutup 135 buka
+        capit2.write(8);  // 8 tutup 40 buka
         //KANAN DEPAN (FR)
         xFR0 = xFR, yFR0 = yFR, xFR1 = xFR, yFR1 = yFR, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -348,8 +348,8 @@ void BodyBalik_K2(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL, yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 10, sdtServoAkhir = 10;
-        sdtDynAwal = 144, sdtDynAkhir = 144;
+        sdtServoAwal = 24, sdtServoAkhir = 24;
+        sdtDynAwal = 135, sdtDynAkhir = 135;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -368,8 +368,8 @@ void BodyBalik_K2(int speeds) {
         xRM0 = xRM, yRM0 = yRM, xRM1 = xRM, yRM1 = yRM, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL, yBL1 = yBL, zBLp = 0;
-        sdtServoAwal = 10, sdtServoAkhir = 120;
-        sdtDynAwal = 144, sdtDynAkhir = 144;
+        sdtServoAwal = 24, sdtServoAkhir = 120;
+        sdtDynAwal = 135, sdtDynAkhir = 135;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -389,7 +389,7 @@ void BodyBalik_K2(int speeds) {
         //KIRI BELAKANG (BL)
         xBL0 = xBL, yBL0 = yBL, xBL1 = xBL, yBL1 = yBL, zBLp = 0;
         sdtServoAwal = 120, sdtServoAkhir = 82;
-        sdtDynAwal = 144, sdtDynAkhir = 240;
+        sdtDynAwal = 135, sdtDynAkhir = 240;
         modeGerak = true;
         statusGerak = true;
         moveDyn = true;
@@ -416,8 +416,8 @@ void BodyBalik_K2(int speeds) {
         statusGerak = true;
         break;
       case 4:
-        Increment = 180 / 5;
-        Inc = 180 / 5;
+        Increment = 180 / 3;
+        Inc = 180 / 3;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -490,16 +490,16 @@ void BodyMundur_K2(int speeds) {
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55, yBL1 = -5, zBLp = 0;
-        sdtServoAwal = 82, sdtServoAkhir = 10;  //??
-        sdtDynAwal = 240, sdtDynAkhir = 145;    //??
+        sdtServoAwal = 82, sdtServoAkhir = 24;  //??
+        sdtDynAwal = 240, sdtDynAkhir = 135;    //??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;
         statusGerak = true;
         break;
       case 2:
-        Increment = 180 / 5;
-        Inc = 180 / 5;
+        Increment = 180 / 3;
+        Inc = 180 / 3;
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 105, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -512,8 +512,8 @@ void BodyMundur_K2(int speeds) {
         xRM0 = -76, yRM0 = 50, xRM1 = -76, yRM1 = 50, zRMp = 0;
         //KIRI BELAKANG (BL)
         xBL0 = 55, yBL0 = -5, xBL1 = 55, yBL1 = -5, zBLp = 0;
-        sdtServoAwal = 10, sdtServoAkhir = 10;  //??
-        sdtDynAwal = 145, sdtDynAkhir = 145;    //??
+        sdtServoAwal = 24, sdtServoAkhir = 24;  //10??
+        sdtDynAwal = 135, sdtDynAkhir = 135;    //??
         moveDyn = true;
         movePeg = true;
         modeGerak = true;

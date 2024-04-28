@@ -1,3 +1,14 @@
+//===OLED Display===//
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+#define SCREEN_WIDTH 128    // OLED display width, in pixels
+#define SCREEN_HEIGHT 32    // OLED display height, in pixels
+#define OLED_RESET    0     // Reset pin # (or -1 if sharing Arduino reset pin)
+#include <Wire.h>
+TwoWire Wire3(PC9, PA8);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire3, OLED_RESET);
+//===OLED Display===//
+#define Button PB12
 HardwareSerial Serial2(USART2);  //Serial Driver Servo
 HardwareSerial Serial3(USART3);  //Serial Arduino Nano
 HardwareSerial Serial6(USART6);  //Serial Maixbit Camera
@@ -13,21 +24,22 @@ HUSKYLENSResult result;
 #define IRfront PA0  //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
 #define IRback PC0
 #define IRright PC4
+#define IRleft PC5
 //Servo
 #include <Servo.h>
-Servo capit1, capit2, pegangan, bodyKanan;
+Servo capit1, capit2, pegangan, bodyKanan, bodyKiri;
 int distances;
 HardwareTimer Timer6(TIM6);
 const uint32_t timerPeriod_us = 17000 - 1;
 const int prescaler = 84 - 1;  // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
 static SemaphoreHandle_t mutex;
-//Kamera
-int pict_x = 200, pict_area, area, pict_y;  //Tambah variabel area klo mau pke area //200
-int pict_x_cal = 165;                       // Threshold nilai tengah korban di kamera
-int pict_area_cal = 7500;                   // Threshold area blob (jarak korban) di kamera
-int pict_y_cal = 0;                         //Ganti nilai 0 dengan nilai y ketika pas capit dengan korban
-bool tengah = 0;
+// //Kamera
+// int pict_x = 200, pict_area, area, pict_y;  //Tambah variabel area klo mau pke area //200
+// int pict_x_cal = 165;                       // Threshold nilai tengah korban di kamera
+// int pict_area_cal = 7500;                   // Threshold area blob (jarak korban) di kamera
+// int pict_y_cal = 0;                         //Ganti nilai 0 dengan nilai y ketika pas capit dengan korban
+// bool tengah = 0;
 //Rotate MPU
 bool rot = true;
 int Offset, tujuan;
@@ -117,7 +129,8 @@ float filtered_IR, filtered_jFront, filtered_jBack;
 int sdtfix;
 int dist;
 float weight = 0.3, weight_PING = 0.6;
-int sdtMaju;
+int sdtMaju, ButtonState = 1;
+bool stop = true;
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -131,51 +144,81 @@ void setup() {
   Serial2.setTx(PA2);
   Serial2.setRx(PA3);
   Serial2.begin(1000000);
-  delay(3000);
+  delay(500);
   Serial3.setTx(PD8);
   Serial3.setRx(PD9);
   Serial3.begin(115200);
   Serial.setTx(PA9);
   Serial.setRx(PA10);
   Serial.begin(9600);
+  //===OLED Setup===//
+  Wire3.begin();
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
   delay(2000);
-  //====Setup SRF04====//n
+  //====Setup SRF04====//
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
-  capit1.attach(PE15);
+  pinMode(Button, INPUT);
+  //  capit1.attach(PE15);//Capit Kiri (Saat Robot ke Arah Depan)
+  capit2.attach(PB11);  //Capit Kanan
   bodyKanan.attach(PE13);
-  //Capit Kiri (Saat Robot ke Arah Depan)
-  // capit2.attach(PB11);  //Capit Kanan
+  bodyKiri.attach(PE7);
   pegangan.attach(PE14);
-  delay(500);
   kirimDynamixel(820);
   pegangan.write(72);
-  capit1.write(135);  // 165 tutup 135 buka
-  // capit2.write(40);  // 8 tutup 40 buka
-  bodyKanan.write(360);
-  delay(2000);
+  //  capit1.write(135);  // 165 tutup 135 buka
+  capit2.write(40);  // 8 tutup 40 buka
+  bodyKanan.write(180);  //180 posisi atas
+  bodyKiri.write(0);     //0 posisi atas
+  delay(500);
   // INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
   // === Setup HuskyLens ===  //
-  Serial6.setTx(PC6);
-  Serial6.setRx(PC7);
-  Serial6.begin(9600);
+  //  Serial6.setTx(PC6);
+  //  Serial6.setRx(PC7);
+  //  Serial6.begin(9600);
+  //  delay(500);
+  //  while (!huskylens.begin(Serial6)) {
+  //    Serial.println(F("Begin failed!"));
+  //    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
+  //    Serial.println(F("2.Please recheck the connection."));
+  //    delay(100);
+  //  }
+  //  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
+  //  //===Setup HuskyLens===//
+  //  delay(1000);
+  naikTangga();
+  FR(-55, 55, 0);
+  RM(-75, 0, 0);
+  BR(-55, -55, 0);
+  BL(55, -55, 0);
+  LM(75, 0, 0);
+  FL(55, 55, 0);
+  KirimIntruksiGerak(512);
   delay(1000);
-  while (!huskylens.begin(Serial6)) {
-    Serial.println(F("Begin failed!"));
-    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
-    Serial.println(F("2.Please recheck the connection."));
-    delay(100);
-  }
-  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
-  //===Setup HuskyLens===//
-  delay(2000);
-  StandbyAwal();
-  delay(4000);
   resetPID();
+  //============================================//
+  display.clearDisplay();             // mengosongkan tampilan
+  display.display();                  // menampilkan karakter yang sudah disimpan
+  display.drawPixel(0, 0, WHITE);
+  display.drawPixel(127, 0, WHITE);
+  display.drawPixel(0, 31, WHITE);
+  display.drawPixel(127, 31, WHITE);
+  display.setTextSize(1);             // set ukuran huruf, sesuaikan jika perlu
+  display.setTextColor(WHITE);        // set warna huruf
+  display.setCursor(20, 25);          // atur posisi kursor (x, y)
+  display.print("Calibrate");
+  display.display();                  // menampilkan karakter yang sudah disimpan
   while (yaw < 0) {
     read_MPU();
     delay(15);
   }
+  display.clearDisplay();
+  display.setTextSize(1);             // set ukuran huruf, sesuaikan jika perlu
+  display.setTextColor(WHITE);        // set warna huruf
+  display.setCursor(20, 25);          // atur posisi kursor (x, y)
+  display.print("Done");
+  display.display();
   bin_sem = xSemaphoreCreateBinary();
   mutex = xSemaphoreCreateMutex();
   if (bin_sem == NULL) {
