@@ -1,9 +1,12 @@
 void Sensor(void *pvParameters) {
   while (1) {
+    //===Test Gerakan Naik Tangga===//
     naikTangga();
-    xSemaphoreTake(mutex, portMAX_DELAY);
-    GerakNaikTangga(-5, -28, -5, -28, 36, 30, 0, 0, 0);
-    xSemaphoreGive(mutex);
+    //    xSemaphoreTake(mutex, portMAX_DELAY);
+    //    GerakNaikTangga(-5, -28, -5, -28, 35, 30, 0, 0, 0);
+    //    xSemaphoreGive(mutex);
+    //===Test Gerakan Naik Tangga===//
+
     //    while (ButtonState == 1) {
     //      ButtonState = digitalRead(Button);
     //      if (ButtonState == 0) {
