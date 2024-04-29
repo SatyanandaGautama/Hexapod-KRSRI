@@ -1,7 +1,7 @@
 void Sensor(void *pvParameters) {
   while (1) {
     //===Test Gerakan Naik Tangga===//
-    naikTangga();
+    //    naikTangga();
     //    xSemaphoreTake(mutex, portMAX_DELAY);
     //    GerakNaikTangga(-5, -28, -5, -28, 35, 30, 0, 0, 0);
     //    xSemaphoreGive(mutex);

@@ -185,16 +185,19 @@ void setup() {
   //    delay(100);
   //  }
   //  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
-  //  //===Setup HuskyLens===//
   //  delay(1000);
-  naikTangga();
-  FR(-55, 55, 0);
-  RM(-75, 0, 0);
-  BR(-55, -55, 0);
-  BL(55, -55, 0);
-  LM(75, 0, 0);
-  FL(55, 55, 0);
-  KirimIntruksiGerak(512);
+  //  //===Setup HuskyLens===//
+  //  //===Standby Tangga===//
+  //  naikTangga();
+  //  FR(-55, 55, 0);
+  //  RM(-75, 0, 0);
+  //  BR(-55, -55, 0);
+  //  BL(55, -55, 0);
+  //  LM(75, 0, 0);
+  //  FL(55, 55, 0);
+  //  KirimIntruksiGerak(512);
+  //  //===Standby Tangga===//
+  StandbyAwal();
   delay(1000);
   resetPID();
   //============================================//
