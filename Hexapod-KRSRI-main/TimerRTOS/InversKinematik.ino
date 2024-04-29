@@ -94,7 +94,7 @@ void BL(float x, float y, float h) {  //Kiri Bawah (KUADRANT 4)
   sdtfemur = ((90 + round((theta2 * 180 / M_PI))) + leftFM + 2) * 3.41;
 
   theta3 = acos((tb * tb + fm * fm - c * c) / (2 * tb * fm));
-  sdttibia = (((90 - (round((theta3 * 180 / M_PI) - 90)))) + leftTB) * 3.41; //Kalau tibia udah diganti pake servo tibianya RM, maka tambahkan + 17
+  sdttibia = (((90 - (round((theta3 * 180 / M_PI) - 90)))) + leftTB) * 3.41; //Kalau tibia udah diganti pake servo tibianya RM, maka tambahkan - 17 di sebelum leftTB
   outServo[3][0] = round(sdtcoxa);
   outServo[3][1] = round(sdtfemur);
   outServo[3][2] = round(sdttibia);
