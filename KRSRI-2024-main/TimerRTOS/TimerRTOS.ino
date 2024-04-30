@@ -45,7 +45,7 @@ bool rot = true;
 int Offset, tujuan;
 //MPU6050
 int yaw = -1;  // -1 Untuk looping menunggu kalibrasi selesai
-int pitch, roll, rollAwal = 0, rollTangga = 15;
+int pitch, roll, rollAwal = 0, rollTangga = 13;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
 uint32_t belakang = PC2;
@@ -128,9 +128,11 @@ float filtered_Roll;
 float filtered_IR, filtered_jFront, filtered_jBack;
 int sdtfix;
 int dist;
-float weight = 0.3, weight_PING = 0.6;
+float weight = 0.4, weight_PING = 0.6;
 int sdtMaju, ButtonState = 1;
 bool stop = true;
+bool sdtRollTangga = true;
+bool sdtRollAfterTangga = false;
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -174,18 +176,18 @@ void setup() {
   delay(500);
   // INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
   // === Setup HuskyLens ===  //
-  //  Serial6.setTx(PC6);
-  //  Serial6.setRx(PC7);
-  //  Serial6.begin(9600);
-  //  delay(500);
-  //  while (!huskylens.begin(Serial6)) {
-  //    Serial.println(F("Begin failed!"));
-  //    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
-  //    Serial.println(F("2.Please recheck the connection."));
-  //    delay(100);
-  //  }
-  //  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
-  //  delay(1000);
+  Serial6.setTx(PC6);
+  Serial6.setRx(PC7);
+  Serial6.begin(9600);
+  delay(500);
+  while (!huskylens.begin(Serial6)) {
+    Serial.println(F("Begin failed!"));
+    Serial.println(F("1.Please recheck the \"Protocol Type\" in HUSKYLENS (General Settings>>Protocol Type>>Serial 9600)"));
+    Serial.println(F("2.Please recheck the connection."));
+    delay(100);
+  }
+  huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
+  delay(1000);
   //  //===Setup HuskyLens===//
   //  //===Standby Tangga===//
   //  naikTangga();

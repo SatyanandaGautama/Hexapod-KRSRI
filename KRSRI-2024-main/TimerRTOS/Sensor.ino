@@ -420,32 +420,68 @@ void beforeTangga() {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
   filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
-  offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 0, 30);
-  offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, 0, -34);
-  rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 37);
-  rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 37);
-  leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 25);
-  leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 12);  //
-  midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 46);
-  midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
-  midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 10);
-  midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 0, -16);  //
+  if (filtered_Roll > 13) {
+    offsetCX[2] = 24; //Coxa BL //25
+    offsetCX[3] = -20; //Coxa FL //-22
+    rightFM = 39; //Femur FR & BR //40
+    rightTB = 34; //Tibia FR & BR
+    leftFM = 18; //Femur FL & BL //12 Naik(+) //15 //18
+    leftTB = 16; //Tibia FL & BL //9 Masuk(+) //13 //16
+    midRightFM = 48; //Femur RM //50
+    midRightTB = 58; //Tibia RM
+    midLeftFM = 18; //Femur LM //14 //16 //18 good (Makin besar makin naik)
+    midLeftTB = -9; //Tibia LM //11 (Makin kecil makin masuk)
+  }
+  else if (filtered_Roll < 0) {
+    offsetCX[2] = 0; //Coxa BL //25
+    offsetCX[3] = 0; //Coxa FL //-22
+    rightFM = 0; //Femur FR & BR //40
+    rightTB = 0; //Tibia FR & BR
+    leftFM = 0; //Femur FL & BL //12 Naik(+) //15 //18
+    leftTB = 0; //Tibia FL & BL //9 Masuk(+) //13 //16
+    midRightFM = 0; //Femur RM //50
+    midRightTB = 0; //Tibia RM
+    midLeftFM = 0; //Femur LM //14 //16 //18 good (Makin besar makin naik)
+    midLeftTB = 0;
+  }
+  else {
+    offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 0, 24);
+    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, 0, -20);
+    rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 39);
+    rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 34);
+    leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 25); //25
+    leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 16);  //
+    midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48); //48
+    midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
+    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 20); //20
+    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 0, -11);  //11
+  }
 }
 
 void afterTangga() {
-  read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
-  filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
-  offsetCX[2] = map(filtered_Roll, rollTangga, rollAwal, 30, 0);
-  offsetCX[3] = map(filtered_Roll, rollTangga, rollAwal, -34, 0);
-  rightFM = map(filtered_Roll, rollTangga, rollAwal, 37, 0);
-  rightTB = map(filtered_Roll, rollTangga, rollAwal, 37, 0);
-  leftFM = map(filtered_Roll, rollTangga, rollAwal, 12, 0);
-  leftTB = map(filtered_Roll, rollTangga, rollAwal, 7, 0);  //
-  midRightFM = map(filtered_Roll, rollTangga, rollAwal, 46, 0);
-  midRightTB = map(filtered_Roll, rollTangga, rollAwal, 58, 0);
-  midLeftFM = map(filtered_Roll, rollTangga, rollAwal, 8, 0);
-  midLeftTB = map(filtered_Roll, rollTangga, rollAwal, -14, 0);  //
+  //  read_MPU();
+  //  vTaskDelay(15 / portTICK_PERIOD_MS);
+  //  filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
+  //  offsetCX[2] = map(filtered_Roll, rollTangga, rollAwal, 24, 0);
+  //  offsetCX[3] = map(filtered_Roll, rollTangga, rollAwal, -20, 0);
+  //  rightFM = map(filtered_Roll, rollTangga, rollAwal, 39, 0);
+  //  rightTB = map(filtered_Roll, rollTangga, rollAwal, 34, 0);
+  //  leftFM = map(filtered_Roll, rollTangga, rollAwal, 18, 0);
+  //  leftTB = map(filtered_Roll, rollTangga, rollAwal, 16, 0);  //
+  //  midRightFM = map(filtered_Roll, rollTangga, rollAwal, 48, 0);
+  //  midRightTB = map(filtered_Roll, rollTangga, rollAwal, 58, 0);
+  //  midLeftFM = map(filtered_Roll, rollTangga, rollAwal, 18, 0);
+  //  midLeftTB = map(filtered_Roll, rollTangga, rollAwal, -9, 0);  //
+  offsetCX[2] = 0; //Coxa BL //25
+  offsetCX[3] = 0; //Coxa FL //-22
+  rightFM = 0; //Femur FR & BR //40
+  rightTB = 0; //Tibia FR & BR
+  leftFM = 0; //Femur FL & BL //12 Naik(+) //15 //18
+  leftTB = 0; //Tibia FL & BL //9 Masuk(+) //13 //16
+  midRightFM = 0; //Femur RM //50
+  midRightTB = 0; //Tibia RM
+  midLeftFM = 0; //Femur LM //14 //16 //18 good (Makin besar makin naik)
+  midLeftTB = 0;
 }
 
 void navigasiKanan_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
@@ -567,16 +603,16 @@ void navigasiKiri_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) 
 //===Gerakan Naik Tangga===//
 void GerakSebelumTangga() {
   beforeTangga();
-  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 20, 5, 20, 45, 30, 0, 0, 0);
-  xSemaphoreGive(mutex);
+  //  xSemaphoreTake(mutex, portMAX_DELAY);
+  GerakNaikTangga(5, 20, 5, 20, 51, 34, 0, 0, 0);
+  //  xSemaphoreGive(mutex);
 }
 
-void GerakNaikTangga() {
+void GerakanNaikTangga() {
   naikTangga();
-  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 28, 5, 28, 35, 28, 0, 0, 0);
-  xSemaphoreGive(mutex);
+  //  xSemaphoreTake(mutex, portMAX_DELAY);
+  GerakNaikTangga(5, 28, 5, 28, 39, 28, 0, 0, 0);
+  //  xSemaphoreGive(mutex);
 }
 
 void GerakSetelahTangga() {
@@ -713,12 +749,17 @@ void GerakSetelahTangga() {
 //    baca_IR();
 
 //===Logika Naik Tangga===//
-// while (roll < 15) {
-//   GerakSebelumTangga();
-// }
-// while (1) {
-//   GerakNaikTangga();
-// }
+//while (roll < 15 && sdtRollTangga) {
+//  GerakSebelumTangga();
+//  if (roll >= 15) {
+//    sdtRollTangga = false;
+//    break;
+//  }
+//}
+//
+//while (roll >= 15 && sdtRollTangga == false) {
+//  GerakNaikTangga();
+//}
 
 //=== Gerakan Mengambil Korban ===//
 //    while (1) {

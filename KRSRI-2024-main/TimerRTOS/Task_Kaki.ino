@@ -239,7 +239,7 @@ void TransformasiTangga(float KeluarRight, float MasukRight, float KeluarLeft, f
   //KANAN BELAKANG (BR)
   xBR_Awal = (standBR[0][0] - MasukRight) + lbrKiri, xBR_Akhir = (standBR[0][0] + KeluarRight) - lbrKiri;
   //KIRI DEPAN (FL)
-  xFL_Awal = (standFL[0][0] + MasukLeft) - lbrKanan, xFL_Akhir = (standFL[0][0] - KeluarLeft) + lbrKanan;
+  xFL_Awal = (standFL[0][0] + MasukLeft) - lbrKanan, xFL_Akhir = (standFL[0][0] - KeluarLeft) + lbrKanan;//KeluarLeft
   //KIRI TENGAH (LM)
   xLM_Awal = (standLM[0][0] - MasukLeft) + lbrTengah, xLM_Akhir = (standLM[0][0] + KeluarLeft) - lbrTengah;
   //KIRI BELAKANG (BL)
