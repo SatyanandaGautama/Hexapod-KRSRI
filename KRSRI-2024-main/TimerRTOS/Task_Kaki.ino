@@ -333,6 +333,104 @@ void GerakNaikTangga(float KeluarKanan, float MasukKanan, float KeluarKiri, floa
   }
 }
 
+void GerakanAfterTangga(float KeluarKanan, float MasukKanan, float KeluarKiri, float MasukKiri, float tinggi, int speedsss, float lKiri, float lKanan, float lTengah) { //Geser Kiri = Lebar(+), Geser Kanan = Lebar(-)
+  if (!statusGerak) {
+    offsetCX[2] -= 2.4; //Coxa BL //- 2.4
+    offsetCX[3] += 2; //Coxa FL //+ 2
+    rightFM -= 3.9; //Femur FR & BR //- 3.9
+    rightTB -= 3.4; //Tibia FR & BR//- 3.4
+    leftFM -= 1.8; //Femur FL & BL //- 1.8
+    leftTB -= 1.6; //Tibia FL & BL //- 1.6
+    midRightFM -= 4.8; //Femur RM //- 4.8
+    midRightTB -= 5.8; //Tibia RM //- 5.8
+    midLeftFM -= 1.8; //Femur LM //- 1.8
+    midLeftTB += 0.9; //Tibia LM //+ 0.9
+    lTengah = lTengah / 2;
+    Increment = 180 / speedsss;
+    switch (steps) {
+      case 0 :
+        degAwal = 0 + Increment;
+        degAkhir = 180;
+        TransformasiTangga(KeluarKanan, MasukKanan, KeluarKiri, MasukKiri, lKiri, lKanan, lTengah);
+        //KANAN DEPAN (FR)
+        xFR0 = xFR_Awal,  yFR0 =  standFR[1][0], xFR1 = xFR_Akhir, yFR1 = standFR[1][0], zFRp = tinggi;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Awal,  yLM0 =  standLM[1][0], xLM1 = xLM_Akhir, yLM1 = standLM[1][0], zLMp = tinggi;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR_Awal,  yBR0 =  standBR[1][0], xBR1 = xBR_Akhir, yBR1 = standBR[1][0], zBRp = tinggi;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Awal,  yFL0 =  standFL[1][0], xFL1 = xFL_Akhir, yFL1 = standFL[1][0], zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM_Awal,  yRM0 =  standRM[1][0], xRM1 = xRM_Akhir, yRM1 = standRM[1][0], zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL_Awal,  yBL0 = standBL[1][0], xBL1 = xBL_Akhir, yBL1 = standBL[1][0], zBLp = 0;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 1:
+        degAwal = 90 + Increment;
+        degAkhir = 90;
+        TransformasiTangga(KeluarKanan, MasukKanan, KeluarKiri, MasukKiri, lKiri, lKanan, lTengah);
+        //KANAN DEPAN (FR)
+        xFR0 = xFR_Akhir,  yFR0 =  standFR[1][0], xFR1 = xFR_Awal, yFR1 = standFR[1][0], zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Akhir,  yLM0 =  standLM[1][0], xLM1 = xLM_Awal, yLM1 = standLM[1][0], zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR_Akhir,  yBR0 =  standBR[1][0], xBR1 = xBR_Awal, yBR1 = standBR[1][0], zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Akhir,  yFL0 =  standFL[1][0], xFL1 = xFL_Awal, yFL1 = standFL[1][0], zFLp = tinggi;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM_Akhir,  yRM0 =  standRM[1][0], xRM1 = xRM_Awal, yRM1 = standRM[1][0], zRMp = tinggi;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL_Akhir, yBL0 = standBL[1][0], xBL1 =  xBL_Awal, yBL1 = standBL[1][0], zBLp = tinggi;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 2 :
+        degAwal = 0 + Increment;
+        degAkhir = 180;
+        TransformasiTangga(KeluarKanan, MasukKanan, KeluarKiri, MasukKiri, lKiri, lKanan, lTengah);
+        //KANAN DEPAN (FR)
+        xFR0 = xFR_Akhir,  yFR0 =  standFR[1][0], xFR1 = xFR_Awal, yFR1 = standFR[1][0], zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Akhir,  yLM0 =  standLM[1][0], xLM1 = xLM_Awal, yLM1 = standLM[1][0], zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR_Akhir,  yBR0 =  standBR[1][0], xBR1 = xBR_Awal, yBR1 = standBR[1][0], zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Akhir,  yFL0 =  standFL[1][0], xFL1 = xFL_Awal, yFL1 = standFL[1][0], zFLp = tinggi;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM_Akhir,  yRM0 =  standRM[1][0], xRM1 = xRM_Awal, yRM1 = standRM[1][0], zRMp = tinggi;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL_Akhir, yBL0 = standBL[1][0], xBL1 =  xBL_Awal, yBL1 = standBL[1][0], zBLp = tinggi;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 3 :
+        degAwal = 90 + Increment;
+        degAkhir = 90;
+        TransformasiTangga(KeluarKanan, MasukKanan, KeluarKiri, MasukKiri, lKiri, lKanan, lTengah);
+        //KANAN DEPAN (FR)
+        xFR0 = xFR_Awal,  yFR0 =  standFR[1][0], xFR1 = xFR_Akhir, yFR1 = standFR[1][0], zFRp = tinggi;
+        //KIRI TENGAH (LM)
+        xLM0 = xLM_Awal,  yLM0 =  standLM[1][0], xLM1 = xLM_Akhir, yLM1 = standLM[1][0], zLMp = tinggi;
+        //KANAN BELAKANG (BR)
+        xBR0 = xBR_Awal,  yBR0 =  standBR[1][0], xBR1 = xBR_Akhir, yBR1 = standBR[1][0], zBRp = tinggi;
+        //KIRI DEPAN (FL)
+        xFL0 = xFL_Awal,  yFL0 =  standFL[1][0], xFL1 = xFL_Akhir, yFL1 = standFL[1][0], zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = xRM_Awal,  yRM0 =  standRM[1][0], xRM1 = xRM_Akhir, yRM1 = standRM[1][0], zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = xBL_Awal,  yBL0 = standBL[1][0], xBL1 = xBL_Akhir, yBL1 = standBL[1][0], zBLp = 0;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+    }
+    steps++;
+    if (steps > 3) steps = 0;
+  }
+}
+
+
 
 
 ////Untuk Rintangan Naik Tangga Geser Kanan

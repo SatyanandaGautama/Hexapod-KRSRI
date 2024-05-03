@@ -453,7 +453,7 @@ void beforeTangga() {
     leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 16);  //
     midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48); //48
     midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
-    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 20); //20
+    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 21); //20
     midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 0, -11);  //11
   }
 }
@@ -461,17 +461,17 @@ void beforeTangga() {
 void afterTangga() {
   //  read_MPU();
   //  vTaskDelay(15 / portTICK_PERIOD_MS);
-  //  filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
-  //  offsetCX[2] = map(filtered_Roll, rollTangga, rollAwal, 24, 0);
-  //  offsetCX[3] = map(filtered_Roll, rollTangga, rollAwal, -20, 0);
-  //  rightFM = map(filtered_Roll, rollTangga, rollAwal, 39, 0);
-  //  rightTB = map(filtered_Roll, rollTangga, rollAwal, 34, 0);
-  //  leftFM = map(filtered_Roll, rollTangga, rollAwal, 18, 0);
-  //  leftTB = map(filtered_Roll, rollTangga, rollAwal, 16, 0);  //
-  //  midRightFM = map(filtered_Roll, rollTangga, rollAwal, 48, 0);
-  //  midRightTB = map(filtered_Roll, rollTangga, rollAwal, 58, 0);
-  //  midLeftFM = map(filtered_Roll, rollTangga, rollAwal, 18, 0);
-  //  midLeftTB = map(filtered_Roll, rollTangga, rollAwal, -9, 0);  //
+  //  //  filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
+  //  offsetCX[2] = map(roll, rollTangga, rollAwal, 24, 0);
+  //  offsetCX[3] = map(roll, rollTangga, rollAwal, -20, 0);
+  //  rightFM = map(roll, rollTangga, rollAwal, 39, 0);
+  //  rightTB = map(roll, rollTangga, rollAwal, 34, 0);
+  //  leftFM = map(roll, rollTangga, rollAwal, 18, 0);
+  //  leftTB = map(roll, rollTangga, rollAwal, 16, 0);  //
+  //  midRightFM = map(roll, rollTangga, rollAwal, 48, 0);
+  //  midRightTB = map(roll, rollTangga, rollAwal, 58, 0);
+  //  midLeftFM = map(roll, rollTangga, rollAwal, 18, 0);
+  //  midLeftTB = map(roll, rollTangga, rollAwal, -9, 0);  //
   offsetCX[2] = 0; //Coxa BL //25
   offsetCX[3] = 0; //Coxa FL //-22
   rightFM = 0; //Femur FR & BR //40
@@ -604,14 +604,14 @@ void navigasiKiri_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) 
 void GerakSebelumTangga() {
   beforeTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 20, 5, 20, 51, 34, 0, 0, 0);
+  GerakNaikTangga(5, 22, 5, 20, 51, 34, 0, 0, 0);
   //  xSemaphoreGive(mutex);
 }
 
 void GerakanNaikTangga() {
   naikTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 28, 5, 28, 39, 28, 0, 0, 0);
+  GerakNaikTangga(5, 28, 5, 28, 40, 28, 0, 0, 0);
   //  xSemaphoreGive(mutex);
 }
 
@@ -847,3 +847,36 @@ void AmbilKorban() {
     }
   }
 }
+
+//StandbyTangga();
+//jmlhStep = 0;
+//while (jmlhStep < 10) {
+//  if (!statusGerak) {
+//    //Masing masing sudut dibuat jadi 0 selama 10 kali step
+//    offsetCX[2] -= 2.4; //Coxa BL //- 2.4
+//    offsetCX[3] += 2; //Coxa FL //+ 2
+//    rightFM -= 3.9; //Femur FR & BR //- 3.9
+//    rightTB -= 3.4; //Tibia FR & BR//- 3.4
+//    leftFM -= 1.8; //Femur FL & BL //- 1.8
+//    leftTB -= 1.6; //Tibia FL & BL //- 1.6
+//    midRightFM -= 4.8; //Femur RM //- 4.8
+//    midRightTB -= 5.8; //Tibia RM //- 5.8
+//    midLeftFM -= 1.8; //Femur LM //- 1.8
+//    midLeftTB += 0.9; //Tibia LM //+ 0.9
+//    StandbyTangga();
+//    jmlhStep++;
+//  }
+//}
+//theta = 90;
+
+//8 step
+//    offsetCX[2] -= 3; //Coxa BL //- 2.4
+//    offsetCX[3] += 2.5; //Coxa FL //+ 2
+//    rightFM -= 4.875; //Femur FR & BR //- 3.9
+//    rightTB -= 4.25; //Tibia FR & BR//- 3.4
+//    leftFM -= 2.25; //Femur FL & BL //- 1.8
+//    leftTB -= 2; //Tibia FL & BL //- 1.6
+//    midRightFM -= 6; //Femur RM //- 4.8
+//    midRightTB -= 7.25; //Tibia RM //- 5.8
+//    midLeftFM -= 2.25; //Femur LM //- 1.8
+//    midLeftTB += 1.125; //Tibia LM //+ 0.9

@@ -132,7 +132,7 @@ float weight = 0.4, weight_PING = 0.6;
 int sdtMaju, ButtonState = 1;
 bool stop = true;
 bool sdtRollTangga = true;
-bool sdtRollAfterTangga = false;
+bool sdtRollAfterTangga = true;
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -167,12 +167,12 @@ void setup() {
   bodyKanan.attach(PE13);
   bodyKiri.attach(PE7);
   pegangan.attach(PE14);
-  kirimDynamixel(820);
-  pegangan.write(72);
+  kirimDynamixel(820); //820 //450
+  pegangan.write(72); //72 //17
   //  capit1.write(135);  // 165 tutup 135 buka
   capit2.write(40);  // 8 tutup 40 buka
-  bodyKanan.write(180);  //180 posisi atas
-  bodyKiri.write(0);     //0 posisi atas
+  bodyKanan.write(180);  //180 posisi atas //140
+  bodyKiri.write(0);     //0 posisi atas //60
   delay(500);
   // INGET DICOMMENT SAAT TRAINING HUSKYLENS di ROBOT
   // === Setup HuskyLens ===  //
@@ -224,6 +224,7 @@ void setup() {
   display.setCursor(20, 25);          // atur posisi kursor (x, y)
   display.print("Done");
   display.display();
+  delay(3000);
   bin_sem = xSemaphoreCreateBinary();
   mutex = xSemaphoreCreateMutex();
   if (bin_sem == NULL) {

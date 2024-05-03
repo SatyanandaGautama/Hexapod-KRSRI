@@ -157,6 +157,28 @@ void Standby() {
   statusGerak = false;
 }
 
+void StandbyTangga() {
+  steps = 0;
+  theta = 0;
+  degAkhir = 0;
+  degAwal = 0;
+  Increment = 10;
+  //KANAN DEPAN (FR)
+  xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 55, zFRp = 0;
+  //KIRI TENGAH (LM)
+  xLM0 = 75, yLM0 = 0, xLM1 = 75, yLM1 = 0, zLMp = 0;
+  //KANAN BELAKANG (BR)
+  xBR0 = -55, yBR0 = -55, xBR1 = -55, yBR1 = -55, zBRp = 0;
+  //KIRI DEPAN (FL)
+  xFL0 = 55, yFL0 = 55, xFL1 = 55, yFL1 = 55, zFLp = 0;
+  //KANAN TENGAH (RM)
+  xRM0 = -75, yRM0 = 0, xRM1 = -75, yRM1 = 0, zRMp = 0;
+  //KIRI BELAKANG (BL)
+  xBL0 = 55, yBL0 = -55, xBL1 = 55, yBL1 = -55, zBLp = 0;
+  modeGerak = true;
+  statusGerak = true;
+}
+
 void StandbyAwal() {
   FR(-55, 55, 20);
   RM(-75, 0, 20);
