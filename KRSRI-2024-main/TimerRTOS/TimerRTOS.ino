@@ -124,8 +124,11 @@ bool Sensors = true;
 bool stateMPU = false;
 bool turunMPU = false;
 float filter_weight = 0.2;  //Untuk filter roll naik tangga = 0.2
-float filtered_Roll;
-float filtered_IR, filtered_jFront, filtered_jBack;
+float filtered_Roll = 0;
+float filtered_IR = 0;
+float filtered_IRdepan = 0;
+float filtered_jFront = 0;
+float filtered_jBack = 0;
 int sdtfix;
 int dist;
 float weight = 0.4, weight_PING = 0.6;

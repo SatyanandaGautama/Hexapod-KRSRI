@@ -54,6 +54,7 @@ void taruhKorban1(int kecepatan) {
         movePeg = true;
         break;
       case 4:
+        Inc = 180 / 3;
         sdtServoAwal = 82, sdtServoAkhir = 82;
         sdtDynAwal = 240, sdtDynAkhir = 240;
         moveDyn = true;
@@ -100,6 +101,55 @@ void taruhKorban2(int kecepatan) {
         movePeg = true;
         break;
       case 4:
+        Inc = 180 / 3;
+        sdtServoAwal = 82, sdtServoAkhir = 82;
+        sdtDynAwal = 240, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+    }
+    stepss++;
+    if (stepss > 5) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
+
+void taruhKorban5(int kecepatan) {
+  if (!moveDyn && !movePeg) {
+    Capit = true;
+    Inc = 180 / kecepatan;
+    switch (stepss) {
+      case 0:  //Turunkan Capit
+        Inc = 180 / 40;
+        sdtServoAwal = 82, sdtServoAkhir = 50;
+        sdtDynAwal = 240, sdtDynAkhir = 136;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1:  //Buka Capit
+        //        capit1.write(135);
+        capit2.write(45);
+        sdtServoAwal = 50, sdtServoAkhir = 50;
+        sdtDynAwal = 136, sdtDynAkhir = 136;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 2:
+        sdtServoAwal = 50, sdtServoAkhir = 92;
+        sdtDynAwal = 136, sdtDynAkhir = 136;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 3:  //Naikkan Capit
+        sdtServoAwal = 92, sdtServoAkhir = 82;
+        sdtDynAwal = 136, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 4:
+        Inc = 180 / 3;
         sdtServoAwal = 82, sdtServoAkhir = 82;
         sdtDynAwal = 240, sdtDynAkhir = 240;
         moveDyn = true;

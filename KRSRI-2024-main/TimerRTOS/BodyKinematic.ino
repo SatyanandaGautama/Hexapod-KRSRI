@@ -192,6 +192,7 @@ void BodyMundur(int speeds) {
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
+        capit2.write(45);
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -456,7 +457,7 @@ void BodyMundur_K2(int speeds) {
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
-        capit2.write(48);
+        capit2.write(50);
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -720,7 +721,7 @@ void BodyMundur_K5(int speeds) {
     Inc = 180 / speeds;
     switch (stepss) {
       case 0:  //Body Mundur
-        capit2.write(48);
+        capit2.write(50);
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
