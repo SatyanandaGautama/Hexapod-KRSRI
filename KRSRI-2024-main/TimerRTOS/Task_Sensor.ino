@@ -629,7 +629,7 @@ void Sensor(void *pvParameters) {
     heightMid = -94;
     heightBack = -94;
     dist = readPING(belakang);
-    while (dist > 8 || (steps == 1 || steps == 3)) {
+    while (dist > 7 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakDinamis(-12, 34, 28, 0, 0);
       xSemaphoreGive(mutex);
