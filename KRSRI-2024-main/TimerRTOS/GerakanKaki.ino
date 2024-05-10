@@ -159,8 +159,7 @@ void Standby() {
 
 void StandbyTangga() {
   steps = 0;
-  theta = 0;
-  degAkhir = 0;
+  theta = 0;  degAkhir = 0;
   degAwal = 0;
   Increment = 10;
   //KANAN DEPAN (FR)
@@ -201,9 +200,11 @@ void naikTangga() {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
   offsetCX[2] = 24; //Coxa BL //25
-  offsetCX[3] = -20; //Coxa FL //-22
+  offsetCX[3] = -24; //Coxa FL //-22
   rightFM = 39; //Femur FR & BR //40
-  rightTB = 34; //Tibia FR & BR
+  rightTB = 34; //Tibia FR & BR 36
+  rightFM_FR = 36;
+  //  rightTB_FR = 34;
   leftFM = 18; //Femur FL & BL //12 Naik(+) //15 //18
   leftTB = 16; //Tibia FL & BL //9 Masuk(+) //13 //16
   midRightFM = 48; //Femur RM //50
@@ -212,18 +213,17 @@ void naikTangga() {
   midLeftTB = -9; //Tibia LM //11 (Makin kecil makin masuk)
 }
 
-//Versi Sebelumnya
-//void naikTangga() {
 //  //  read_MPU();
 //  //  vTaskDelay(15 / portTICK_PERIOD_MS);
-//  offsetCX[2] = 30; //Coxa BL
-//  offsetCX[3] = -34; //Coxa FL
-//  rightFM = 40; //Femur FR & BR
-//  rightTB = 34; //Tibia FR & BR
-//  leftFM = 12; //Femur FL & BL
-//  leftTB = 9; //Tibia FL & BL
-//  midRightFM = 50; //Femur RM
+//  offsetCX[2] = 24; //Coxa BL //25
+//  offsetCX[3] = -20; //Coxa FL //-22
+//  rightFM = 39; //Femur FR & BR //40
+//  rightTB = 36; //Tibia BR 36
+//  //  rightFM_FR = 40;
+//  //  rightTB_FR = 40; //Tibia FR
+//  leftFM = 19; //Femur FL & BL //12 Naik(+) //15 //18
+//  leftTB = 15; //Tibia FL & BL //9 Masuk(+) //13 //16
+//  midRightFM = 49; //Femur RM //50
 //  midRightTB = 58; //Tibia RM
-//  midLeftFM = 14; //Femur LM
-//  midLeftTB = -10; //Tibia LM
-//}
+//  midLeftFM = 18; //Femur LM //14 //16 //18 good (Makin besar makin naik)
+//  midLeftTB = -9; //Tibia LM //11 (Makin kecil makin masuk)

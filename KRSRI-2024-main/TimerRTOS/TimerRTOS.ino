@@ -108,7 +108,7 @@ const float standFL[3][1] = { { 55 }, { 55 }, { 0 } };
 const float standLM[3][1] = { { 76 }, { 0 }, { 0 } };
 const float standBL[3][1] = { { 55 }, { -55 }, { 0 } };
 float offsetCX[4] = { 0 };  //0 = FR, 1 = BR, 2 = BL, 3 = FL
-float midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0;
+float midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0, rightTB_FR = 0, rightFM_FR = 0;
 int jmlhStep;
 //Gerak Rotate
 float P1[3][1];
@@ -123,7 +123,6 @@ float lebarKiri, lebarKanan, lebarTengah;
 bool Sensors = true;
 bool stateMPU = false;
 bool turunMPU = false;
-float filter_weight = 0.2;  //Untuk filter roll naik tangga = 0.2
 float filtered_Roll = 0;
 float filtered_IR = 0;
 float filtered_IRdepan = 0;
@@ -136,6 +135,7 @@ int sdtMaju, ButtonState = 1;
 bool stop = true;
 bool sdtRollTangga = true;
 bool sdtRollAfterTangga = true;
+float filter_weight = 0.25;  //Untuk filter roll naik tangga = 0.2
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -191,8 +191,8 @@ void setup() {
   }
   huskylens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);  //Switch the algorithm to object tracking.
   delay(1000);
-  //  //===Setup HuskyLens===//
-  //  //===Standby Tangga===//
+  //===Setup HuskyLens===//
+  //===Standby Tangga===//
   //  naikTangga();
   //  FR(-55, 55, 0);
   //  RM(-75, 0, 0);
@@ -201,31 +201,33 @@ void setup() {
   //  LM(75, 0, 0);
   //  FL(55, 55, 0);
   //  KirimIntruksiGerak(512);
-  //  //===Standby Tangga===//
+  //===Standby Tangga===//
   StandbyAwal();
   delay(1000);
   resetPID();
   //============================================//
-  display.clearDisplay();             // mengosongkan tampilan
-  display.display();                  // menampilkan karakter yang sudah disimpan
   display.drawPixel(0, 0, WHITE);
   display.drawPixel(127, 0, WHITE);
   display.drawPixel(0, 31, WHITE);
   display.drawPixel(127, 31, WHITE);
-  display.setTextSize(1);             // set ukuran huruf, sesuaikan jika perlu
+  display.setTextSize(1);             // set ukuran huruf
   display.setTextColor(WHITE);        // set warna huruf
-  display.setCursor(20, 25);          // atur posisi kursor (x, y)
-  display.print("Calibrate");
-  display.display();                  // menampilkan karakter yang sudah disimpan
+  display.setCursor(38, 8);
+  display.print("CALIBRATE");
+  display.setTextSize(1);             // set ukuran huruf
+  display.setTextColor(WHITE);        // set warna huruf
+  display.setCursor(46, 16);
+  display.print("MPU");
+  display.display();
   while (yaw < 0) {
     read_MPU();
     delay(15);
   }
   display.clearDisplay();
-  display.setTextSize(1);             // set ukuran huruf, sesuaikan jika perlu
+  display.setTextSize(2);             // set ukuran huruf, sesuaikan jika perlu
   display.setTextColor(WHITE);        // set warna huruf
-  display.setCursor(20, 25);          // atur posisi kursor (x, y)
-  display.print("Done");
+  display.setCursor(40, 8);          // atur posisi kursor (x, y)
+  display.print("DONE");
   display.display();
   delay(3000);
   bin_sem = xSemaphoreCreateBinary();

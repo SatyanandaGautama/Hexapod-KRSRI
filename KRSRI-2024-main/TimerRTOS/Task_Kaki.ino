@@ -335,16 +335,22 @@ void GerakNaikTangga(float KeluarKanan, float MasukKanan, float KeluarKiri, floa
 
 void GerakanAfterTangga(float KeluarKanan, float MasukKanan, float KeluarKiri, float MasukKiri, float tinggi, int speedsss, float lKiri, float lKanan, float lTengah) { //Geser Kiri = Lebar(+), Geser Kanan = Lebar(-)
   if (!statusGerak) {
+    //10 Titik
     offsetCX[2] -= 2.4; //Coxa BL //- 2.4
-    offsetCX[3] += 2; //Coxa FL //+ 2
+    offsetCX[3] += 2.4; //Coxa FL //+ 2
     rightFM -= 3.9; //Femur FR & BR //- 3.9
     rightTB -= 3.4; //Tibia FR & BR//- 3.4
+    rightFM_FR -= 3.6;
     leftFM -= 1.8; //Femur FL & BL //- 1.8
     leftTB -= 1.6; //Tibia FL & BL //- 1.6
     midRightFM -= 4.8; //Femur RM //- 4.8
     midRightTB -= 5.8; //Tibia RM //- 5.8
     midLeftFM -= 1.8; //Femur LM //- 1.8
     midLeftTB += 0.9; //Tibia LM //+ 0.9
+    jmlhStep -= 1;
+    if (jmlhStep == 0) {
+      sdtRollAfterTangga = false;
+    }
     lTengah = lTengah / 2;
     Increment = 180 / speedsss;
     switch (steps) {
@@ -430,8 +436,18 @@ void GerakanAfterTangga(float KeluarKanan, float MasukKanan, float KeluarKiri, f
   }
 }
 
-
-
+// 8 Titik
+//    offsetCX[2] -= 3; //Coxa BL //- 2.4
+//    offsetCX[3] += 3; //Coxa FL //+ 2
+//    rightFM -= 4.875; //Femur FR & BR //- 3.9
+//    rightTB -= 4.25; //Tibia FR & BR//- 3.4
+//    rightFM_FR -= 4.5;
+//    leftFM -= 2.25; //Femur FL & BL //- 1.8
+//    leftTB -= 2; //Tibia FL & BL //- 1.6
+//    midRightFM -= 6; //Femur RM //- 4.8
+//    midRightTB -= 7.25; //Tibia RM //- 5.8
+//    midLeftFM -= 2.25; //Femur LM //- 1.8
+//    midLeftTB += 1.125; //Tibia LM //+ 0.9
 
 ////Untuk Rintangan Naik Tangga Geser Kanan
 ////GerakNaikTangga(-5, -28, -5, -28, 36, 30, 0, 0, 0); (Asumsi Geser Kanan)
