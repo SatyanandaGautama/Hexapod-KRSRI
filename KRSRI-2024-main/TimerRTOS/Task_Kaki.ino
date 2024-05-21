@@ -21,6 +21,103 @@ void Kaki(void *pvParameters) {
   }
 }
 
+void GerakDinamis_afterK5(float Lebar, float tinggi, int speeds, float lKiri, float lKanan) { //lebarY : maju (+), mundur (-)
+  if (!statusGerak) {
+    //3 Steps
+    heightFR += 5.67; //-72; //-89
+    heightRM += 7; //-72; //-93
+    heightBR += 8.67; //-72; //-98
+    heightFL -= 3.67; //-100; //-89
+    heightLM -= 2.33; //-100; //-93
+    heightBL -= 0.67; //-100; //-98
+    jmlhStep -= 1;
+    if (jmlhStep == 0) {
+      afterK5 = false;
+    }
+    Increment = 180 / speeds;
+    switch (steps) {
+      case 0 :
+        degAwal = 0 + Increment;
+        degAkhir = 180;
+        TransformasiGerak(Lebar, lKiri, lKanan);
+        //KANAN DEPAN (FR)
+        xFR0 = standFR[0][0],  yFR0 =  yFR_Awal, xFR1 = standFR[0][0] , yFR1 = yFR_Akhir, zFRp = tinggi;
+        //KIRI TENGAH (LM)
+        xLM0 = standLM[0][0],  yLM0 =  yLM_Awal, xLM1 = standLM[0][0] , yLM1 = yLM_Akhir, zLMp = tinggi;
+        //KANAN BELAKANG (BR)
+        xBR0 = standBR[0][0],  yBR0 =  yBR_Awal, xBR1 = standBR[0][0], yBR1 = yBR_Akhir, zBRp = tinggi;
+        //KIRI DEPAN (FL)
+        xFL0 = standFL[0][0],  yFL0 =  yFL_Awal, xFL1 = standFL[0][0], yFL1 = yFL_Akhir, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = standRM[0][0],  yRM0 =  yRM_Awal, xRM1 = standRM[0][0], yRM1 = yRM_Akhir, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = standBL[0][0],  yBL0 = yBL_Awal, xBL1 =  standBL[0][0], yBL1 = yBL_Akhir, zBLp = 0;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 1:
+        degAwal = 90 + Increment;
+        degAkhir = 90;
+        TransformasiGerak(Lebar, lKiri, lKanan);
+        //KANAN DEPAN (FR)
+        xFR0 = standFR[0][0],  yFR0 =  yFR_Akhir, xFR1 = standFR[0][0] , yFR1 = yFR_Awal, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = standLM[0][0],  yLM0 =  yLM_Akhir, xLM1 = standLM[0][0] , yLM1 = yLM_Awal, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = standBR[0][0],  yBR0 =  yBR_Akhir, xBR1 = standBR[0][0], yBR1 = yBR_Awal, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = standFL[0][0],  yFL0 =  yFL_Akhir, xFL1 = standFL[0][0], yFL1 = yFL_Awal, zFLp = tinggi;
+        //KANAN TENGAH (RM)
+        xRM0 = standRM[0][0],  yRM0 =  yRM_Akhir, xRM1 = standRM[0][0], yRM1 = yRM_Awal, zRMp = tinggi;
+        //KIRI BELAKANG (BL)
+        xBL0 = standBL[0][0],  yBL0 = yBL_Akhir, xBL1 =  standBL[0][0], yBL1 = yBL_Awal, zBLp = tinggi;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 2 :
+        degAwal = 0 + Increment;
+        degAkhir = 180;
+        TransformasiGerak(Lebar, lKiri, lKanan);
+        //KANAN DEPAN (FR)
+        xFR0 = standFR[0][0],  yFR0 =  yFR_Akhir, xFR1 = standFR[0][0] , yFR1 = yFR_Awal, zFRp = 0;
+        //KIRI TENGAH (LM)
+        xLM0 = standLM[0][0],  yLM0 =  yLM_Akhir, xLM1 = standLM[0][0] , yLM1 = yLM_Awal, zLMp = 0;
+        //KANAN BELAKANG (BR)
+        xBR0 = standBR[0][0],  yBR0 =  yBR_Akhir, xBR1 = standBR[0][0], yBR1 = yBR_Awal, zBRp = 0;
+        //KIRI DEPAN (FL)
+        xFL0 = standFL[0][0],  yFL0 =  yFL_Akhir, xFL1 = standFL[0][0], yFL1 = yFL_Awal, zFLp = tinggi;
+        //KANAN TENGAH (RM)
+        xRM0 = standRM[0][0],  yRM0 =  yRM_Akhir, xRM1 = standRM[0][0], yRM1 = yRM_Awal, zRMp = tinggi;
+        //KIRI BELAKANG (BL)
+        xBL0 = standBL[0][0],  yBL0 = yBL_Akhir, xBL1 =  standBL[0][0], yBL1 = yBL_Awal, zBLp = tinggi;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 3 :
+        degAwal = 90 + Increment;
+        degAkhir = 90;
+        TransformasiGerak(Lebar, lKiri, lKanan);
+        //KANAN DEPAN (FR)
+        xFR0 = standFR[0][0],  yFR0 =  yFR_Awal, xFR1 = standFR[0][0] , yFR1 = yFR_Akhir, zFRp = tinggi;
+        //KIRI TENGAH (LM)
+        xLM0 = standLM[0][0],  yLM0 =  yLM_Awal, xLM1 = standLM[0][0] , yLM1 = yLM_Akhir, zLMp = tinggi;
+        //KANAN BELAKANG (BR)
+        xBR0 = standBR[0][0],  yBR0 =  yBR_Awal, xBR1 = standBR[0][0], yBR1 = yBR_Akhir, zBRp = tinggi;
+        //KIRI DEPAN (FL)
+        xFL0 = standFL[0][0],  yFL0 =  yFL_Awal, xFL1 = standFL[0][0], yFL1 = yFL_Akhir, zFLp = 0;
+        //KANAN TENGAH (RM)
+        xRM0 = standRM[0][0],  yRM0 =  yRM_Awal, xRM1 = standRM[0][0], yRM1 = yRM_Akhir, zRMp = 0;
+        //KIRI BELAKANG (BL)
+        xBL0 = standBL[0][0],  yBL0 = yBL_Awal, xBL1 =  standBL[0][0], yBL1 = yBL_Akhir, zBLp = 0;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+    }
+    steps++;
+    if (steps > 3) steps = 0;
+  }
+}
+
 //=========Gerak Dinamis======//
 void TransformasiGerak(float lebarY, float lbrKiri, float lbrKanan) {
   //Kanan maju duluan && Belok Kanan = lbr(+), Belok kiri = lbr(-)

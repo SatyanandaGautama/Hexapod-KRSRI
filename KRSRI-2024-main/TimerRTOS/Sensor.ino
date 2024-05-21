@@ -27,6 +27,66 @@ void RotJarak(uint32_t PING1, uint32_t PING2) {
   if (OffsetJarak < -25) OffsetJarak = -25;
 }
 
+void RotJarakIR_1() {
+  baca_IR(IRbackgroan);
+  filtered_Rg = distances;
+  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
+  // Serial.print("M : ");
+  // Serial.println(filtered_Rg);
+  baca_IR(IRback);
+  filtered_Rb = distances;
+  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  filtered_Rb += 2;
+  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
+  if (OffsetJarak > 15) OffsetJarak = 15;
+  if (OffsetJarak < -15) OffsetJarak = -15;
+}
+
+void RotJarakIR_2() {
+  baca_IR(IRbackgroan);
+  filtered_Rg = distances;
+  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
+  // Serial.print("M : ");
+  // Serial.println(filtered_Rg);
+  baca_IR(IRback);
+  filtered_Rb = distances;
+  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  filtered_Rb += 3;
+  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
+  if (OffsetJarak > 15) OffsetJarak = 15;
+  if (OffsetJarak < -15) OffsetJarak = -15;
+}
+
+void RotJarakIR_3() {
+  baca_IR(IRbackgroan);
+  filtered_Rg = distances;
+  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
+  // Serial.print("M : ");
+  // Serial.println(filtered_Rg);
+  baca_IR(IRback);
+  filtered_Rb = distances;
+  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  filtered_Rb += 7;
+  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
+  if (OffsetJarak > 15) OffsetJarak = 15;
+  if (OffsetJarak < -15) OffsetJarak = -15;
+}
+
 void navigasiMPU_Maju(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
@@ -421,43 +481,41 @@ void beforeTangga() {
   vTaskDelay(15 / portTICK_PERIOD_MS);
   filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
   if (filtered_Roll > 13) {
-    offsetCX[2] = 24; //Coxa BL //25
-    offsetCX[3] = -24; //Coxa FL //-22
-    rightFM = 39; //Femur FR & BR //40
-    rightTB = 34; //Tibia FR & BR // 34
+    offsetCX[2] = 24;   //Coxa BL //25
+    offsetCX[3] = -24;  //Coxa FL //-22
+    rightFM = 39;       //Femur FR & BR //40
+    rightTB = 34;       //Tibia FR & BR // 34
     rightFM_FR = 36;
-    leftFM = 26; //Femur FL & BL //12 Naik(+) //15 //18
-    leftTB = 15; //Tibia FL & BL //9 Masuk(+) //13 //16
-    midRightFM = 48; //Femur RM //50
-    midRightTB = 58; //Tibia RM
-    midLeftFM = 23; //Femur LM //14 //16 //18 good (Makin besar makin naik)
-    midLeftTB = -12; //Tibia LM //11 (Makin kecil makin masuk)
-  }
-  else if (filtered_Roll < 0) {
-    offsetCX[2] = 0; //Coxa BL //25
-    offsetCX[3] = 0; //Coxa FL //-22
-    rightFM = 0; //Femur FR & BR //40
-    rightTB = 0; //Tibia FR & BR
+    leftFM = 26;      //Femur FL & BL //12 Naik(+) //15 //18
+    leftTB = 15;      //Tibia FL & BL //9 Masuk(+) //13 //16
+    midRightFM = 48;  //Femur RM //50
+    midRightTB = 58;  //Tibia RM
+    midLeftFM = 23;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
+    midLeftTB = -12;  //Tibia LM //11 (Makin kecil makin masuk)
+  } else if (filtered_Roll < 0) {
+    offsetCX[2] = 0;  //Coxa BL //25
+    offsetCX[3] = 0;  //Coxa FL //-22
+    rightFM = 0;      //Femur FR & BR //40
+    rightTB = 0;      //Tibia FR & BR
     rightFM_FR = 0;
-    leftFM = 0; //Femur FL & BL //12 Naik(+) //15 //18
-    leftTB = 0; //Tibia FL & BL //9 Masuk(+) //13 //16
-    midRightFM = 0; //Femur RM //50
-    midRightTB = 0; //Tibia RM
-    midLeftFM = 0; //Femur LM //14 //16 //18 good (Makin besar makin naik)
+    leftFM = 0;      //Femur FL & BL //12 Naik(+) //15 //18
+    leftTB = 0;      //Tibia FL & BL //9 Masuk(+) //13 //16
+    midRightFM = 0;  //Femur RM //50
+    midRightTB = 0;  //Tibia RM
+    midLeftFM = 0;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
     midLeftTB = 0;
-  }
-  else {
+  } else {
     offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 0, 24);
     offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, 0, -24);
     rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 39);
-    rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 34);//34
+    rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 34);  //34
     rightFM_FR = map(filtered_Roll, rollAwal, rollTangga, 0, 36);
-    leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 27); //25 //26
-    leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 14);  //16 //15
-    midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48); //48
+    leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 27);      //25 //26
+    leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 14);      //16 //15
+    midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48);  //48
     midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
-    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 23); //20
-    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 0, -12);  //11
+    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 2, 23);   //20
+    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 2, -11);  //11
   }
 }
 
@@ -484,15 +542,15 @@ void afterTangga() {
   //  midRightTB = map(roll, rollTangga, rollAwal, 58, 0);
   //  midLeftFM = map(roll, rollTangga, rollAwal, 18, 0);
   //  midLeftTB = map(roll, rollTangga, rollAwal, -9, 0);  //
-  offsetCX[2] = 0; //Coxa BL //25
-  offsetCX[3] = 0; //Coxa FL //-22
-  rightFM = 0; //Femur FR & BR //40
-  rightTB = 0; //Tibia FR & BR
-  leftFM = 0; //Femur FL & BL //12 Naik(+) //15 //18
-  leftTB = 0; //Tibia FL & BL //9 Masuk(+) //13 //16
-  midRightFM = 0; //Femur RM //50
-  midRightTB = 0; //Tibia RM
-  midLeftFM = 0; //Femur LM //14 //16 //18 good (Makin besar makin naik)
+  offsetCX[2] = 0;  //Coxa BL //25
+  offsetCX[3] = 0;  //Coxa FL //-22
+  rightFM = 0;      //Femur FR & BR //40
+  rightTB = 0;      //Tibia FR & BR
+  leftFM = 0;       //Femur FL & BL //12 Naik(+) //15 //18
+  leftTB = 0;       //Tibia FL & BL //9 Masuk(+) //13 //16
+  midRightFM = 0;   //Femur RM //50
+  midRightTB = 0;   //Tibia RM
+  midLeftFM = 0;    //Femur LM //14 //16 //18 good (Makin besar makin naik)
   midLeftTB = 0;
 }
 
@@ -615,7 +673,7 @@ void navigasiKiri_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) 
 void GerakanNaikTangga() {
   naikTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 28, 5, 28, 40, 30, 0, 0, 0);
+  GerakNaikTangga(5, 28, 5, 28, 39, 30, 0, 0, 0);
   //  xSemaphoreGive(mutex);
 }
 
@@ -822,36 +880,6 @@ void BacaSensor() {
   Serial.println(yaw);
 }
 
-//void AmbilKorban() {
-//  while (1) {
-//    xSemaphoreTake(mutex, portMAX_DELAY);
-//    BodyMundur(25);
-//    xSemaphoreGive(mutex);
-//    if (Capit == false) {
-//      break;
-//    }
-//  }
-//  readSRF();
-//  while (jarak > 5) {
-//    xSemaphoreTake(mutex, portMAX_DELAY);
-//    BodyMaju(50);
-//    xSemaphoreGive(mutex);
-//    if (Capit == false) break;
-//    readSRF();
-//  }
-//  xSemaphoreTake(mutex, portMAX_DELAY);
-//  stepss = 0;
-//  xSemaphoreGive(mutex);
-//  while (1) {
-//    xSemaphoreTake(mutex, portMAX_DELAY);
-//    BodyBalik(25);
-//    xSemaphoreGive(mutex);
-//    if (Capit == false) {
-//      break;
-//    }
-//  }
-//}
-
 //StandbyTangga();
 //jmlhStep = 0;
 //while (jmlhStep < 10) {
@@ -884,3 +912,24 @@ void BacaSensor() {
 //    midRightTB -= 7.25; //Tibia RM //- 5.8
 //    midLeftFM -= 2.25; //Femur LM //- 1.8
 //    midLeftTB += 1.125; //Tibia LM //+ 0.9
+
+//    bodyKanan.write(70);
+//    baca_IR(IRright);
+//    Serial.print("R : ");
+//    Serial.println(distances);
+//    baca_IR(IRback);
+//    Serial.print("B : ");
+//    Serial.println(distances);
+//    RotJarakIR();
+//    while (abs(OffsetJarak) > 0 || (steps == 1 || steps == 3)) {
+//      xSemaphoreTake(mutex, portMAX_DELAY);
+//      GerakRotasi(OffsetJarak, 25, 26);
+//      RotJarakIR();
+//      xSemaphoreGive(mutex);
+//    }
+//    while (1) {
+//      Standby();
+//    }
+//    baca_IR(IRbackgroan);
+//    Serial.print("M : ");
+//    Serial.println(distances);

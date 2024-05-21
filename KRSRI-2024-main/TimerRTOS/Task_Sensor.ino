@@ -9,12 +9,24 @@ void Sensor(void *pvParameters) {
         break;
       }
     }
-    RotateMPU(90, true);
-    while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakRotasi(Offset, 20, 16);
-      xSemaphoreGive(mutex);
-      RotateMPU();
+    dist = readPING(rightBack);
+    dist1 = readPING(leftBack);
+    if (dist > dist1) {
+      RotateMPU(90, true);
+      while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakRotasi(Offset, 20, 16);
+        xSemaphoreGive(mutex);
+        RotateMPU();
+      }
+    } else {
+      RotateMPU(-90, true);
+      while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakRotasi(Offset, 20, 16);
+        xSemaphoreGive(mutex);
+        RotateMPU();
+      }
     }
     RotJarak(rightFront, rightBack);
     while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
@@ -206,7 +218,7 @@ void Sensor(void *pvParameters) {
                 }
               } else {
                 jmlhStep = 0;
-                while (jmlhStep < 1) {
+                while (jmlhStep < 2) {
                   xSemaphoreTake(mutex, portMAX_DELAY);
                   if (steps == 0 && statusGerak == false) {
                     jmlhStep++;
@@ -334,23 +346,6 @@ void Sensor(void *pvParameters) {
       RotJarak(rightFront, rightBack);
       xSemaphoreGive(mutex);
     }
-    //    //===Geser Turunan 1===//
-    //    jFront = readPING(rightFront);
-    //    offsets = (14 - jFront) * 5;
-    //    while ((jFront > 14 + 2) || (steps == 1 || steps == 3)) {  //Geser Kanan
-    //      navigasiKanan_pingKanan(offsets, rightFront, rightBack);
-    //      xSemaphoreTake(mutex, portMAX_DELAY);
-    //      GerakGeser(offsets, 40, 24, lebarKiri, lebarKanan, lebarTengah);
-    //      xSemaphoreGive(mutex);
-    //      offsets = (14 - jFront) * 5;
-    //    }
-    //    while ((jFront < 14 - 2) || (steps == 1 || steps == 3)) {  //Geser Kiri
-    //      navigasiKiri_pingKanan(offsets, rightFront, rightBack);
-    //      xSemaphoreTake(mutex, portMAX_DELAY);
-    //      GerakGeser(offsets, 40, 24, lebarKiri, lebarKanan, lebarTengah);
-    //      xSemaphoreGive(mutex);
-    //      offsets = (14 - jFront) * 5;
-    //    }
     read_MPU();
     vTaskDelay(15 / portTICK_PERIOD_MS);
     yawSebelum = yaw;
@@ -368,9 +363,12 @@ void Sensor(void *pvParameters) {
       sdtAcuan = yaw;
     }
     sdtAcuan = yaw;
-    heightFront = -92;
-    heightMid = -90;
-    heightBack = -77;
+    heightFR = -92;
+    heightRM = -90;
+    heightBR = -77;
+    heightFL = -92;
+    heightLM = -90;
+    heightBL = -77;
     //===Jalan Turunan 2===//
     while (pitch <= -1 && stateMPU == false) {
       navigasiMPU_Maju(25);
@@ -384,14 +382,17 @@ void Sensor(void *pvParameters) {
       }
     }
     //== = Jalan Berbatu Menuju SZ - 1 == =  //
-    heightFront = -92;
-    heightMid = -92;
-    heightBack = -92;
+    heightFR = -92;
+    heightRM = -92;
+    heightBR = -92;
+    heightFL = -92;
+    heightLM = -92;
+    heightBL = -92;
     baca_IR(IRfront);
     while (distances > 4 && stateMPU == true) {
-      navigasiMPU_Maju(26);
+      navigasiMPU_Maju(24);
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakDinamis(26, 37, 22, lebarKiri, lebarKanan);
+      GerakDinamis(24, 37, 22, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
       baca_IR(IRfront);
     }
@@ -542,9 +543,12 @@ void Sensor(void *pvParameters) {
     sdtAcuan = sdtMaju;
     sdtfix = yaw;
     //== == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == ==  //
-    heightFront = -94;
-    heightMid = -94;
-    heightBack = -94;
+    heightFR = -94;
+    heightRM = -94;
+    heightBR = -94;
+    heightFL = -94;
+    heightLM = -94;
+    heightBL = -94;
     // //====Gerakan Ambil Korban 2 sampai taruh safety zone 2====//
     //================Dari SZ-1 Menuju SZ-2==============//
     baca_IR(IRback);
@@ -611,9 +615,12 @@ void Sensor(void *pvParameters) {
       RotJarak(leftBack, leftFront);
       xSemaphoreGive(mutex);
     }
-    heightFront = -92;
-    heightMid = -92;
-    heightBack = -92;
+    heightFR = -92;
+    heightRM = -92;
+    heightBR = -92;
+    heightFL = -92;
+    heightLM = -92;
+    heightBL = -92;
     read_MPU();
     vTaskDelay(15 / portTICK_PERIOD_MS);
     tujuan = sdtfix + 90;
@@ -624,9 +631,12 @@ void Sensor(void *pvParameters) {
       xSemaphoreGive(mutex);
       RotateMPU();
     }
-    heightFront = -94;
-    heightMid = -94;
-    heightBack = -94;
+    heightFR = -94;
+    heightRM = -94;
+    heightBR = -94;
+    heightFL = -94;
+    heightLM = -94;
+    heightBL = -94;
     dist = readPING(belakang);
     while (dist > 8 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
@@ -634,9 +644,19 @@ void Sensor(void *pvParameters) {
       xSemaphoreGive(mutex);
       dist = readPING(belakang);
     }
-    heightFront = -92;
-    heightMid = -92;
-    heightBack = -92;
+    dist = readPING(belakang);
+    while (dist < 6 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakDinamis(-14, 34, 28, 0, 0);
+      xSemaphoreGive(mutex);
+      dist = readPING(belakang);
+    }
+    heightFR = -92;
+    heightRM = -92;
+    heightBR = -92;
+    heightFL = -92;
+    heightLM = -92;
+    heightBL = -92;
     Sensors = true;
     //===Test Gerakan Ambil Korban K2===//
     huskylens.request();
@@ -818,9 +838,12 @@ void Sensor(void *pvParameters) {
         }
       }
     }
-    heightFront = -92;
-    heightMid = -92;
-    heightBack = -92;
+    heightFR = -92;
+    heightRM = -92;
+    heightBR = -92;
+    heightFL = -92;
+    heightLM = -92;
+    heightBL = -92;
     //===Test Gerakan Ambil Korban K2===//
     tujuan = sdtfix + 182;
     RotateMPU();  //110
@@ -924,9 +947,12 @@ void Sensor(void *pvParameters) {
       RotateMPU();
     }
     sdtAcuan = yaw;
-    heightFront = -92;
-    heightMid = -92;
-    heightBack = -92;
+    heightFR = -92;
+    heightRM = -92;
+    heightBR = -92;
+    heightFL = -92;
+    heightLM = -92;
+    heightBL = -92;
     jBack = readPING(leftBack);
     jFront = readPING(leftFront);
     while ((jBack > 10 || jFront > 10) || (steps == 1 || steps == 3)) {  //Geser Kiri
@@ -1065,12 +1091,17 @@ void Sensor(void *pvParameters) {
       RotJarak(leftBack, leftFront);
       xSemaphoreGive(mutex);
     }
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    read_MPU();
+    vTaskDelay(15 / portTICK_PERIOD_MS);
+    sdtAcuan = yaw;
+    xSemaphoreGive(mutex);
     baca_IR(IRfront);
     //    filtered_IR = ((1 - weight) * filtered_IR) + (weight * distances);
-    while ((distances < 42) || (steps == 1 || steps == 3)) {  //43
+    while ((distances < 52) || (steps == 1 || steps == 3)) {  //43
       navigasiMPU_Mundur(22);
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakDinamis(-22, 28, 22, lebarKiri, lebarKanan);
+      GerakDinamis(-22, 28, 20, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
       baca_IR(IRfront);
       //      filtered_IR = ((1 - weight) * filtered_IR) + (weight * distances);
@@ -1083,26 +1114,28 @@ void Sensor(void *pvParameters) {
       xSemaphoreGive(mutex);
     }
     RotateMPU(-90, true);
-    while (abs(Offset) > 5 || (steps == 1 || steps == 3)) {
+    while (abs(Offset) > 3 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakRotasi(Offset, 30, 26);
+      GerakRotasi(Offset, 28, 22);
       xSemaphoreGive(mutex);
       RotateMPU();
     }
     sdtAcuan = yaw;
     xSemaphoreTake(mutex, portMAX_DELAY);
-    bodyKanan.write(17);
+    bodyKanan.write(5);
     stop = true;
     xSemaphoreGive(mutex);
     while (stop == true) {
       baca_IR(IRright);
-      while ((distances < 50) || (steps == 1 || steps == 3)) {  //Asli 13
+      filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
+      while ((filtered_IRdepan < 51) || (steps == 1 || steps == 3)) {  //Asli 13
         navigasiMPU_Kiri(24);
         xSemaphoreTake(mutex, portMAX_DELAY);
         GerakGeser(24, 28, 26, lebarKiri, lebarKanan, lebarTengah);
         xSemaphoreGive(mutex);
         baca_IR(IRright);
-        if (distances >= 51) {
+        filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
+        if (filtered_IRdepan >= 51) {
           stop = false;
         }
       }
@@ -1162,7 +1195,7 @@ void Sensor(void *pvParameters) {
     vTaskDelay(30 / portTICK_PERIOD_MS);
     baca_IR(IRleft);
     filtered_IR = ((1 - weight) * filtered_IR) + (weight * distances);
-    while ((filtered_IR > 7) || (steps == 1 || steps == 3)) {
+    while ((filtered_IR > 5) || (steps == 1 || steps == 3)) { //7
       navigasiMPU_Kiri(26);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakGeser(22, 48, 34, lebarKiri, lebarKanan, lebarTengah);
@@ -1190,6 +1223,7 @@ void Sensor(void *pvParameters) {
       RotJarak(leftBack, leftFront);
       xSemaphoreGive(mutex);
     }
+    //====================================================================//
     //===Test Gerakan Naik Tangga===//
     read_MPU();
     vTaskDelay(15 / portTICK_PERIOD_MS);
@@ -1206,7 +1240,7 @@ void Sensor(void *pvParameters) {
     jmlhStep = 10;
     xSemaphoreGive(mutex);
     while (1) {
-      GerakanAfterTangga(5, 25, 5, 25, 39, 28, 0, 0, 0);
+      GerakanAfterTangga(5, 20, 5, 20, 39, 28, 0, 0, 0);
       if (sdtRollAfterTangga == false) break;
     }
     //===Gerakan Ambil korban 5===//
@@ -1251,9 +1285,12 @@ void Sensor(void *pvParameters) {
       baca_IR(IRfront);
       filtered_IRdepan = ((1 - 0.8) * filtered_IRdepan) + (0.8 * distances);
     }
-    heightFront = -89;
-    heightMid = -93;
-    heightBack = -98;
+    heightFR = -89;
+    heightRM = -93;
+    heightBR = -98;
+    heightFL = -89;
+    heightLM = -93;
+    heightBL = -98;
     RotateMPU(-96, true);
     while (abs(Offset) > 3 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
@@ -1359,9 +1396,12 @@ void Sensor(void *pvParameters) {
             read_maix();
           }
         } else {
-          heightFront = -92;
-          heightMid = -92;
-          heightBack = -92;
+          heightFR = -92;
+          heightRM = -92;
+          heightBR = -92;
+          heightFL = -92;
+          heightLM = -92;
+          heightBL = -92;
           Standby();
           while (1) {
             xSemaphoreTake(mutex, portMAX_DELAY);
@@ -1398,7 +1438,7 @@ void Sensor(void *pvParameters) {
         }
       }
     } else {
-      RotateMPU(21, true);
+      RotateMPU(23, true);
       while (abs(Offset) > 4 || (steps == 1 || steps == 3)) {
         xSemaphoreTake(mutex, portMAX_DELAY);
         GerakRotasi(Offset, 35, 38);
@@ -1410,8 +1450,8 @@ void Sensor(void *pvParameters) {
       if (huskylens.available()) {
         while (Sensors == true) {
           read_maix();
-          if (result.xCenter > 177) {
-            while (result.xCenter > 177 || (steps == 1 || steps == 3)) {
+          if (result.xCenter > 176) {
+            while (result.xCenter > 176 || (steps == 1 || steps == 3)) {
               xSemaphoreTake(mutex, portMAX_DELAY);
               GerakRotasi(5, 25, 36);
               xSemaphoreGive(mutex);
@@ -1425,9 +1465,12 @@ void Sensor(void *pvParameters) {
               read_maix();
             }
           } else {
-            heightFront = -92;
-            heightMid = -92;
-            heightBack = -92;
+            heightFR = -92;
+            heightRM = -92;
+            heightBR = -92;
+            heightFL = -92;
+            heightLM = -92;
+            heightBL = -92;
             Standby();
             while (1) {
               xSemaphoreTake(mutex, portMAX_DELAY);
@@ -1465,7 +1508,7 @@ void Sensor(void *pvParameters) {
         }
       }
     }
-    //=== Gerakan Ambil korban 5 ===//
+    // // //=== Gerakan Ambil korban 5 ===//
     RotJarak(rightFront, rightBack);
     while (abs(OffsetJarak) > 0 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
@@ -1473,53 +1516,73 @@ void Sensor(void *pvParameters) {
       RotJarak(rightFront, rightBack);
       xSemaphoreGive(mutex);
     }
-    heightFront = -89;
-    heightMid = -93;
-    heightBack = -98;
-    RotateMPU(-100, true);
+    read_MPU();
+    vTaskDelay(15 / portTICK_PERIOD_MS);
+    heightFR = -89;
+    heightRM = -93;
+    heightBR = -98;
+    heightFL = -89;
+    heightLM = -93;
+    heightBL = -98;
+    RotateMPU(-92, true);
     while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakRotasi(Offset, 36, 36);
       xSemaphoreGive(mutex);
       RotateMPU();
     }
-    heightFront = -92;
-    heightMid = -92;
-    heightBack = -92;
+    bodyKanan.write(70);
     xSemaphoreTake(mutex, portMAX_DELAY);
     read_MPU();
-    vTaskDelay(12 / portTICK_PERIOD_MS);
+    vTaskDelay(15 / portTICK_PERIOD_MS);
     sdtAcuan = yaw;
     xSemaphoreGive(mutex);
-    bodyKanan.write(50);
-    baca_IR(IRright);
-    filtered_IR = distances;
-    filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-    while ((filtered_IR <= 18) || (steps == 1 || steps == 3)) {  //Asli 23
-      navigasiMPU_Kiri(17);
+    jmlhStep = 3;
+    while (1) {
+      navigasiMPU_Maju(10);
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakGeser(17, 37, 34, lebarKiri, lebarKanan, lebarTengah);
+      GerakDinamis_afterK5(10, 37, 32, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
-      baca_IR(IRright);
-      filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+      if (afterK5 == false)break;
     }
-    baca_IR(IRright);
-    filtered_IR = distances;
-    filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-    while ((filtered_IR >= 20) || (steps == 1 || steps == 3)) {  //Asli 26
-      navigasiMPU_Kanan(17);
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakGeser(-17, 37, 34, lebarKiri, lebarKanan, lebarTengah);
-      xSemaphoreGive(mutex);
+    heightFR = -72;
+    heightRM = -72;
+    heightBR = -72;
+    heightFL = -100;
+    heightLM = -100;
+    heightBL = -100;
+    stop = true;
+    while (stop == true) {
       baca_IR(IRright);
+      filtered_IR = distances;
       filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+      while ((filtered_IR <= 20) || (steps == 1 || steps == 3)) {  //Asli 22
+        navigasiMPU_Kiri(17);
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakGeser(17, 37, 38, lebarKiri, lebarKanan, lebarTengah);
+        xSemaphoreGive(mutex);
+        baca_IR(IRright);
+        filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+        if (filtered_IR >= 20) {
+          stop = false;
+        }
+      }
+      while ((filtered_IR >= 21) || (steps == 1 || steps == 3)) {  //Asli 26
+        navigasiMPU_Kanan(17);
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakGeser(-17, 37, 38, lebarKiri, lebarKanan, lebarTengah);
+        xSemaphoreGive(mutex);
+        baca_IR(IRright);
+        filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+        if (filtered_IR <= 21) {
+          stop = false;
+        }
+      }
     }
-    xSemaphoreTake(mutex, portMAX_DELAY);
     bodyKanan.write(180);
-    xSemaphoreGive(mutex);
     baca_IR(IRback);
     filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
-    while (filtered_IRdepan < 16 || (steps == 1 || steps == 3)) {
+    while (filtered_IRdepan < 5 || (steps == 1 || steps == 3)) {
       navigasiMPU_Maju(24);  //24
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakDinamis(24, 37, 32, lebarKiri, lebarKanan);
@@ -1527,43 +1590,148 @@ void Sensor(void *pvParameters) {
       baca_IR(IRback);
       filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
     }
+    RotJarakIR_1();
+    while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(OffsetJarak, 30, 28);
+      RotJarakIR_1();
+      xSemaphoreGive(mutex);
+    }
     xSemaphoreTake(mutex, portMAX_DELAY);
-    bodyKanan.write(50);
+    read_MPU();
+    vTaskDelay(15 / portTICK_PERIOD_MS);
+    sdtAcuan = yaw;
     xSemaphoreGive(mutex);
-    baca_IR(IRright);
-    filtered_IR = distances;
-    filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-    while ((filtered_IR <= 18) || (steps == 1 || steps == 3)) {  //Asli 23
-      navigasiMPU_Kiri(18);
+    baca_IR(IRback);
+    filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
+    while (filtered_IRdepan < 8 || (steps == 1 || steps == 3)) {
+      navigasiMPU_Maju(20);  //24
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakGeser(18, 37, 34, lebarKiri, lebarKanan, lebarTengah);
+      GerakDinamis(20, 37, 32, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
-      baca_IR(IRright);
-      filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+      baca_IR(IRback);
+      filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
     }
-    baca_IR(IRright);
-    filtered_IR = distances;
-    filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-    while ((filtered_IR >= 19) || (steps == 1 || steps == 3)) {  //Asli 26
-      navigasiMPU_Kanan(18);
+    RotJarakIR_2();
+    while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakGeser(-18, 37, 34, lebarKiri, lebarKanan, lebarTengah);
+      GerakRotasi(OffsetJarak, 30, 28);
+      RotJarakIR_2();
       xSemaphoreGive(mutex);
-      baca_IR(IRright);
-      filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
     }
-    baca_IR(IRright);
-    filtered_IR = distances;
-    filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-    while ((filtered_IR <= 18) || (steps == 1 || steps == 3)) {  //Asli 23
-      navigasiMPU_Kiri(18);
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakGeser(18, 37, 34, lebarKiri, lebarKanan, lebarTengah);
-      xSemaphoreGive(mutex);
+    bodyKanan.write(70);
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    read_MPU();
+    vTaskDelay(15 / portTICK_PERIOD_MS);
+    sdtAcuan = yaw;
+    xSemaphoreGive(mutex);
+    stop = true;
+    while (stop == true) {
       baca_IR(IRright);
+      filtered_IR = distances;
       filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+      while ((filtered_IR >= 22) || (steps == 1 || steps == 3)) {  //Asli 26
+        navigasiMPU_Kanan(15);
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakGeser(-15, 37, 38, lebarKiri, lebarKanan, lebarTengah);
+        xSemaphoreGive(mutex);
+        baca_IR(IRright);
+        filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+        if (filtered_IR <= 22) {
+          stop = false;
+        }
+      }
+      while ((filtered_IR <= 20) || (steps == 1 || steps == 3)) {  //Asli 23
+        navigasiMPU_Kiri(16);
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakGeser(16, 37, 38, lebarKiri, lebarKanan, lebarTengah);
+        xSemaphoreGive(mutex);
+        baca_IR(IRright);
+        filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+        if (filtered_IR >= 20) {
+          stop = false;
+        }
+      }
     }
     bodyKanan.write(180);
+    RotJarakIR_2();
+    while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(OffsetJarak, 30, 28);
+      RotJarakIR_2();
+      xSemaphoreGive(mutex);
+    }
+    baca_IR(IRback);
+    filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
+    while (filtered_IRdepan < 14 || (steps == 1 || steps == 3)) {
+      navigasiMPU_Maju(20);  //24
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakDinamis(20, 37, 32, lebarKiri, lebarKanan);
+      xSemaphoreGive(mutex);
+      baca_IR(IRback);
+      filtered_IRdepan = ((1 - 0.6) * filtered_IRdepan) + (0.6 * distances);
+    }
+    RotJarakIR_3();
+    while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(OffsetJarak, 30, 28);
+      RotJarakIR_3();
+      xSemaphoreGive(mutex);
+    }
+    bodyKanan.write(70);
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    read_MPU();
+    vTaskDelay(15 / portTICK_PERIOD_MS);
+    sdtAcuan = yaw;
+    xSemaphoreGive(mutex);
+    stop = true;
+    while (stop == true) {
+      baca_IR(IRright);
+      filtered_IR = distances;
+      filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+      while ((filtered_IR >= 21) || (steps == 1 || steps == 3)) {  //Asli 26
+        navigasiMPU_Kanan(15);
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakGeser(-15, 37, 38, lebarKiri, lebarKanan, lebarTengah);
+        xSemaphoreGive(mutex);
+        baca_IR(IRright);
+        filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+        if (filtered_IR <= 21) {
+          stop = false;
+        }
+      }
+      RotJarakIR_3();
+      while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakRotasi(OffsetJarak, 30, 28);
+        RotJarakIR_3();
+        xSemaphoreGive(mutex);
+      }
+      while ((filtered_IR <= 20) || (steps == 1 || steps == 3)) {  //Asli 23
+        navigasiMPU_Kiri(15);
+        xSemaphoreTake(mutex, portMAX_DELAY);
+        GerakGeser(15, 37, 38, lebarKiri, lebarKanan, lebarTengah);
+        xSemaphoreGive(mutex);
+        baca_IR(IRright);
+        filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+        if (filtered_IR >= 20) {
+          stop = false;
+        }
+      }
+    }
+    bodyKanan.write(180);
+    RotJarakIR_3();
+    while (abs(OffsetJarak) > 1 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(OffsetJarak, 30, 28);
+      RotJarakIR_3();
+      xSemaphoreGive(mutex);
+    }
+    xSemaphoreTake(mutex, portMAX_DELAY);
+    read_MPU();
+    vTaskDelay(15 / portTICK_PERIOD_MS);
+    sdtAcuan = yaw;
+    xSemaphoreGive(mutex);
     offsetCX[0] = -5;
     offsetCX[1] = 5;
     offsetCX[2] = -5;
@@ -1571,9 +1739,9 @@ void Sensor(void *pvParameters) {
     baca_IR(IRfront);
     filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
     while (filtered_IR > 5 || (steps == 1 || steps == 3)) {
-      navigasiMPU_Maju(24);  //24
+      navigasiMPU_Maju(20);  //24
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakDinamis(24, 37, 32, lebarKiri, lebarKanan);
+      GerakDinamis(20, 37, 32, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
       baca_IR(IRfront);
       filtered_IR = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
@@ -1589,8 +1757,14 @@ void Sensor(void *pvParameters) {
       RotJarak(leftBack, leftFront);
       xSemaphoreGive(mutex);
     }
+    heightFR = -92;
+    heightRM = -92;
+    heightBR = -92;
+    heightFL = -92;
+    heightLM = -92;
+    heightBL = -92;
     RotateMPU(90, true);
-    while (abs(Offset) > 1 || (steps == 1 || steps == 3)) {
+    while (abs(Offset) > 2 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakRotasi(Offset, 20, 24);
       xSemaphoreGive(mutex);
@@ -1632,36 +1806,50 @@ void Sensor(void *pvParameters) {
       if (offsets > 11) offsets = 20;
       if (offsets < -11) offsets = -20;
     }
+    RotJarak(leftBack, leftFront);
+    while (abs(OffsetJarak) > 0 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(OffsetJarak, 20, 24);
+      RotJarak(leftBack, leftFront);
+      xSemaphoreGive(mutex);
+    }
     jBack = readPING(leftBack);
-    offsets = (jBack - 16) * 5;
-    if (offsets > 16) offsets = 15;
-    if (offsets < -16) offsets = -15;
-    while ((jBack > 17) || (steps == 1 || steps == 3)) {  //Geser Kiri
+    offsets = (jBack - 17) * 5;
+    if (offsets > 17) offsets = 15;
+    if (offsets < -17) offsets = -15;
+    while ((jBack > 18) || (steps == 1 || steps == 3)) {  //Geser Kiri
       navigasiKiri_pingKiri(18, leftFront, leftBack);
       xSemaphoreTake(mutex, portMAX_DELAY);
       GerakGeser(offsets, 25, 22, lebarKiri, lebarKanan, lebarTengah);
       xSemaphoreGive(mutex);
-      offsets = (jBack - 16) * 5;
-      if (offsets > 16) offsets = 15;
-      if (offsets < -16) offsets = -15;
-    }
-    jBack = readPING(leftBack);
-    offsets = (jBack - 16) * 5;
-    if (offsets > 16) offsets = 15;
-    if (offsets < -16) offsets = -15;
-    while ((jBack < 17) || (steps == 1 || steps == 3)) {  //Geser Kiri
-      navigasiKanan_pingKiri(18, leftFront, leftBack);
-      xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakGeser(offsets, 25, 22, lebarKiri, lebarKanan, lebarTengah);
-      xSemaphoreGive(mutex);
-      offsets = (jBack - 16) * 5;
-      if (offsets > 16) offsets = 15;
-      if (offsets < -16) offsets = -15;
+      offsets = (jBack - 17) * 5;
+      if (offsets > 17) offsets = 15;
+      if (offsets < -17) offsets = -15;
     }
     RotJarak(leftBack, leftFront);
     while (abs(OffsetJarak) > 0 || (steps == 1 || steps == 3)) {
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakRotasi(OffsetJarak, 20, 20);
+      GerakRotasi(OffsetJarak, 20, 24);
+      RotJarak(leftBack, leftFront);
+      xSemaphoreGive(mutex);
+    }
+    jBack = readPING(leftBack);
+    offsets = (jBack - 17) * 5;
+    if (offsets > 17) offsets = 15;
+    if (offsets < -17) offsets = -15;
+    while ((jBack < 18) || (steps == 1 || steps == 3)) {  //Geser Kiri
+      navigasiKanan_pingKiri(18, leftFront, leftBack);
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakGeser(offsets, 25, 22, lebarKiri, lebarKanan, lebarTengah);
+      xSemaphoreGive(mutex);
+      offsets = (jBack - 17) * 5;
+      if (offsets > 17) offsets = 15;
+      if (offsets < -17) offsets = -15;
+    }
+    RotJarak(leftBack, leftFront);
+    while (abs(OffsetJarak) > 0 || (steps == 1 || steps == 3)) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      GerakRotasi(OffsetJarak, 20, 24);
       RotJarak(leftBack, leftFront);
       xSemaphoreGive(mutex);
     }
@@ -1678,9 +1866,18 @@ void Sensor(void *pvParameters) {
     while (distances > 4 || (steps == 1 || steps == 3)) {
       navigasiMPU_Mundur(25);
       xSemaphoreTake(mutex, portMAX_DELAY);
-      GerakDinamis(-25, 20, 16, lebarKiri, lebarKanan);
+      GerakDinamis(-25, 20, 14, lebarKiri, lebarKanan);
       xSemaphoreGive(mutex);
       baca_IR(IRback);
+    }
+    Standby();
+    while (1) {
+      xSemaphoreTake(mutex, portMAX_DELAY);
+      CapitBack_K5(20);
+      xSemaphoreGive(mutex);
+      if (Capit == false) {
+        break;
+      }
     }
     while (1) {
       Standby();

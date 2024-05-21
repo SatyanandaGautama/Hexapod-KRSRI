@@ -25,6 +25,7 @@ HUSKYLENSResult result;
 #define IRback PC0
 #define IRright PC4
 #define IRleft PC5
+#define IRbackgroan PC2
 //Servo
 #include <Servo.h>
 Servo capit1, capit2, pegangan, bodyKanan, bodyKiri;
@@ -48,7 +49,7 @@ int yaw = -1;  // -1 Untuk looping menunggu kalibrasi selesai
 int pitch, roll, rollAwal = 0, rollTangga = 13;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
-uint32_t belakang = PC2;
+uint32_t belakang = PE15;
 uint32_t rightBack = PE11;
 uint32_t rightFront = PE12;
 uint32_t leftBack = PE8;    //E8
@@ -97,7 +98,7 @@ int outServo[6][3];
 const float cx = 22;
 const int fm = 53;
 const int tb = 70;
-int heightFront = -92, heightMid = -92, heightBack = -92;  //kelereng -94
+int heightFR = -92, heightRM = -92, heightBR = -92, heightFL = -92, heightLM = -92, heightBL = -92;
 float z, sdtcoxa, sdtcoxa1, sdtcoxa2, sdtcoxa3, sdtcoxa4, sdtrotate, sdtfemur, sdttibia, theta2, theta3, angle1, angle2, P, c, alas, alpha, beta;
 const int legoffset[6] = { 0, 45, 135, 180, 225, 315 };
 //Koordinat Awal (Standby) per Kaki :
@@ -128,14 +129,17 @@ float filtered_IR = 0;
 float filtered_IRdepan = 0;
 float filtered_jFront = 0;
 float filtered_jBack = 0;
+float filtered_Rg = 0;
+float filtered_Rb = 0;
 int sdtfix;
-int dist;
+int dist, dist1;
 float weight = 0.4, weight_PING = 0.6;
 int sdtMaju, ButtonState = 1;
 bool stop = true;
 bool sdtRollTangga = true;
 bool sdtRollAfterTangga = true;
-float filter_weight = 0.25;  //Untuk filter roll naik tangga = 0.2
+float filter_weight = 0.23;  //Untuk filter roll naik tangga = 0.2
+bool afterK5 = true;
 
 void timerInterrupt() {
   BaseType_t task_woken = pdFALSE;
@@ -229,7 +233,7 @@ void setup() {
   display.setCursor(40, 8);          // atur posisi kursor (x, y)
   display.print("DONE");
   display.display();
-  delay(3000);
+  //  delay(3000);
   bin_sem = xSemaphoreCreateBinary();
   mutex = xSemaphoreCreateMutex();
   if (bin_sem == NULL) {
