@@ -218,7 +218,7 @@ void Sensor(void *pvParameters) {
                 }
               } else {
                 jmlhStep = 0;
-                while (jmlhStep < 2) {
+                while (jmlhStep < 3) {
                   xSemaphoreTake(mutex, portMAX_DELAY);
                   if (steps == 0 && statusGerak == false) {
                     jmlhStep++;
@@ -229,7 +229,7 @@ void Sensor(void *pvParameters) {
                 statusGerak = false;
                 while (1) {
                   xSemaphoreTake(mutex, portMAX_DELAY);
-                  BodyMundur(25);
+                  BodyMundur_K2(25);
                   xSemaphoreGive(mutex);
                   if (Capit == false) {
                     break;
@@ -238,7 +238,7 @@ void Sensor(void *pvParameters) {
                 readSRF();
                 while (jarak > 3) {
                   xSemaphoreTake(mutex, portMAX_DELAY);
-                  BodyMaju(70);
+                  BodyMaju_K2(70);
                   xSemaphoreGive(mutex);
                   if (Capit == false) break;
                   readSRF();
@@ -252,7 +252,7 @@ void Sensor(void *pvParameters) {
                 xSemaphoreGive(mutex);
                 while (1) {
                   xSemaphoreTake(mutex, portMAX_DELAY);
-                  BodyBalik(25);
+                  BodyBalik_K2(25);
                   xSemaphoreGive(mutex);
                   if (Capit == false) {
                     Sensors = false;
