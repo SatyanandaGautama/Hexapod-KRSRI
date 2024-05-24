@@ -109,7 +109,7 @@ const float standFL[3][1] = { { 55 }, { 55 }, { 0 } };
 const float standLM[3][1] = { { 76 }, { 0 }, { 0 } };
 const float standBL[3][1] = { { 55 }, { -55 }, { 0 } };
 float offsetCX[4] = { 0 };  //0 = FR, 1 = BR, 2 = BL, 3 = FL
-float midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0, rightTB_FR = 0, rightFM_FR = 0;
+float leftFM_FL = 0, midRightFM = 0, midRightTB = 0, midLeftFM = 0, midLeftTB = 0, rightFM = 0, rightTB = 0, leftFM = 0, leftTB = 0, rightTB_FR = 0, rightFM_FR = 0;
 int jmlhStep;
 //Gerak Rotate
 float P1[3][1];
@@ -207,7 +207,7 @@ void setup() {
   //  KirimIntruksiGerak(512);
   //===Standby Tangga===//
   StandbyAwal();
-  delay(1000);
+  delay(1500);
   resetPID();
   //============================================//
   display.drawPixel(0, 0, WHITE);
@@ -220,7 +220,7 @@ void setup() {
   display.print("CALIBRATE");
   display.setTextSize(1);             // set ukuran huruf
   display.setTextColor(WHITE);        // set warna huruf
-  display.setCursor(46, 16);
+  display.setCursor(56, 16);
   display.print("MPU");
   display.display();
   while (yaw < 0) {

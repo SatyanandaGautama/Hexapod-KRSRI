@@ -65,8 +65,8 @@ void BodyBalik(int speeds) {
     Inc = 180 / speeds;
     switch (stepss) {
       case 0:
-        Increment = 180 / 15;
-        Inc = 180 / 15;
+        Increment = 180 / 10;
+        Inc = 180 / 10;
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
@@ -330,8 +330,8 @@ void BodyBalik_K2(int speeds) {
     Inc = 180 / speeds;
     switch (stepss) {
       case 0:
-        Increment = 180 / 15;
-        Inc = 180 / 15;
+        Increment = 180 / 10;
+        Inc = 180 / 10;
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
@@ -447,7 +447,7 @@ void BodyBalik_K2(int speeds) {
   }
 }
 
-void BodyMundur_K2(int speeds) {
+void BodyMundur_K2(int sdtCapit, int speeds) {
   if (!statusGerak) {
     Capit = true;
     Increment = 180 / speeds;
@@ -457,7 +457,7 @@ void BodyMundur_K2(int speeds) {
         theta = 0;
         degAwal = 0;
         degAkhir = 180;
-        capit2.write(55);
+        capit2.write(sdtCapit);
         //KANAN DEPAN (FR)
         xFR0 = -55, yFR0 = 55, xFR1 = -55, yFR1 = 105, zFRp = 0;
         //KIRI TENGAH (LM)
@@ -597,8 +597,8 @@ void BodyBalik_K5(int speeds) {
     Inc = 180 / speeds;
     switch (stepss) {
       case 0:
-        Increment = 180 / 14;
-        Inc = 180 / 14;
+        Increment = 180 / 10;
+        Inc = 180 / 10;
         theta = 0;
         degAwal = 0;
         degAkhir = 180;

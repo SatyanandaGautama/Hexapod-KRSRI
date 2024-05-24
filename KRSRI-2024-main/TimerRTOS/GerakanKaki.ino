@@ -204,7 +204,7 @@ void naikTangga() {
   rightFM = 39; //Femur FR & BR //40
   rightTB = 34; //Tibia FR & BR 36
   rightFM_FR = 36;
-  //  rightTB_FR = 34;
+  leftFM_FL = 20;
   leftFM = 18; //Femur FL & BL //12 Naik(+) //15 //18
   leftTB = 16; //Tibia FL & BL //9 Masuk(+) //13 //16
   midRightFM = 48; //Femur RM //50

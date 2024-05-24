@@ -438,6 +438,7 @@ void GerakanAfterTangga(float KeluarKanan, float MasukKanan, float KeluarKiri, f
     rightFM -= 3.9; //Femur FR & BR //- 3.9
     rightTB -= 3.4; //Tibia FR & BR//- 3.4
     rightFM_FR -= 3.6;
+    leftFM_FL -= 2.0;
     leftFM -= 1.8; //Femur FL & BL //- 1.8
     leftTB -= 1.6; //Tibia FL & BL //- 1.6
     midRightFM -= 4.8; //Femur RM //- 4.8

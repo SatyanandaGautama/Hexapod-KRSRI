@@ -26,6 +26,25 @@ void RotJarak(uint32_t PING1, uint32_t PING2) {
   if (OffsetJarak > 25) OffsetJarak = 25;
   if (OffsetJarak < -25) OffsetJarak = -25;
 }
+void RotJarakIR(int inc) {
+  baca_IR(IRbackgroan);
+  filtered_Rg = distances;
+  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
+  // Serial.print("M : ");
+  // Serial.println(filtered_Rg);
+  baca_IR(IRback);
+  filtered_Rb = distances;
+  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  filtered_Rb += inc;
+  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
+  // Serial.print("B : ");
+  // Serial.println(filtered_Rb);
+  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
+  if (OffsetJarak > 15) OffsetJarak = 15;
+  if (OffsetJarak < -15) OffsetJarak = -15;
+}
 
 void RotJarakIR_1() {
   baca_IR(IRbackgroan);
@@ -486,18 +505,20 @@ void beforeTangga() {
     rightFM = 39;       //Femur FR & BR //40
     rightTB = 34;       //Tibia FR & BR // 34
     rightFM_FR = 36;
-    leftFM = 26;      //Femur FL & BL //12 Naik(+) //15 //18
-    leftTB = 15;      //Tibia FL & BL //9 Masuk(+) //13 //16
+    leftFM_FL = 27;
+    leftFM = 27;      //Femur FL & BL //12 Naik(+) //15 //18
+    leftTB = 14;      //Tibia FL & BL //9 Masuk(+) //13 //16
     midRightFM = 48;  //Femur RM //50
     midRightTB = 58;  //Tibia RM
-    midLeftFM = 23;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
-    midLeftTB = -12;  //Tibia LM //11 (Makin kecil makin masuk)
+    midLeftFM = 18;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
+    midLeftTB = -9;  //Tibia LM //11 (Makin kecil makin masuk)
   } else if (filtered_Roll < 0) {
     offsetCX[2] = 0;  //Coxa BL //25
     offsetCX[3] = 0;  //Coxa FL //-22
     rightFM = 0;      //Femur FR & BR //40
     rightTB = 0;      //Tibia FR & BR
     rightFM_FR = 0;
+    leftFM_FL = 0;
     leftFM = 0;      //Femur FL & BL //12 Naik(+) //15 //18
     leftTB = 0;      //Tibia FL & BL //9 Masuk(+) //13 //16
     midRightFM = 0;  //Femur RM //50
@@ -505,17 +526,18 @@ void beforeTangga() {
     midLeftFM = 0;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
     midLeftTB = 0;
   } else {
-    offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 0, 24);
-    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, 0, -24);
+    offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 2, 24);
+    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, -2, -24);
     rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 39);
     rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 34);  //34
     rightFM_FR = map(filtered_Roll, rollAwal, rollTangga, 0, 36);
+    leftFM_FL = map(filtered_Roll, rollAwal, rollTangga, 0, 27);
     leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 27);      //25 //26
     leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 14);      //16 //15
     midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48);  //48
     midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
-    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 2, 23);   //20
-    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, 2, -11);  //11
+    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 4, 24);   //20
+    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, -2, -12);  //11
   }
 }
 
@@ -523,25 +545,12 @@ void beforeTangga() {
 void GerakSebelumTangga() {
   beforeTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(4, 21, 6, 20, 54, 36, 0, 0, 0);
+  GerakNaikTangga(5, 23, 5, 23, 54, 40, 0, 0, 0); //4,21,6,20
   //  xSemaphoreGive(mutex);
 }
 
 
 void afterTangga() {
-  //  read_MPU();
-  //  vTaskDelay(15 / portTICK_PERIOD_MS);
-  //  //  filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
-  //  offsetCX[2] = map(roll, rollTangga, rollAwal, 24, 0);
-  //  offsetCX[3] = map(roll, rollTangga, rollAwal, -20, 0);
-  //  rightFM = map(roll, rollTangga, rollAwal, 39, 0);
-  //  rightTB = map(roll, rollTangga, rollAwal, 34, 0);
-  //  leftFM = map(roll, rollTangga, rollAwal, 18, 0);
-  //  leftTB = map(roll, rollTangga, rollAwal, 16, 0);  //
-  //  midRightFM = map(roll, rollTangga, rollAwal, 48, 0);
-  //  midRightTB = map(roll, rollTangga, rollAwal, 58, 0);
-  //  midLeftFM = map(roll, rollTangga, rollAwal, 18, 0);
-  //  midLeftTB = map(roll, rollTangga, rollAwal, -9, 0);  //
   offsetCX[2] = 0;  //Coxa BL //25
   offsetCX[3] = 0;  //Coxa FL //-22
   rightFM = 0;      //Femur FR & BR //40
