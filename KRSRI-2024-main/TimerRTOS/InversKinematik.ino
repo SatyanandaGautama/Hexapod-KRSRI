@@ -41,7 +41,7 @@ void RM(float x, float y, float h) {  //Kanan Tengah (Kuadrant 2 atau 3)
   sdtfemur = (((300 - (90 + round((theta2 * 180 / M_PI)))) + 4) + midRightFM) * 3.41; //2
 
   theta3 = acos((tb * tb + fm * fm - c * c) / (2 * tb * fm));
-  sdttibia = (((300 - (90 - (round((theta3 * 180 / M_PI) - 90)))) + midRightTB)) * 3.41; //Kalau servo tibia udah diganti, hapus + 17 nya // diganti
+  sdttibia = (((300 - (90 - (round((theta3 * 180 / M_PI) - 90)))) + midRightTB) + 3) * 3.41; //Kalau servo tibia udah diganti, hapus + 17 nya // diganti
   outServo[1][0] = round(sdtcoxa);
   outServo[1][1] = round(sdtfemur);
   outServo[1][2] = round(sdttibia);
@@ -120,7 +120,7 @@ void LM(float x, float y, float h) {  //Kiri Tengah (Kuadrant 1 atau 4)
   alpha = atan(z / alas);
   beta = acos((fm * fm + c * c - tb * tb) / (2 * fm * c));
   theta2 = alpha + beta;
-  sdtfemur = (((90 + round((theta2 * 180 / M_PI))) - 2) + midLeftFM) * 3.41;
+  sdtfemur = (((90 + round((theta2 * 180 / M_PI)))) + midLeftFM) * 3.41; //-2
 
   theta3 = acos((tb * tb + fm * fm - c * c) / (2 * tb * fm));
   sdttibia = (((90 - (round((theta3 * 180 / M_PI) - 90)))) + 3 + midLeftTB) * 3.41;  //Awalnya tidak ditambah 3

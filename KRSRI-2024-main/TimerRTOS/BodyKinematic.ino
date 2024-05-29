@@ -530,6 +530,53 @@ void BodyMundur_K2(int sdtCapit, int speeds) {
   }
 }
 
+void TurunCapit(int sdtCapit, int speeds) {
+  if (!statusGerak) {
+    Capit = true;
+    Increment = 180 / speeds;
+    Inc = 180 / speeds;
+    switch (stepss) {
+      case 0:  //Body Mundur
+        theta = 0;
+        degAwal = 0;
+        degAkhir = 180;
+        capit2.write(sdtCapit);
+        sdtServoAwal = 82, sdtServoAkhir = 82;  //??
+        sdtDynAwal = 240, sdtDynAkhir = 240;    //??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 1:  //Turun Capit
+        Increment = 180 / 34;
+        Inc = 180 / 34;
+        sdtServoAwal = 82, sdtServoAkhir = 24;  //??
+        sdtDynAwal = 240, sdtDynAkhir = 135;    //??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+      case 2:
+        Increment = 180 / 2;
+        Inc = 180 / 2;
+        sdtServoAwal = 23, sdtServoAkhir = 23;  //10??
+        sdtDynAwal = 133, sdtDynAkhir = 133;    //??
+        moveDyn = true;
+        movePeg = true;
+        modeGerak = true;
+        statusGerak = true;
+        break;
+    }
+    stepss++;
+    if (stepss > 3) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
+
 void BodyMaju_K5(int speeds) {  //gerakan saat ambil korban
   if (!statusGerak) {
     Capit = true;

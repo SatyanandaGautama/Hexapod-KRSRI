@@ -8,6 +8,7 @@
 TwoWire Wire3(PC9, PA8);
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire3, OLED_RESET);
 //===OLED Display===//
+#define Lampu PB9
 #define Button PB12
 HardwareSerial Serial2(USART2);  //Serial Driver Servo
 HardwareSerial Serial3(USART3);  //Serial Arduino Nano
@@ -20,6 +21,7 @@ HardwareSerial Serial6(USART6);  //Serial Maixbit Camera
 #include "HUSKYLENS.h"
 HUSKYLENS huskylens;
 HUSKYLENSResult result;
+int x0 = 158, x1;
 //SharpIR
 #define IRfront PA0  //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
 #define IRback PC0
@@ -169,6 +171,7 @@ void setup() {
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
   pinMode(Button, INPUT);
+  pinMode(Lampu, OUTPUT);
   //  capit1.attach(PE15);//Capit Kiri (Saat Robot ke Arah Depan)
   capit2.attach(PB11);  //Capit Kanan
   bodyKanan.attach(PE13);

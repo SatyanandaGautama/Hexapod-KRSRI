@@ -139,6 +139,40 @@ void navigasiMPU_Maju(int maxStep) {
   //  Serial.println(yaw);
 }
 
+
+void navigasi_K4(int maxStep) {
+  read_maix();
+  x1 = result.xCenter;
+  error = x1 - x0;  //error (+) => belok kanan, error (-) => belok kiri
+  if (error < -50) {
+    error = -50;
+  }
+  if (error > 50) {
+    error = 50;
+  }
+  PID_controller();
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
+    lebarKanan = PID_control;
+    lebarKiri = 0;
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+    lebarKanan = 0;
+    lebarKiri = PID_control;
+  } else {
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  time_prev = Time;
+  Time = millis();
+  dt = (Time - time_prev) / 1000;
+  previous_error = error;
+  //  Serial.print("E: ");
+  //  Serial.println(error);
+  //  Serial.print(", Y: ");
+  //  Serial.println(yaw);
+}
+
 void navigasiMPU_Mundur(int maxStep) {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
@@ -511,7 +545,7 @@ void beforeTangga() {
     midRightFM = 48;  //Femur RM //50
     midRightTB = 58;  //Tibia RM
     midLeftFM = 18;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
-    midLeftTB = -9;  //Tibia LM //11 (Makin kecil makin masuk)
+    midLeftTB = -9;   //Tibia LM //11 (Makin kecil makin masuk)
   } else if (filtered_Roll < 0) {
     offsetCX[2] = 0;  //Coxa BL //25
     offsetCX[3] = 0;  //Coxa FL //-22
@@ -536,7 +570,7 @@ void beforeTangga() {
     leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 14);      //16 //15
     midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48);  //48
     midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
-    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 4, 24);   //20
+    midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 4, 24);    //20
     midLeftTB = map(filtered_Roll, rollAwal, rollTangga, -2, -12);  //11
   }
 }
@@ -545,7 +579,7 @@ void beforeTangga() {
 void GerakSebelumTangga() {
   beforeTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 23, 5, 23, 54, 40, 0, 0, 0); //4,21,6,20
+  GerakNaikTangga(5, 23, 5, 23, 54, 40, 0, 0, 0);  //4,21,6,20
   //  xSemaphoreGive(mutex);
 }
 
