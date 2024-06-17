@@ -47,13 +47,19 @@ void taruhKorban1(int kecepatan) {
         moveDyn = true;
         movePeg = true;
         break;
-      case 3:  //Naikkan Capit
-        sdtServoAwal = 102, sdtServoAkhir = 82;
-        sdtDynAwal = 117, sdtDynAkhir = 240;
+      case 3:
+        sdtServoAwal = 102, sdtServoAkhir = 102;
+        sdtDynAwal = 117, sdtDynAkhir = 112;
         moveDyn = true;
         movePeg = true;
         break;
-      case 4:
+      case 4:  //Naikkan Capit
+        sdtServoAwal = 102, sdtServoAkhir = 82;
+        sdtDynAwal = 112, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 5:
         Inc = 180 / 3;
         sdtServoAwal = 82, sdtServoAkhir = 82;
         sdtDynAwal = 240, sdtDynAkhir = 240;
@@ -62,7 +68,7 @@ void taruhKorban1(int kecepatan) {
         break;
     }
     stepss++;
-    if (stepss > 5) {
+    if (stepss > 6) {
       Capit = false;
       stepss = 0;
     }

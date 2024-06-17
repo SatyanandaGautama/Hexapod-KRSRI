@@ -1,12 +1,35 @@
 //===OLED Display===//
+#include <vl53l0x_class.h>
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
-#define SCREEN_WIDTH 128    // OLED display width, in pixels
-#define SCREEN_HEIGHT 32    // OLED display height, in pixels
-#define OLED_RESET    0     // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_WIDTH 128  // OLED display width, in pixels
+#define SCREEN_HEIGHT 32  // OLED display height, in pixels
+#define OLED_RESET 0      // Reset pin # (or -1 if sharing Arduino reset pin)
 #include <Wire.h>
-TwoWire Wire3(PC9, PA8);
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire3, OLED_RESET);
+
+//============ TOF =================== //
+#define XSHUT_depan PC4
+#define XSHUT_kanan PC0
+#define XSHUT_kiri PC5
+#define XSHUT_belakang PA0 //A0
+// #define XSHUT_belakangKanan PE10
+// #define XSHUT_belakangKiri PE10
+// Create components.
+TwoWire WIRE1(PC9, PA8);                          //SDA=PB11 & SCL=PB10
+VL53L0X sensor_vl53l0x_1(&WIRE1, XSHUT_depan);    //XSHUT=PE11
+VL53L0X sensor_vl53l0x_2(&WIRE1, XSHUT_kanan);  //XSHUT=PE12
+VL53L0X sensor_vl53l0x_3(&WIRE1, XSHUT_kiri);
+VL53L0X sensor_vl53l0x_4(&WIRE1, XSHUT_belakang);
+
+uint32_t distance_top_1;
+uint32_t distance_top_2;
+uint32_t distance_top_3;
+uint32_t distance_top_4;
+int TOFDepan, TOFKanan, TOFKiri, TOFBelakang;
+int s = 1;
+//============ TOF =================== //
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &WIRE1, OLED_RESET);
 //===OLED Display===//
 #define Lampu PB9
 #define Button PB12
@@ -33,21 +56,22 @@ int x0 = 158, x1;
 Servo capit1, capit2, pegangan, bodyKanan, bodyKiri;
 int distances;
 HardwareTimer Timer6(TIM6);
-const uint32_t timerPeriod_us = 17000 - 1;
+const uint32_t timerPeriod_us = 22000 - 1;
 const int prescaler = 84 - 1;  // 1 MHz
 static SemaphoreHandle_t bin_sem = NULL;
 static SemaphoreHandle_t mutex;
-// //Kamera
-// int pict_x = 200, pict_area, area, pict_y;  //Tambah variabel area klo mau pke area //200
-// int pict_x_cal = 165;                       // Threshold nilai tengah korban di kamera
-// int pict_area_cal = 7500;                   // Threshold area blob (jarak korban) di kamera
-// int pict_y_cal = 0;                         //Ganti nilai 0 dengan nilai y ketika pas capit dengan korban
-// bool tengah = 0;
+// ToF
+uint32_t jarakTof;
+int distanceTof;
+uint32_t jarakTof1;
+int distanceTof1;
+int status;
 //Rotate MPU
 bool rot = true;
 int Offset, tujuan;
 //MPU6050
 int yaw = -1;  // -1 Untuk looping menunggu kalibrasi selesai
+int yawAwal = 0;
 int pitch, roll, rollAwal = 0, rollTangga = 13;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
@@ -126,6 +150,7 @@ float lebarKiri, lebarKanan, lebarTengah;
 bool Sensors = true;
 bool stateMPU = false;
 bool turunMPU = false;
+bool cactch = true;
 float filtered_Roll = 0;
 float filtered_IR = 0;
 float filtered_IRdepan = 0;
@@ -162,11 +187,44 @@ void setup() {
   Serial.setTx(PA9);
   Serial.setRx(PA10);
   Serial.begin(9600);
-  //===OLED Setup===//
-  Wire3.begin();
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  display.clearDisplay();
+  WIRE1.begin();
   delay(2000);
+  //===OLED Setup===//
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  //==== ToF Setup====//
+  //=== Configure VL53L0X components. ===//
+  sensor_vl53l0x_1.begin();//Depan
+  sensor_vl53l0x_2.begin();//Kanan
+  sensor_vl53l0x_3.begin();//Kiri
+  sensor_vl53l0x_4.begin();//Belakang
+  //=== Switch off VL53L0X components. ===//
+  sensor_vl53l0x_1.VL53L0X_Off();//Depan
+  sensor_vl53l0x_2.VL53L0X_Off();//Kanan
+  sensor_vl53l0x_3.VL53L0X_Off();//Kiri
+  sensor_vl53l0x_4.VL53L0X_Off();//Belakang
+  //=== Initialize VL53L0X components. ===//
+  status = sensor_vl53l0x_1.InitSensor(0x10);
+  if (status) {
+    Serial.println("Init sensor_vl53l0x_1 failed...");
+  }
+  status = sensor_vl53l0x_2.InitSensor(0x13);
+  if (status) {
+    Serial.println("Init sensor_vl53l0x_2 failed...");
+  }
+  status = sensor_vl53l0x_3.InitSensor(0x16);
+  if (status) {
+    Serial.println("Init sensor_vl53l0x_3 failed...");
+  }
+  status = sensor_vl53l0x_4.InitSensor(0x19); //0x19
+  if (status) {
+    Serial.println("Init sensor_vl53l0x_4 failed...");
+  }
+  SetupSingleShot(sensor_vl53l0x_1);
+  SetupSingleShot(sensor_vl53l0x_2);
+  SetupSingleShot(sensor_vl53l0x_3);
+  SetupSingleShot(sensor_vl53l0x_4);
+  //============ TOF =======================
+  delay(100);
   //====Setup SRF04====//
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
@@ -177,10 +235,10 @@ void setup() {
   bodyKanan.attach(PE13);
   bodyKiri.attach(PE7);
   pegangan.attach(PE14);
-  kirimDynamixel(820); //820 //450
-  pegangan.write(72); //72 //17
+  kirimDynamixel(820);  //820 //450
+  pegangan.write(72);   //72 //17
   //  capit1.write(135);  // 165 tutup 135 buka
-  capit2.write(40);  // 8 tutup 40 buka
+  capit2.write(40);      // 8 tutup 40 buka
   bodyKanan.write(180);  //180 posisi atas //140
   bodyKiri.write(0);     //0 posisi atas //60
   delay(500);
@@ -200,29 +258,30 @@ void setup() {
   delay(1000);
   //===Setup HuskyLens===//
   //===Standby Tangga===//
-  //  naikTangga();
-  //  FR(-55, 55, 0);
-  //  RM(-75, 0, 0);
-  //  BR(-55, -55, 0);
-  //  BL(55, -55, 0);
-  //  LM(75, 0, 0);
-  //  FL(55, 55, 0);
-  //  KirimIntruksiGerak(512);
+  // naikTangga();
+  // FR(-55, 55, 0);
+  // RM(-75, 0, 0);
+  // BR(-55, -55, 0);
+  // BL(55, -55, 0);
+  // LM(75, 0, 0);
+  // FL(55, 55, 0);
+  // KirimIntruksiGerak(512);
   //===Standby Tangga===//
   StandbyAwal();
   delay(1500);
   resetPID();
   //============================================//
+  display.clearDisplay();
   display.drawPixel(0, 0, WHITE);
   display.drawPixel(127, 0, WHITE);
   display.drawPixel(0, 31, WHITE);
   display.drawPixel(127, 31, WHITE);
-  display.setTextSize(1);             // set ukuran huruf
-  display.setTextColor(WHITE);        // set warna huruf
+  display.setTextSize(1);       // set ukuran huruf
+  display.setTextColor(WHITE);  // set warna huruf
   display.setCursor(38, 8);
   display.print("CALIBRATE");
-  display.setTextSize(1);             // set ukuran huruf
-  display.setTextColor(WHITE);        // set warna huruf
+  display.setTextSize(1);       // set ukuran huruf
+  display.setTextColor(WHITE);  // set warna huruf
   display.setCursor(56, 16);
   display.print("MPU");
   display.display();
@@ -231,9 +290,9 @@ void setup() {
     delay(15);
   }
   display.clearDisplay();
-  display.setTextSize(2);             // set ukuran huruf, sesuaikan jika perlu
-  display.setTextColor(WHITE);        // set warna huruf
-  display.setCursor(40, 8);          // atur posisi kursor (x, y)
+  display.setTextSize(2);       // set ukuran huruf, sesuaikan jika perlu
+  display.setTextColor(WHITE);  // set warna huruf
+  display.setCursor(40, 8);     // atur posisi kursor (x, y)
   display.print("DONE");
   display.display();
   //  delay(3000);

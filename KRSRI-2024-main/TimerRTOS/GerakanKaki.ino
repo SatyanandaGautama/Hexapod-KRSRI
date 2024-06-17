@@ -1,9 +1,8 @@
 void Rotate(float rot) {
   rot = rot / 180 * M_PI;
   float rotasi[3][3] = { { cos(rot), -sin(rot), 0 },
-    { sin(rot), cos(rot), 0 },
-    { 0, 0, 1 }
-  };
+                         { sin(rot), cos(rot), 0 },
+                         { 0, 0, 1 } };
   float P1[3][1] = { 0 };
   float P2[3][1] = { 0 };
   for (int i = 0; i < 2; i++) {
@@ -159,7 +158,8 @@ void Standby() {
 
 void StandbyTangga() {
   steps = 0;
-  theta = 0;  degAkhir = 0;
+  theta = 0;
+  degAkhir = 0;
   degAwal = 0;
   Increment = 10;
   //KANAN DEPAN (FR)
@@ -199,18 +199,18 @@ void StandbyAwal() {
 void naikTangga() {
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
-  offsetCX[2] = 24; //Coxa BL //25
-  offsetCX[3] = -24; //Coxa FL //-22
-  rightFM = 39; //Femur FR & BR //40
-  rightTB = 34; //Tibia FR & BR 36
+  offsetCX[2] = 27;   //Coxa BL //25  nambah makin masuk
+  offsetCX[3] = -20;  //Coxa FL //-22 nambah makin masuk
+  rightFM = 39;       //Femur FR & BR //40
+  rightTB = 34;       //Tibia FR & BR 36
   rightFM_FR = 36;
-  leftFM_FL = 20;
-  leftFM = 18; //Femur FL & BL //12 Naik(+) //15 //18
-  leftTB = 16; //Tibia FL & BL //9 Masuk(+) //13 //16
-  midRightFM = 48; //Femur RM //50
-  midRightTB = 58; //Tibia RM
-  midLeftFM = 18; //Femur LM //14 //16 //18 good (Makin besar makin naik)
-  midLeftTB = -9; //Tibia LM //11 (Makin kecil makin masuk)
+  leftFM_FL = 24;   //
+  leftFM = 20;      //Femur FL & BL //12 Naik(+) //15 //18
+  leftTB = 16;      //Tibia FL & BL //9 Masuk(+) //13 //16
+  midRightFM = 48;  //Femur RM //50
+  midRightTB = 58;  //Tibia RM
+  midLeftFM = 19;   //Femur LM //14 //16 //18 good (Makin besar makin naik)//18
+  midLeftTB = -9;   //Tibia LM //11 (Makin kecil makin masuk)
 }
 
 //  //  read_MPU();

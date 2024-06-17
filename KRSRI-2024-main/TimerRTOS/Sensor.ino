@@ -1,3 +1,10 @@
+void testSharp() {
+  int jarak = analogRead(PA0);
+  int IRRangeVal = 27.728 * pow(map(jarak, 0, 1023, 0, 5000) / 1000.0, -1.2045);
+  Serial.print("sensor ");
+  Serial.println(IRRangeVal);
+}
+
 void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar Kanan
   if (rot) {
     read_MPU();
@@ -16,6 +23,8 @@ void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar K
     Offset = tujuan - yaw - 360;
   }
 }
+
+
 
 void RotJarak(uint32_t PING1, uint32_t PING2) {
   jFront = readPING(PING1);
@@ -106,9 +115,39 @@ void RotJarakIR_3() {
   if (OffsetJarak < -15) OffsetJarak = -15;
 }
 
+void navigasiMPU_Maju_versiCepat(int maxStep) {
+  read_MPU();
+  vTaskDelay(10 / portTICK_PERIOD_MS);
+  error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
+  if (error < -180) {
+    error = sdtAcuan - yaw + 360;
+  }
+  if (error > 180) {
+    error = sdtAcuan - yaw - 360;
+  }
+  PID_controller_cepat();
+  if (PID_control >= maxStep) PID_control = maxStep;
+  if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
+  if (PID_control > 0) {  //PID_control(+) = belok kanan
+    lebarKanan = PID_control;
+    lebarKiri = 0;
+  } else if (PID_control < 0) {  //PID_control(-) = belok kiri
+    lebarKanan = 0;
+    lebarKiri = PID_control;
+  } else {
+    lebarKiri = 0;
+    lebarKanan = 0;
+  }
+  previous_error = error;
+  //  Serial.print("E: ");
+  //  Serial.println(error);
+  //  Serial.print(", Y: ");
+  //  Serial.println(yaw);
+}
+
 void navigasiMPU_Maju(int maxStep) {
   read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
+  vTaskDelay(10 / portTICK_PERIOD_MS);
   error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
@@ -129,16 +168,12 @@ void navigasiMPU_Maju(int maxStep) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //  Serial.print("E: ");
   //  Serial.println(error);
   //  Serial.print(", Y: ");
   //  Serial.println(yaw);
 }
-
 
 void navigasi_K4(int maxStep) {
   read_maix();
@@ -163,9 +198,6 @@ void navigasi_K4(int maxStep) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //  Serial.print("E: ");
   //  Serial.println(error);
@@ -175,7 +207,7 @@ void navigasi_K4(int maxStep) {
 
 void navigasiMPU_Mundur(int maxStep) {
   read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
+  vTaskDelay(10 / portTICK_PERIOD_MS);
   error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
@@ -196,9 +228,6 @@ void navigasiMPU_Mundur(int maxStep) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //  Serial.print("E: ");
   //  Serial.println(error);
@@ -208,7 +237,7 @@ void navigasiMPU_Mundur(int maxStep) {
 
 void navigasiMPU_Kiri(int maxStep) {
   read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
+  vTaskDelay(10 / portTICK_PERIOD_MS);
   error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
@@ -231,9 +260,6 @@ void navigasiMPU_Kiri(int maxStep) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //  Serial.print("E: ");
   //  Serial.println(error);
@@ -243,7 +269,7 @@ void navigasiMPU_Kiri(int maxStep) {
 
 void navigasiMPU_Kanan(int maxStep) {
   read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
+  vTaskDelay(10 / portTICK_PERIOD_MS);
   error = sdtAcuan - yaw;  //error (+) => belok kanan, error (-) => belok kiri
   if (error < -180) {
     error = sdtAcuan - yaw + 360;
@@ -266,9 +292,6 @@ void navigasiMPU_Kanan(int maxStep) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //  Serial.print("E: ");
   //  Serial.println(error);
@@ -294,30 +317,9 @@ void navigasiMaju(int setpoint, int maxStep, uint32_t pingFront, uint32_t pingBa
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //    Serial.print("E: ");
   //    Serial.println(error);
-  //}
-  //else if ( error == 0 && (jFront >= setpoint + 4 || jFront <= setpoint - 4)) {
-  //  offsets = setpoint - jFront;
-  //  while ( jFront > setpoint + 2) {//Geser Kanan
-  //    xSemaphoreTake(mutex, portMAX_DELAY);
-  //    GerakGeser(offsets, 20, 12, 0, 0, 0);
-  //    xSemaphoreGive(mutex);
-  //    jFront = readPING(pingFront);
-  //    offsets = setpoint - jFront;
-  //  }
-  //  while (jFront < setpoint - 2) {//Geser Kiri
-  //    xSemaphoreTake(mutex, portMAX_DELAY);
-  //    GerakGeser(offsets, 20, 12, 0, 0, 0);
-  //    xSemaphoreGive(mutex);
-  //    jFront = readPING(pingFront);
-  //    offsets = setpoint - jFront;
-  //  }
-  //}
 }
 
 void navigasiMundur(int setpoint, int maxStep, uint32_t pingFront, uint32_t pingBack) {
@@ -339,37 +341,15 @@ void navigasiMundur(int setpoint, int maxStep, uint32_t pingFront, uint32_t ping
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //    Serial.print("E: ");
   //    Serial.println(error);
-  //  }
-  //  else if ( error == 0 && (jFront >= 20 || jFront <= 10)) {
-  //    offsets = setpoint - jFront;
-  //    while ( jFront > setpoint + 2) {//Geser Kanan
-  //      xSemaphoreTake(mutex, portMAX_DELAY);
-  //      GerakGeser(offsets, 20, 20, 0, 0, 0);
-  //      xSemaphoreGive(mutex);
-  //      jFront = readPING(pingFront);
-  //      offsets = setpoint - jFront;
-  //    }
-  //    while (jFront < setpoint - 2) {//Geser Kiri
-  //      xSemaphoreTake(mutex, portMAX_DELAY);
-  //      GerakGeser(offsets, 20, 20, 0, 0, 0);
-  //      xSemaphoreGive(mutex);
-  //      jFront = readPING(pingFront);
-  //      offsets = setpoint - jFront;
-  //    }
-  //  }
 }
 
 void navigasiKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   jFront = readPING(pingFront);
   jBack = readPING(pingBack);
   error = jFront - jBack;
-  //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
   if (PID_control >= maxStep) PID_control = maxStep;
   if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
@@ -386,48 +366,15 @@ void navigasiKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //    Serial.print("E: ");
   //    Serial.println(error);
 }
-
-// void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
-//   jFront = readPING(pingFront);
-//   jBack = readPING(pingBack);
-//   error = jFront - jBack;
-//   //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
-//   PID_controller();
-//   if (PID_control >= maxStep) PID_control = maxStep;
-//   if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
-//   if (PID_control > 0) {  //PID_control(+) = belok kanan
-//     lebarKiri = 0;
-//     lebarKanan = PID_control;
-//     lebarTengah = PID_control;
-//   } else if (PID_control < 0) {  //PID_control(-) = belok kiri
-//     lebarTengah = -PID_control;
-//     lebarKiri = -PID_control;
-//     lebarKanan = 0;
-//   } else {
-//     lebarTengah = 0;
-//     lebarKiri = 0;
-//     lebarKanan = 0;
-//   }
-//   time_prev = Time;
-//   Time = millis();
-//   dt = (Time - time_prev) / 1000;
-//   previous_error = error;
-//   //    Serial.print("E: ");
-//   //    Serial.println(error);
-// }
 
 void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
   jFront = readPING(pingFront);
   jBack = readPING(pingBack);
   error = jBack - jFront;  //jFront - jBack
-  //  xSemaphoreGive(mutex); //Untuk SRF04 di SemaphoreGive di comment
   PID_controller();
   if (PID_control >= maxStep) PID_control = maxStep;
   if (PID_control <= maxStep * -1) PID_control = maxStep * -1;
@@ -444,14 +391,10 @@ void navigasiKiri(int maxStep, uint32_t pingFront, uint32_t pingBack) {
     lebarKiri = 0;
     lebarKanan = 0;
   }
-  time_prev = Time;
-  Time = millis();
-  dt = (Time - time_prev) / 1000;
   previous_error = error;
   //    Serial.print("E: ");
   //    Serial.println(error);
 }
-
 
 int readPING(uint32_t pinData) {
   pinMode(pinData, OUTPUT);
@@ -513,10 +456,16 @@ void PID_controller() {
   //Proportional control
   P_control = kp * error;
   //Derivative control
-  if (dt < 0.000000001) {
-    dt = 0.000000001;
-  }
-  D_control = kd * ((error - previous_error) / dt);
+  D_control = kd * (error - previous_error);
+  //Summing PID
+  PID_control = (P_control + D_control) * 10;  //Coba saja dikali 10 atau tidak (Besaran Output PID Controller)
+}
+
+void PID_controller_cepat() {
+  //Proportional control
+  P_control = 0.15 * error;
+  //Derivative control
+  D_control = 0.001 * (error - previous_error);
   //Summing PID
   PID_control = (P_control + D_control) * 10;  //Coba saja dikali 10 atau tidak (Besaran Output PID Controller)
 }
@@ -534,8 +483,8 @@ void beforeTangga() {
   vTaskDelay(15 / portTICK_PERIOD_MS);
   filtered_Roll = ((1 - filter_weight) * filtered_Roll) + (filter_weight * roll);
   if (filtered_Roll > 13) {
-    offsetCX[2] = 24;   //Coxa BL //25
-    offsetCX[3] = -24;  //Coxa FL //-22
+    offsetCX[2] = 27;   //Coxa BL //25
+    offsetCX[3] = -20;  //Coxa FL //-22
     rightFM = 39;       //Femur FR & BR //40
     rightTB = 34;       //Tibia FR & BR // 34
     rightFM_FR = 36;
@@ -560,8 +509,8 @@ void beforeTangga() {
     midLeftFM = 0;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
     midLeftTB = 0;
   } else {
-    offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 2, 24);
-    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, -2, -24);
+    offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 2, 27);
+    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, -2, -25);
     rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 39);
     rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 34);  //34
     rightFM_FR = map(filtered_Roll, rollAwal, rollTangga, 0, 36);
@@ -574,7 +523,6 @@ void beforeTangga() {
     midLeftTB = map(filtered_Roll, rollAwal, rollTangga, -2, -12);  //11
   }
 }
-
 //===Gerakan Naik Tangga===//
 void GerakSebelumTangga() {
   beforeTangga();
@@ -716,7 +664,7 @@ void navigasiKiri_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) 
 void GerakanNaikTangga() {
   naikTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 28, 5, 28, 39, 30, 0, 0, 0);
+  GerakNaikTangga(5, 28, 5, 28, 40, 30, 0, 0, 0);
   //  xSemaphoreGive(mutex);
 }
 
@@ -866,38 +814,6 @@ void GerakSetelahTangga() {
 //  GerakNaikTangga();
 //}
 
-//=== Gerakan Mengambil Korban ===//
-//    while (1) {
-//      xSemaphoreTake(mutex, portMAX_DELAY);
-//      BodyMundur(25);
-//      xSemaphoreGive(mutex);
-//      if (Capit == false) {
-//        break;
-//      }
-//    }
-//    readSRF();
-//    while (jarak > 7) {
-//      xSemaphoreTake(mutex, portMAX_DELAY);
-//      BodyMaju(30);
-//      xSemaphoreGive(mutex);
-//      if (Capit == false)break;
-//      readSRF();
-//    }
-//    xSemaphoreTake(mutex, portMAX_DELAY);
-//    stepss = 0;
-//    xSemaphoreGive(mutex);
-//    while (1) {
-//      xSemaphoreTake(mutex, portMAX_DELAY);
-//      BodyBalik(25);
-//      xSemaphoreGive(mutex);
-//      if (Capit == false) {
-//        break;
-//      }
-//    }
-//    while (1) {
-//      Serial.println("1");
-//    }
-
 void BacaSensor() {
   baca_IR(IRfront);
   Serial.print("IR Front : ");
@@ -921,40 +837,21 @@ void BacaSensor() {
   Serial.println(yaw);
   Serial.print("Pitch :");
   Serial.println(yaw);
+  // while (1) {
+  //   xSemaphoreTake(mutex, portMAX_DELAY);
+  //   bacaTOFDepan();
+  //   xSemaphoreGive(mutex);
+  //   xSemaphoreTake(mutex, portMAX_DELAY);
+  //   bacaTOFKanan();
+  //   xSemaphoreGive(mutex);
+  //   xSemaphoreTake(mutex, portMAX_DELAY);
+  //   bacaTOFKiri();
+  //   xSemaphoreGive(mutex);
+  //   xSemaphoreTake(mutex, portMAX_DELAY);
+  //   bacaTOFBelakang();
+  //   xSemaphoreGive(mutex);
+  // }
 }
-
-//StandbyTangga();
-//jmlhStep = 0;
-//while (jmlhStep < 10) {
-//  if (!statusGerak) {
-//    //Masing masing sudut dibuat jadi 0 selama 10 kali step
-//    offsetCX[2] -= 2.4; //Coxa BL //- 2.4
-//    offsetCX[3] += 2; //Coxa FL //+ 2
-//    rightFM -= 3.9; //Femur FR & BR //- 3.9
-//    rightTB -= 3.4; //Tibia FR & BR//- 3.4
-//    leftFM -= 1.8; //Femur FL & BL //- 1.8
-//    leftTB -= 1.6; //Tibia FL & BL //- 1.6
-//    midRightFM -= 4.8; //Femur RM //- 4.8
-//    midRightTB -= 5.8; //Tibia RM //- 5.8
-//    midLeftFM -= 1.8; //Femur LM //- 1.8
-//    midLeftTB += 0.9; //Tibia LM //+ 0.9
-//    StandbyTangga();
-//    jmlhStep++;
-//  }
-//}
-//theta = 90;
-
-//8 step
-//    offsetCX[2] -= 3; //Coxa BL //- 2.4
-//    offsetCX[3] += 2.5; //Coxa FL //+ 2
-//    rightFM -= 4.875; //Femur FR & BR //- 3.9
-//    rightTB -= 4.25; //Tibia FR & BR//- 3.4
-//    leftFM -= 2.25; //Femur FL & BL //- 1.8
-//    leftTB -= 2; //Tibia FL & BL //- 1.6
-//    midRightFM -= 6; //Femur RM //- 4.8
-//    midRightTB -= 7.25; //Tibia RM //- 5.8
-//    midLeftFM -= 2.25; //Femur LM //- 1.8
-//    midLeftTB += 1.125; //Tibia LM //+ 0.9
 
 //    bodyKanan.write(70);
 //    baca_IR(IRright);

@@ -47,7 +47,7 @@ void TrayektoriSinus() {
     FL(xFL, yFL, zFL);
     theta += Increment;
     if (theta > degAkhir) {
-      theta = degAwal; //Untuk Increment Tujuan Selanjutnya
+      theta = degAwal;  //Untuk Increment Tujuan Selanjutnya
       statusGerak = false;
     }
   }
