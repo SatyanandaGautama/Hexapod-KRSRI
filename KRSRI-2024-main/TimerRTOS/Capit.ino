@@ -122,6 +122,87 @@ void taruhKorban2(int kecepatan) {
   }
 }
 
+void NaikkanCapit(int kecepatan) {
+  if (!moveDyn && !movePeg) {
+    Capit = true;
+    Inc = 180 / kecepatan;
+    switch (stepss) {
+      case 0:  //Naikkan Capit
+        sdtServoAwal = 17, sdtServoAkhir = 82;
+        sdtDynAwal = 132, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1:
+        Inc = 180 / 3;
+        sdtServoAwal = 82, sdtServoAkhir = 82;
+        sdtDynAwal = 240, sdtDynAkhir = 240;
+        moveDyn = true;
+        movePeg = true;
+        break;
+    }
+    stepss++;
+    if (stepss > 2) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
+
+void TurunkanCapit(int sdtSERVO, int sdtDYN, int kecepatan) {
+  if (!moveDyn && !movePeg) {
+    Capit = true;
+    Inc = 180 / kecepatan;
+    switch (stepss) {
+      case 0:  //Naikkan Capit
+        sdtServoAwal = 82, sdtServoAkhir = sdtSERVO;
+        sdtDynAwal = 240, sdtDynAkhir = sdtDYN;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1:
+        Inc = 180 / 3;
+        sdtServoAwal = sdtSERVO, sdtServoAkhir = sdtSERVO;
+        sdtDynAwal = sdtDYN, sdtDynAkhir = sdtDYN;
+        moveDyn = true;
+        movePeg = true;
+        break;
+    }
+    stepss++;
+    if (stepss > 2) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
+
+void TurunkanCapitK5(int sdtSERVO, int sdtDYN, int kecepatan) {
+  if (!moveDyn && !movePeg) {
+    Capit = true;
+    Inc = 180 / kecepatan;
+    switch (stepss) {
+      case 0:  //Naikkan Capit
+        sdtServoAwal = 20, sdtServoAkhir = sdtSERVO;
+        sdtDynAwal = 145, sdtDynAkhir = sdtDYN;
+        moveDyn = true;
+        movePeg = true;
+        break;
+      case 1:
+        Inc = 180 / 3;
+        sdtServoAwal = sdtSERVO, sdtServoAkhir = sdtSERVO;
+        sdtDynAwal = sdtDYN, sdtDynAkhir = sdtDYN;
+        moveDyn = true;
+        movePeg = true;
+        break;
+    }
+    stepss++;
+    if (stepss > 2) {
+      Capit = false;
+      stepss = 0;
+    }
+  }
+}
+
 void taruhKorban5(int kecepatan) {
   if (!moveDyn && !movePeg) {
     Capit = true;

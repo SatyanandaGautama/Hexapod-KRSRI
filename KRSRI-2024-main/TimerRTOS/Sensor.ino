@@ -8,13 +8,13 @@ void testSharp() {
 void RotateMPU(int selisih = 0, bool rot = false) {  //(-)Putar Kiri, (+)Putar Kanan
   if (rot) {
     read_MPU();
-    vTaskDelay(15 / portTICK_PERIOD_MS);
+    vTaskDelay(20 / portTICK_PERIOD_MS);
     tujuan = yaw + selisih;
     if (tujuan >= 360) tujuan -= 360;
     if (tujuan < 0) tujuan += 360;
   }
   read_MPU();
-  vTaskDelay(15 / portTICK_PERIOD_MS);
+  vTaskDelay(20 / portTICK_PERIOD_MS);
   Offset = tujuan - yaw;
   if (Offset < -180) {
     Offset = tujuan - yaw + 360;
@@ -35,85 +35,19 @@ void RotJarak(uint32_t PING1, uint32_t PING2) {
   if (OffsetJarak > 25) OffsetJarak = 25;
   if (OffsetJarak < -25) OffsetJarak = -25;
 }
-void RotJarakIR(int inc) {
-  baca_IR(IRbackgroan);
-  filtered_Rg = distances;
-  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
-  // Serial.print("M : ");
-  // Serial.println(filtered_Rg);
-  baca_IR(IRback);
-  filtered_Rb = distances;
-  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  filtered_Rb += inc;
-  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
-  if (OffsetJarak > 15) OffsetJarak = 15;
-  if (OffsetJarak < -15) OffsetJarak = -15;
+
+void RotJarakTOF() {
+  xSemaphoreTake(mutex, portMAX_DELAY);
+  bacaTOFBelakangKanan();
+  xSemaphoreGive(mutex);
+  xSemaphoreTake(mutex, portMAX_DELAY);
+  bacaTOFBelakangKiri();
+  xSemaphoreGive(mutex);
+  OffsetJarak = (TOFBelakangKanan - TOFBelakangKiri) * 5;  //2.5
+  if (OffsetJarak > 20) OffsetJarak = 20;
+  if (OffsetJarak < -20) OffsetJarak = -20;
 }
 
-void RotJarakIR_1() {
-  baca_IR(IRbackgroan);
-  filtered_Rg = distances;
-  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
-  // Serial.print("M : ");
-  // Serial.println(filtered_Rg);
-  baca_IR(IRback);
-  filtered_Rb = distances;
-  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  filtered_Rb += 2;
-  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
-  if (OffsetJarak > 15) OffsetJarak = 15;
-  if (OffsetJarak < -15) OffsetJarak = -15;
-}
-
-void RotJarakIR_2() {
-  baca_IR(IRbackgroan);
-  filtered_Rg = distances;
-  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
-  // Serial.print("M : ");
-  // Serial.println(filtered_Rg);
-  baca_IR(IRback);
-  filtered_Rb = distances;
-  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  filtered_Rb += 3;
-  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
-  if (OffsetJarak > 15) OffsetJarak = 15;
-  if (OffsetJarak < -15) OffsetJarak = -15;
-}
-
-void RotJarakIR_3() {
-  baca_IR(IRbackgroan);
-  filtered_Rg = distances;
-  //  filtered_Rg = ((1 - 0.6) * filtered_Rg) + (0.6 * distances);
-  // Serial.print("M : ");
-  // Serial.println(filtered_Rg);
-  baca_IR(IRback);
-  filtered_Rb = distances;
-  // filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  filtered_Rb += 7;
-  //  filtered_Rb = ((1 - 0.6) * filtered_IR) + (0.6 * distances);
-  // Serial.print("B : ");
-  // Serial.println(filtered_Rb);
-  OffsetJarak = (filtered_Rg - filtered_Rb) * 3;  //2.5
-  if (OffsetJarak > 15) OffsetJarak = 15;
-  if (OffsetJarak < -15) OffsetJarak = -15;
-}
 
 void navigasiMPU_Maju_versiCepat(int maxStep) {
   read_MPU();
@@ -175,7 +109,7 @@ void navigasiMPU_Maju(int maxStep) {
   //  Serial.println(yaw);
 }
 
-void navigasi_K4(int maxStep) {
+void navigasi_K5(int maxStep) {
   read_maix();
   x1 = result.xCenter;
   error = x1 - x0;  //error (+) => belok kanan, error (-) => belok kiri
@@ -199,10 +133,6 @@ void navigasi_K4(int maxStep) {
     lebarKanan = 0;
   }
   previous_error = error;
-  //  Serial.print("E: ");
-  //  Serial.println(error);
-  //  Serial.print(", Y: ");
-  //  Serial.println(yaw);
 }
 
 void navigasiMPU_Mundur(int maxStep) {
@@ -488,13 +418,13 @@ void beforeTangga() {
     rightFM = 39;       //Femur FR & BR //40
     rightTB = 34;       //Tibia FR & BR // 34
     rightFM_FR = 36;
-    leftFM_FL = 27;
-    leftFM = 27;      //Femur FL & BL //12 Naik(+) //15 //18
-    leftTB = 14;      //Tibia FL & BL //9 Masuk(+) //13 //16
-    midRightFM = 48;  //Femur RM //50
+    leftFM_FL = 24;   //27
+    leftFM = 20;      //Femur FL & BL //12 Naik(+) //15 //18
+    leftTB = 16;      //Tibia FL & BL //9 Masuk(+) //13 //16
+    midRightFM = 50;  //Femur RM //50
     midRightTB = 58;  //Tibia RM
-    midLeftFM = 18;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
-    midLeftTB = -9;   //Tibia LM //11 (Makin kecil makin masuk)
+    midLeftFM = 19;   //Femur LM //14 //16 //18 good (Makin besar makin naik)
+    midLeftTB = -9;   //Tibia LM //9 (Makin kecil makin masuk)
   } else if (filtered_Roll < 0) {
     offsetCX[2] = 0;  //Coxa BL //25
     offsetCX[3] = 0;  //Coxa FL //-22
@@ -510,27 +440,34 @@ void beforeTangga() {
     midLeftTB = 0;
   } else {
     offsetCX[2] = map(filtered_Roll, rollAwal, rollTangga, 2, 27);
-    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, -2, -25);
+    offsetCX[3] = map(filtered_Roll, rollAwal, rollTangga, -2, -30);
     rightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 39);
     rightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 34);  //34
     rightFM_FR = map(filtered_Roll, rollAwal, rollTangga, 0, 36);
     leftFM_FL = map(filtered_Roll, rollAwal, rollTangga, 0, 27);
     leftFM = map(filtered_Roll, rollAwal, rollTangga, 0, 27);      //25 //26
     leftTB = map(filtered_Roll, rollAwal, rollTangga, 0, 14);      //16 //15
-    midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 48);  //48
+    midRightFM = map(filtered_Roll, rollAwal, rollTangga, 0, 50);  //48
     midRightTB = map(filtered_Roll, rollAwal, rollTangga, 0, 58);
     midLeftFM = map(filtered_Roll, rollAwal, rollTangga, 4, 24);    //20
-    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, -2, -12);  //11
+    midLeftTB = map(filtered_Roll, rollAwal, rollTangga, -2, -10);  //11
   }
 }
+
 //===Gerakan Naik Tangga===//
 void GerakSebelumTangga() {
   beforeTangga();
   //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 23, 5, 23, 54, 40, 0, 0, 0);  //4,21,6,20
+  GerakNaikTangga(5, 23, 5, 23, 54, 32, 0, 0, 0);  //4,21,6,20
   //  xSemaphoreGive(mutex);
 }
 
+void GerakanNaikTangga() {
+  naikTangga();
+  //  xSemaphoreTake(mutex, portMAX_DELAY);
+  GerakNaikTangga(5, 28, 5, 28, 42, 24, 0, 0, 0);
+  //  xSemaphoreGive(mutex);
+}
 
 void afterTangga() {
   offsetCX[2] = 0;  //Coxa BL //25
@@ -661,17 +598,10 @@ void navigasiKiri_pingKanan(int maxStep, uint32_t pingFront, uint32_t pingBack) 
   //    Serial.println(error);
 }
 
-void GerakanNaikTangga() {
-  naikTangga();
-  //  xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 28, 5, 28, 40, 30, 0, 0, 0);
-  //  xSemaphoreGive(mutex);
-}
-
 void GerakSetelahTangga() {
   afterTangga();
   xSemaphoreTake(mutex, portMAX_DELAY);
-  GerakNaikTangga(5, 28, 5, 28, 35, 28, 0, 0, 0);
+  GerakNaikTangga(5, 28, 5, 28, 35, 20, 0, 0, 0);
   xSemaphoreGive(mutex);
 }
 
@@ -829,8 +759,6 @@ void BacaSensor() {
   Serial.println(readPING(leftFront));
   Serial.print("Left Back : ");
   Serial.println(readPING(leftBack));
-  Serial.print("Back : ");
-  Serial.println(readPING(belakang));
   read_MPU();
   vTaskDelay(15 / portTICK_PERIOD_MS);
   Serial.print("Yaw :");
@@ -849,6 +777,12 @@ void BacaSensor() {
   //   xSemaphoreGive(mutex);
   //   xSemaphoreTake(mutex, portMAX_DELAY);
   //   bacaTOFBelakang();
+  //   xSemaphoreGive(mutex);
+  //   xSemaphoreTake(mutex, portMAX_DELAY);
+  //   bacaTOFBelakangKanan();
+  //   xSemaphoreGive(mutex);
+  //   xSemaphoreTake(mutex, portMAX_DELAY);
+  //   bacaTOFBelakangKiri();
   //   xSemaphoreGive(mutex);
   // }
 }

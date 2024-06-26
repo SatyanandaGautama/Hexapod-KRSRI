@@ -207,9 +207,9 @@ void naikTangga() {
   leftFM_FL = 24;   //
   leftFM = 20;      //Femur FL & BL //12 Naik(+) //15 //18
   leftTB = 16;      //Tibia FL & BL //9 Masuk(+) //13 //16
-  midRightFM = 48;  //Femur RM //50
+  midRightFM = 50;  //Femur RM //50 //makin besar makin turun
   midRightTB = 58;  //Tibia RM
-  midLeftFM = 19;   //Femur LM //14 //16 //18 good (Makin besar makin naik)//18
+  midLeftFM = 19;   //Femur LM //(Makin besar makin naik)//18
   midLeftTB = -9;   //Tibia LM //11 (Makin kecil makin masuk)
 }
 

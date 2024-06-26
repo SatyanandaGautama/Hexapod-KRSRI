@@ -11,21 +11,33 @@
 #define XSHUT_depan PC4
 #define XSHUT_kanan PC0
 #define XSHUT_kiri PC5
-#define XSHUT_belakang PA0 //A0
-// #define XSHUT_belakangKanan PE10
-// #define XSHUT_belakangKiri PE10
+#define XSHUT_belakang PA0  //A0
+#define XSHUT_belakangKanan PC2
+#define XSHUT_belakangKiri PE8
 // Create components.
-TwoWire WIRE1(PC9, PA8);                          //SDA=PB11 & SCL=PB10
-VL53L0X sensor_vl53l0x_1(&WIRE1, XSHUT_depan);    //XSHUT=PE11
+TwoWire WIRE1(PC9, PA8);                        //SDA=PB11 & SCL=PB10
+VL53L0X sensor_vl53l0x_1(&WIRE1, XSHUT_depan);  //XSHUT=PE11
 VL53L0X sensor_vl53l0x_2(&WIRE1, XSHUT_kanan);  //XSHUT=PE12
 VL53L0X sensor_vl53l0x_3(&WIRE1, XSHUT_kiri);
 VL53L0X sensor_vl53l0x_4(&WIRE1, XSHUT_belakang);
+VL53L0X sensor_vl53l0x_5(&WIRE1, XSHUT_belakangKanan);
+VL53L0X sensor_vl53l0x_6(&WIRE1, XSHUT_belakangKiri);
 
 uint32_t distance_top_1;
 uint32_t distance_top_2;
 uint32_t distance_top_3;
 uint32_t distance_top_4;
-int TOFDepan, TOFKanan, TOFKiri, TOFBelakang;
+uint32_t distance_top_5;
+uint32_t distance_top_6;
+
+uint8_t NewDataReady_1 = 0;
+uint8_t NewDataReady_2 = 0;
+uint8_t NewDataReady_3 = 0;
+uint8_t NewDataReady_4 = 0;
+uint8_t NewDataReady_5 = 0;
+uint8_t NewDataReady_6 = 0;
+
+int TOFDepan, TOFKanan, TOFKiri, TOFBelakang, TOFBelakangKanan, TOFBelakangKiri;
 int s = 1;
 //============ TOF =================== //
 
@@ -44,7 +56,7 @@ HardwareSerial Serial6(USART6);  //Serial Maixbit Camera
 #include "HUSKYLENS.h"
 HUSKYLENS huskylens;
 HUSKYLENSResult result;
-int x0 = 158, x1;
+int x0 = 157, x1;
 //SharpIR
 #define IRfront PA0  //PA0(Mau), PC5(Mau), PC4(Mau), PB0(Mau), PC2(Mau), PC1(Mau)
 #define IRback PC0
@@ -75,10 +87,10 @@ int yawAwal = 0;
 int pitch, roll, rollAwal = 0, rollTangga = 13;
 int sdtAcuan = 0, yawSebelum = 0;
 //PING
-uint32_t belakang = PE15;
+
 uint32_t rightBack = PE11;
 uint32_t rightFront = PE12;
-uint32_t leftBack = PE8;    //E8
+uint32_t leftBack = PE15;   //E8
 uint32_t leftFront = PE10;  //E10
 int cm, duration, OffsetJarak, offsets, jBack, jFront;
 //SRF-04
@@ -193,15 +205,19 @@ void setup() {
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   //==== ToF Setup====//
   //=== Configure VL53L0X components. ===//
-  sensor_vl53l0x_1.begin();//Depan
-  sensor_vl53l0x_2.begin();//Kanan
-  sensor_vl53l0x_3.begin();//Kiri
-  sensor_vl53l0x_4.begin();//Belakang
+  sensor_vl53l0x_1.begin();  //Depan
+  sensor_vl53l0x_2.begin();  //Kanan
+  sensor_vl53l0x_3.begin();  //Kiri
+  sensor_vl53l0x_4.begin();  //Belakang
+  sensor_vl53l0x_5.begin();  //BelakangKanan
+  sensor_vl53l0x_6.begin();  //BelakangKiri
   //=== Switch off VL53L0X components. ===//
-  sensor_vl53l0x_1.VL53L0X_Off();//Depan
-  sensor_vl53l0x_2.VL53L0X_Off();//Kanan
-  sensor_vl53l0x_3.VL53L0X_Off();//Kiri
-  sensor_vl53l0x_4.VL53L0X_Off();//Belakang
+  sensor_vl53l0x_1.VL53L0X_Off();  //Depan
+  sensor_vl53l0x_2.VL53L0X_Off();  //Kanan
+  sensor_vl53l0x_3.VL53L0X_Off();  //Kiri
+  sensor_vl53l0x_4.VL53L0X_Off();  //Belakang
+  sensor_vl53l0x_5.VL53L0X_Off();  //BelakangKanan
+  sensor_vl53l0x_6.VL53L0X_Off();  //BelakangKiri
   //=== Initialize VL53L0X components. ===//
   status = sensor_vl53l0x_1.InitSensor(0x10);
   if (status) {
@@ -215,14 +231,24 @@ void setup() {
   if (status) {
     Serial.println("Init sensor_vl53l0x_3 failed...");
   }
-  status = sensor_vl53l0x_4.InitSensor(0x19); //0x19
+  status = sensor_vl53l0x_4.InitSensor(0x19);  //0x19
   if (status) {
     Serial.println("Init sensor_vl53l0x_4 failed...");
+  }
+  status = sensor_vl53l0x_5.InitSensor(0x22);  //0x19
+  if (status) {
+    Serial.println("Init sensor_vl53l0x_5 failed...");
+  }
+  status = sensor_vl53l0x_6.InitSensor(0x25);  //0x19
+  if (status) {
+    Serial.println("Init sensor_vl53l0x_6 failed...");
   }
   SetupSingleShot(sensor_vl53l0x_1);
   SetupSingleShot(sensor_vl53l0x_2);
   SetupSingleShot(sensor_vl53l0x_3);
   SetupSingleShot(sensor_vl53l0x_4);
+  SetupSingleShot(sensor_vl53l0x_5);
+  SetupSingleShot(sensor_vl53l0x_6);
   //============ TOF =======================
   delay(100);
   //====Setup SRF04====//
@@ -287,7 +313,7 @@ void setup() {
   display.display();
   while (yaw < 0) {
     read_MPU();
-    delay(15);
+    delay(20);
   }
   display.clearDisplay();
   display.setTextSize(2);       // set ukuran huruf, sesuaikan jika perlu
